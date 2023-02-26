@@ -1,8 +1,4 @@
 <?xml version="1.0"?>
-<!--
-
-
--->
 <project name="build-libjs" default="zipall" basedir="."
  xmlns:if="ant:if"
     xmlns:unless="ant:unless">
@@ -18,16 +14,8 @@
   	<property name="libjs.dir" value="libjs"/>
 
 	<target name="zipall" depends="zipapache">
-		
-		
     </target>
 
   <target name="zipapache">
-  	<echo>Nothing to do</echo>
-  	<!--
-	    <property name="apache.zip" value="${libjs.dir}/apache-commons-site.zip" />	  	  	
-	  	<echo> Zipping up ${apache.zip} </echo>
-	  	<zip destfile="${apache.zip}" basedir="${site.dir}" includes="swingjs/j2s/org/apache/commons/**" />
--->
-	</target>
+  </target>
 </project>

@@ -11,10 +11,7 @@
  
 -->
 
-<project name="swingjs-project" default="tosite" basedir="."
- xmlns:if="ant:if"
-    xmlns:unless="ant:unless">
-	
+<project name="swingjs-project" default="tosite" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
   <target name="tosite">
   	  	
   	<!-- input directories -->
@@ -53,14 +50,14 @@
 	   
 	 -->
 
-  	<for param="file.zip">
-  	  <path>
-  	    <fileset dir="${libjs.dir}" includes="*.zip"/>
-  	  </path>
-  	  <sequential>
-  	  	 	<unzip src="@{file.zip}" dest="${site.dir}" overwrite="true"/>  	
-  	  </sequential>
-  	</for>
+	<for param="file.zip">
+		<path>
+			<fileset dir="${libjs.dir}" includes="*.zip"/>
+		</path>
+		<sequential>
+			<unzip src="@{file.zip}" dest="${site.dir}" overwrite="true"/>  	
+		</sequential>
+	</for>
 
   	<!-- unzip SwingJS-site.zip 
   	
@@ -86,7 +83,6 @@
   	</fileset>
     </copy>
 
-  	
 	<copy todir="${j2s.dir}/core" >
 	  <fileset dir="src/org/jmol/viewer/">
 	    <include name="Jmol.properties" />
@@ -112,6 +108,4 @@
   <echo message="version=${version}" />
 
 </target>
-	
-
 </project>
