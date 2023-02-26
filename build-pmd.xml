@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <project name="JmolPMD" default="pmd" basedir=".">
+
     <property name="lib" value="develjars" />
     <property name="build" value="build" />
     <property name="src" value="src" />
@@ -16,14 +17,17 @@
     </path>
 
     <target name="compileRenderer" id="compileRenderer">
-        <javac srcdir="pmd" destdir="${build}" includes="net/sourceforge/pmd/renderers/SummaryVBHTMLRenderer.java">
+        <javac srcdir="pmd" destdir="${build}"
+               includes="net/sourceforge/pmd/renderers/SummaryVBHTMLRenderer.java">
             <classpath refid="pmd.classpath" />
         </javac>
     </target>
 
     <taskdef name="pmd" id="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath"/>
 
-    <target id="pmd" name="pmd" description="Performs a PMD checks on the Jmol source code.">
+    <target id="pmd" name="pmd"
+            description="Performs a PMD checks on the Jmol source code.">
+
       <echo message="Running PMD checks..." />
 
       <mkdir dir="${build}/pmd"/>
@@ -34,4 +38,5 @@
         </fileset>
       </pmd>
     </target>
+
 </project>

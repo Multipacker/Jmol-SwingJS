@@ -1,7 +1,10 @@
 <project name="JSmol" default="todist" basedir=".">
+ 
    <property name="site.path" value="site/" />
    <property name="dist.path" value="dist/" />
    <property name="Jmol-SwingJS.zip" value="${dist.path}Jmol-SwingJS.zip" />	  	  	
+
+
    <target name="todist" id="todist">
 
    	<echo> Zipping up ${Jmol-SwingJS.zip} </echo>
@@ -14,7 +17,8 @@
   			swingjs/j2s/org/jmol/**,
   			swingjs/j2s/org/openscience/jmol/**,
   			swingjs/j2s/javajs/awt/**"
-  			excludes=""
+  			excludes="
+   			"
   	/>
    	
    	
@@ -38,6 +42,8 @@
     
     
   </target>
+
+
 	  <target name="call-core" id="call-core">
 	   	<echo>......Creating core${call-core.name}.js</echo>
 	   	<concat destfile="${site.path}/js/core/tmp.js">
@@ -53,10 +59,13 @@
 	   		core/corebottom2.js
 	   		" />
 	   	</concat>
-	   	<echo>......Generating ${site.path}/j2s/core/core${call-core.name}.z.js</echo>
+	   	<echo>......Generating ${site.path}/j2s/core/core${call-core.name}.z.js</echo> 	
 	   	<java jar="tools/closure_compiler.jar" fork="true" dir="${site.path}/j2s/core" failonerror="false">
 	   		<arg line="--js core${call-core.name}.js --js_output_file core${call-core.name}.z.js" />
 	    </java>
 	 	<delete quiet="true" file="${site.path}/js/core/tmp.js" />
 	  </target>
+
+		
+	
 </project>
