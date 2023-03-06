@@ -80,10 +80,8 @@ import org.jmol.util.Logger;
  */
 
 public class MMTFReader extends MMCifReader {
-
   private boolean haveStructure;
   private String pdbID;
-
 
   @Override
   protected void addHeader() {
@@ -98,8 +96,7 @@ public class MMTFReader extends MMCifReader {
    * @param reader
    */
   @Override
-  protected void setup(String fullPath, Map<String, Object> htParams,
-                       Object reader) {
+  protected void setup(String fullPath, Map<String, Object> htParams, Object reader) {
     isBinary = true;
     isMMCIF = true;
     iHaveFractionalCoordinates = false;
@@ -108,7 +105,6 @@ public class MMTFReader extends MMCifReader {
 
   @Override
   protected void processBinaryDocument() throws Exception {
-
     // load xxx.mmtf filter "..." options 
 
     // NODOUBLE -- standard PDB-like structures
@@ -488,7 +484,6 @@ public class MMTFReader extends MMCifReader {
       }
     }
   }
-
 
   private Object decode(String key) {
       return MessagePackReader.decode((byte[]) map.get(key));

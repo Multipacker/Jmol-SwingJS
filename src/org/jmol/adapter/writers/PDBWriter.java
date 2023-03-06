@@ -23,11 +23,8 @@ import javajs.util.Qd;
  * An XCrysDen XSF writer
  * 
  * see http://www.xcrysden.org/doc/XSF.html
- * 
  */
 public class PDBWriter implements JmolWriter {
-
-
   private Viewer vwr;
   private OC oc;
   private boolean isPQR;
@@ -283,13 +280,8 @@ public class PDBWriter implements JmolWriter {
     return modelPt;
   }
 
-
-
   @Override
   public String toString() {
     return (oc == null ? "" : oc.toString());
   }
-
-
 }
-

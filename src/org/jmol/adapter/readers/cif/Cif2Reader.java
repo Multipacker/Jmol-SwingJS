@@ -25,30 +25,16 @@ package org.jmol.adapter.readers.cif;
 
 import javajs.api.GenericCifDataParser;
 
-
 /**
- * 
  * Preliminary Cif2 reader. Just a shell. 
  * 
  * See http://journals.iucr.org/j/issues/2016/01/00/aj5269/index.html
  * 
- * 
  * @author Bob Hanson (hansonr@stolaf.edu)
- * 
  */
 public class Cif2Reader extends CifReader {
-  
   @Override
   protected GenericCifDataParser getCifDataParser() {
     return new Cif2DataParser().set(this, null, debugging);
   }
-
-
-  
-  
-  
 }
-
-
-
-

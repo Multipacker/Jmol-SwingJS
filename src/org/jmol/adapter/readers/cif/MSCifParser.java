@@ -23,16 +23,11 @@
  */
 package org.jmol.adapter.readers.cif;
 
-
-//import java.util.Arrays;
-
 import javajs.util.M3d;
 import javajs.util.Matrix;
 import javajs.util.PT;
 
-
 public class MSCifParser extends MSRdr {
-
   public MSCifParser() {
     // for reflection
   }
@@ -268,21 +263,16 @@ public class MSCifParser extends MSRdr {
     if (key.equals("_cell_subsystem_code"))
       return processSubsystemLoopBlock();
     
-    if (!key.startsWith("_cell_wave") && !key.contains("fourier")
-        && !key.contains("legendre") && !key.contains("_special_func")) {
-      if (key.contains("crenel_ortho"))
-        cr.appendLoadNote("WARNING: Orthogonalized non-Legendre functions not supported.\nThe following block has been ignored. Use Legendre functions instead.\n\n" 
-            + cr.cifParser.skipLoop(true) + "=================================\n");
+    if (!key.startsWith("_cell_wave") && !key.contains("fourier") && !key.contains("legendre") && !key.contains("_special_func")) {
+      if (key.contains("crenel_ortho")) {
+        cr.appendLoadNote("WARNING: Orthogonalized non-Legendre functions not supported.\nThe following block has been ignored. Use Legendre functions instead.\n\n" + cr.cifParser.skipLoop(true) + "=================================\n");
+	  }
       return 0;
     }
     if (cr.asc.iSet < 0)
       cr.asc.newAtomSet();
     cr.parseLoopParametersFor(CifReader.FAMILY_ATOM, modulationFields);
     int tok;
-//    if (cr.key2col[JANA_FWV_Q1_COEF] != NONE) {
-//      // disable x y z for atom_site_fourier if we have coefficients
-//      cr.key2col[FWV_X] = cr.key2col[FWV_Y] = cr.key2col[FWV_Z] = NONE;
-//    }
     while (cr.cifParser.getData()) {
       boolean ignore = false;
       String type_id = null;
@@ -343,8 +333,6 @@ public class MSCifParser extends MSRdr {
           case FWV_SPIN_SEQ_ID:
           case FWV_U_SEQ_ID:
             type_id = modulationFields[tok].substring(11, 12).toUpperCase();
-//            type_id = Character.toUpperCase(modulationFields[tok].charAt(11))
-//                + "_";
             break;
           }
           type_id += sep + field;
@@ -558,7 +546,6 @@ public class MSCifParser extends MSRdr {
   
   private void addMod(@SuppressWarnings("unused") String key, String id, String fid, double[] params) {
     String k = (fid == null ? id : id + fid);
-//System.out.println("!mscifp addMod id=" + id + " fid=" + fid + " key = " + k + " " + Arrays.toString(params) + " for " + key);
     addModulation(null, k, params, -1);
   }
 
@@ -619,8 +606,7 @@ public class MSCifParser extends MSRdr {
     int p;
     int n = cr.cifParser.getColumnCount();
     for (; i < n; ++i) {
-      if ((p = fieldProperty(cr, i)) < 0 
-          || !(key = cr.cifParser.getColumnName(p)).contains(term))
+      if ((p = fieldProperty(cr, i)) < 0 || !(key = cr.cifParser.getColumnName(p)).contains(term))
         continue;
       String[] tokens = PT.split(key, "_");
       int r = cr.parseIntStr(tokens[tokens.length - 2]);
@@ -636,11 +622,6 @@ public class MSCifParser extends MSRdr {
     return fixDouble(d);
   }
 
-//  private void fixDoubleA(double[] pt) {
-//    for (int i = pt.length; --i >= 0;)
-//      pt[i] = fixDouble(pt[i]);
-//  }
-
   private double fixDouble(double d) {
     // was fixFloat(float[] pt  -- removed in Jmol 15.32.53
     // this is fine -- we are just removing the lower-order bits; 
@@ -649,9 +630,6 @@ public class MSCifParser extends MSRdr {
   }
 
   private int fieldProperty(CifReader cr, int i) {
-    return ((field = (String) cr.cifParser.getColumnData(i)).length() > 0 
-        && field.charAt(0) != '\0' ? 
-            cr.col2key[i] : NONE);
+    return ((field = (String) cr.cifParser.getColumnData(i)).length() > 0 && field.charAt(0) != '\0' ?  cr.col2key[i] : NONE);
   }
-
 }

@@ -551,8 +551,6 @@ public class MolReader extends AtomSetCollectionReader {
     order = fixOrder(order, stereo);
     if (haveAtomSerials)
       return asc.addNewBondFromNames(iAtom1, iAtom2, order);
-    return asc.addNewBondWithOrder(iatom0 + parseIntStr(iAtom1) - 1,
-        iatom0 + parseIntStr(iAtom2) - 1, order);
+    return asc.addNewBondWithOrder(iatom0 + parseIntStr(iAtom1) - 1, iatom0 + parseIntStr(iAtom2) - 1, order);
   }
-
 }

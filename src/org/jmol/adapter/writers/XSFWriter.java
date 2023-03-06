@@ -15,10 +15,8 @@ import javajs.util.PT;
  * more than one model.
  * 
  * see http://www.xcrysden.org/doc/XSF.html
- * 
  */
 public class XSFWriter implements JmolWriter {
-
   private Viewer vwr;
   private OC oc;
   private SymmetryInterface uc;
@@ -97,5 +95,4 @@ public class XSFWriter implements JmolWriter {
   public String toString() {
     return (oc == null ? "" : oc.toString());
   }
-
 }

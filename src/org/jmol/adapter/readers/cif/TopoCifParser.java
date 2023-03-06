@@ -33,16 +33,10 @@ import javajs.util.T3d;
  * 
  * TAtoms extend Atom and may have symmetry aspects.
  * 
- * 
- * 
- * 
- * 
- * 
  * @author Bob Hanson hansonr@stolaf.edu 2020.11.17 2021.05.07
  * 
  */
 public class TopoCifParser implements Parser {
-
   final static int TOPOL_LINK = 0x1000000;
   final static int TOPOL_GROUP = 0x2000000;
   final static int TOPOL_NODE = 0x4000000;
@@ -1668,5 +1662,4 @@ public class TopoCifParser implements Parser {
     }
     return null;
   }
-
 }

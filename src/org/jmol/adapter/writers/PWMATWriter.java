@@ -18,15 +18,11 @@ import javajs.util.PT;
 import javajs.util.V3d;
 
 /**
- * 
  * A writer for PWMAT atom.config files.
- * 
  */
 public class PWMATWriter extends XtlWriter implements JmolWriter {
-
   private final static String PWM_PREFIX = "property_pwm_";
   private final static int PREFIX_LEN = 13;
-  
 
   private Viewer vwr;
   private OC oc;
@@ -48,7 +44,6 @@ public class PWMATWriter extends XtlWriter implements JmolWriter {
     isSlab = (data != null && data[0] != null && data[0].equals("slab"));
     this.oc = (oc == null ? vwr.getOutputChannel(null,  null) : oc);
   }
-
   
   @SuppressWarnings("unchecked")
   @Override
@@ -256,7 +251,4 @@ public class PWMATWriter extends XtlWriter implements JmolWriter {
   public String toString() {
     return (oc == null ? "" : oc.toString());
   }
-
-
 }
-

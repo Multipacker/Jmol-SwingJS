@@ -13,7 +13,6 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.Viewer;
 
 public class MMCifValidationParser {
-
   private boolean asResidues;
   private AtomSetCollectionReader reader;
 
@@ -195,6 +194,4 @@ public class MMCifValidationParser {
     }
     return note;
   }
-
-
 }

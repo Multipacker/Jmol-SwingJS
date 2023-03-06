@@ -14,9 +14,7 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 import javajs.util.V3d;
 
-
 class Subsystem {
-
   private MSRdr msRdr;
   private String code;
   private int d;

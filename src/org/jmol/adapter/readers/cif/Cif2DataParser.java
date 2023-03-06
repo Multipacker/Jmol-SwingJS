@@ -23,13 +23,10 @@ import javajs.util.PT;
  * @author Bob Hanson hansonr@stolaf.edu 
  */
 public class Cif2DataParser extends CifDataParser {
-
-  
   @Override
   protected int getVersion() {
     return 2;
   }
-
 
 //  3.1. Character set and encoding
 //
@@ -154,7 +151,6 @@ public class Cif2DataParser extends CifDataParser {
 //  - Delivers proper JSON strings after converting keys and data values
 //
 // 
-
 
   /**
    * There is no need to convert to unicode in CIF 2.0.
@@ -467,7 +463,4 @@ public class Cif2DataParser extends CifDataParser {
       a[i] = (int) f[i];
     return a;
   }
-
-
-
 }

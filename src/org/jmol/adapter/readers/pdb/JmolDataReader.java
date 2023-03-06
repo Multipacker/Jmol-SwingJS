@@ -35,12 +35,8 @@ import org.jmol.util.Parser;
 
 /**
  * JmolData file reader, for a modified PDB format
- *
  */
-
 public class JmolDataReader extends PdbReader {
-
-  
   private Map<String, double[]> props;
   private String[] residueNames;
   private String[] atomNames;
@@ -164,6 +160,4 @@ public class JmolDataReader extends PdbReader {
     asc.setCurrentModelInfo("jmolDataProperties", props);
     finalizeReaderPDB();
   }
-
 }
-

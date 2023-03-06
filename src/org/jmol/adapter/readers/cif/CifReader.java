@@ -73,8 +73,6 @@ import javajs.util.V3d;
  * 
  */
 public class CifReader extends AtomSetCollectionReader {
-
-
   protected static final String CELL_TYPE_MAGNETIC_PARENT = "parent";
   protected static final String CELL_TYPE_MAGNETIC_STANDARD = "standard";
 
@@ -417,18 +415,6 @@ public class CifReader extends AtomSetCollectionReader {
     }
   }
 
-//  /**
-//   * No need for anything other than the atom name and symbol; coordinates will
-//   * be (0 0 0), and no other information is needed.
-//   */
-//  private void readSingleAtom() {
-//    Atom atom = new Atom();
-//    atom.set(0, 0, 0);
-//    atom.atomName = cifParser.fullTrim(data);
-//    atom.getElementSymbol();
-//    asc.addAtom(atom);
-//  }
-//
   private MSCifParser getModulationReader() throws Exception {
     return (modr == null ? initializeMSCIF() : modr);
   }
@@ -439,16 +425,6 @@ public class CifReader extends AtomSetCollectionReader {
     modulated = (modr.initialize(this, modDim) > 0);
     return modr;
   }
-
-//  private MagCifRdr getMagCifReader() throws Exception {
-//    return (magr == null ? initializeMagCIF() : magr);
-//  }
-
-//  private MagCifRdr initializeMagCIF() throws Exception {
-//    if (magr == null)
-//      magr = (MagCifRdr) getInterface("org.jmol.adapter.readers.cif.MagCifRdr");
-//    return magr;
-//  }
 
   public Map<String, Integer> modelMap;
 
@@ -522,8 +498,6 @@ public class CifReader extends AtomSetCollectionReader {
       }
     }
   }
-
-
 
   protected void addHeader() {
     String header = cifParser.getFileHeader();
@@ -2270,5 +2244,4 @@ public class CifReader extends AtomSetCollectionReader {
     if (isLoop)
       cifParser.skipLoop(doReport);
   }
-
 }

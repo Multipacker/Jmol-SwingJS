@@ -34,7 +34,6 @@ import javajs.util.SB;
  * 
  */
 public class QCJSONWriter extends JSONWriter implements JmolWriter {
-
   // Current status: 
   // 
   // 2017.12.14  Generating valid JSON code that can be read back in for tested files.
@@ -630,5 +629,4 @@ public class QCJSONWriter extends JSONWriter implements JmolWriter {
           + "]");
     }
   }
-
 }

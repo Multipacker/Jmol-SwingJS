@@ -43,7 +43,6 @@ import javajs.util.PT;
  * <p>
  */
 public class V3000Rdr {
-
   private MolReader mr;
   private String line;
 
@@ -244,11 +243,10 @@ public class V3000Rdr {
   }
 
   private String rdContinuation() throws Exception {
-	    rd();
-	    while (line.endsWith("-")) {
-	      line = line.substring(0, line.length() - 1) + rd().substring(7);
-	    }
-	    return line;
+	rd();
+	while (line.endsWith("-")) {
+	  line = line.substring(0, line.length() - 1) + rd().substring(7);
+	}
+	return line;
   }
-
 }

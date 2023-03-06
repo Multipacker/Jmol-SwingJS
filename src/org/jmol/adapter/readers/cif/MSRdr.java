@@ -39,7 +39,6 @@ import javajs.util.T3d;
  * 
  * -- not handling _cell_commen_t_section_1
  * 
- * 
  * @author Bob Hanson hansonr@stolaf.edu
  * 
  */

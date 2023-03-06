@@ -75,10 +75,7 @@ import javajs.util.SB;
  *  applySymmetryAndSetTrajectory()
  *  
  */
-
 public class PdbReader extends AtomSetCollectionReader {
-
-
   // serial number and sequence number extensions added Jan 2012 by BH, Jmol 13.1.12
   // Schroedinger HEX solution: 
   // https://www.schrodinger.com/AcrobatFile.php?type=supportdocs&type2=&ident=530
@@ -2096,6 +2093,4 @@ public class PdbReader extends AtomSetCollectionReader {
     connectNextAtomSet = index + 1;
     connectNextAtomIndex = firstAtom;
   }
-  
 }
-

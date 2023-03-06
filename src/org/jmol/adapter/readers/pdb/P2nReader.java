@@ -36,9 +36,7 @@ import org.jmol.adapter.smarter.Atom;
  * http://q4md-forcefieldtools.org/
  *  
  */
-
 public class P2nReader extends PdbReader {
-
   private Lst<String> altNames = new  Lst<String>();
   
   @Override
@@ -59,6 +57,4 @@ public class P2nReader extends PdbReader {
       asc.setCurrentModelInfo("altName", altNames
           .toArray(new String[altNames.size()]));
   }
-
 }
-

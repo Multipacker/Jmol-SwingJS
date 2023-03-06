@@ -26,7 +26,6 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 
 public class MOLWriter {
-
   private Viewer vwr;
 
   private P3d ptTemp;
@@ -35,9 +34,7 @@ public class MOLWriter {
 
   private int[] connections;
 
-
   public MOLWriter() {
-    
   }
   
   public MOLWriter setViewer(Viewer vwr) {
@@ -45,9 +42,7 @@ public class MOLWriter {
     return this;
   }
 
-  public boolean addMolFile(String title, int iModel, SB mol, BS bsAtoms, BS bsBonds,
-                            boolean asV3000, boolean asJSON,
-                            boolean noAromatic, Qd q, boolean is2d) {
+  public boolean addMolFile(String title, int iModel, SB mol, BS bsAtoms, BS bsBonds, boolean asV3000, boolean asJSON, boolean noAromatic, Qd q, boolean is2d) {
     int nAtoms = bsAtoms.cardinality();
     int nBonds = bsBonds.cardinality();
     if (!asV3000 && !asJSON && (nAtoms > 999 || nBonds > 999))
@@ -58,14 +53,11 @@ public class MOLWriter {
       mol.append(title).append("\n");
       String version = Viewer.getJmolVersion();
       mol.append(PropertyManager.getSDFDateLine("__Jmol-" + version, is2d));
-      mol.append("Jmol version ").append(version)
-          .append(" EXTRACT: ").append(Escape.eBS(bsAtoms)).append("\n");
+      mol.append("Jmol version ").append(version).append(" EXTRACT: ").append(Escape.eBS(bsAtoms)).append("\n");
     }    
    boolean asSDF = (iModel >= 0);
    @SuppressWarnings("unchecked")
-   Map<String, Object> molData = (asSDF
-       ? (Map<String, Object>) vwr.ms.getInfo(iModel, "molData")
-       : null);
+   Map<String, Object> molData = (asSDF ? (Map<String, Object>) vwr.ms.getInfo(iModel, "molData") : null);
    @SuppressWarnings("unchecked")
    Lst<String> _keyList = (asSDF ? (Lst<String>) vwr.ms.getInfo(iModel, "molDataKeys") : null);
    ModelSet ms = vwr.ms;
@@ -74,8 +66,7 @@ public class MOLWriter {
    if (asV3000) {
      mol.append("  0  0  0  0  0  0            999 V3000");
    } else if (asJSON) {
-     mol.append("{\"mol\":{\"createdBy\":\"Jmol " + Viewer.getJmolVersion()
-         + "\",\"a\":[");
+     mol.append("{\"mol\":{\"createdBy\":\"Jmol " + Viewer.getJmolVersion() + "\",\"a\":[");
    } else {
      PT.rightJustify(mol, "   ", "" + nAtoms);
      PT.rightJustify(mol, "   ", "" + nBonds);
@@ -84,29 +75,23 @@ public class MOLWriter {
    if (!asJSON)
      mol.append("\n");
    if (asV3000) {
-     mol.append("M  V30 BEGIN CTAB\nM  V30 COUNTS ").appendI(nAtoms)
-         .append(" ").appendI(nBonds).append(" 0 0 0\n")
-         .append("M  V30 BEGIN ATOM\n");
+     mol.append("M  V30 BEGIN CTAB\nM  V30 COUNTS ").appendI(nAtoms).append(" ").appendI(nBonds).append(" 0 0 0\n").append("M  V30 BEGIN ATOM\n");
    }
    Object o = (molData == null ? null : molData.get("atom_value_name"));
    if (o instanceof SV)
      o = ((SV) o).asString();
    int valueType = (o == null ? T.nada : T.getTokFromName("" + o));
    SB atomValues = (valueType == T.nada && !asSDF ? null : new SB());
-   for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms
-       .nextSetBit(i + 1)) {
-     getAtomRecordMOL(iModel, ms, mol, atomMap[i] = ++n, ms.at[i], q, pTemp,
-         asV3000, asJSON, atomValues, valueType, asSDF);
+   for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms.nextSetBit(i + 1)) {
+     getAtomRecordMOL(iModel, ms, mol, atomMap[i] = ++n, ms.at[i], q, pTemp, asV3000, asJSON, atomValues, valueType, asSDF);
    }
    if (asV3000) {
      mol.append("M  V30 END ATOM\nM  V30 BEGIN BOND\n");
    } else if (asJSON) {
      mol.append("],\"b\":[");
    }
-   for (int i = bsBonds.nextSetBit(0), n = 0; i >= 0; i = bsBonds
-       .nextSetBit(i + 1)) {
-     getBondRecordMOL(mol, ++n, ms.bo[i], atomMap, asV3000, asJSON,
-         noAromatic, is2d);
+   for (int i = bsBonds.nextSetBit(0), n = 0; i >= 0; i = bsBonds.nextSetBit(i + 1)) {
+     getBondRecordMOL(mol, ++n, ms.bo[i], atomMap, asV3000, asJSON, noAromatic, is2d);
    }
    if (asV3000) {
      mol.append("M  V30 END BOND\nM  V30 END CTAB\n");
@@ -126,20 +111,17 @@ public class MOLWriter {
        SB sb = new SB();
        if (pc != null) {
          sb.appendI(nAtoms).appendC('\n');
-         for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms
-             .nextSetBit(i + 1))
+         for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms.nextSetBit(i + 1))
            sb.appendI(++n).append(" ").appendD(pc[i]).appendC('\n');
          molData.put("jmol_partial_charges", sb.toString());
        }
        sb.setLength(0);
        sb.appendI(nAtoms).appendC('\n');
-       for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms
-           .nextSetBit(i + 1)) {
+       for (int i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms.nextSetBit(i + 1)) {
          String name = ms.at[i].getAtomName().trim();
          if (name.length() == 0)
            name = ".";
-         sb.appendI(++n).append(" ").append(name.replace(' ', '_'))
-             .appendC('\n');
+         sb.appendI(++n).append(" ").append(name.replace(' ', '_')).appendC('\n');
        }
        molData.put("jmol_atom_names", sb.toString());
        if (_keyList == null)
@@ -207,14 +189,12 @@ public class MOLWriter {
     //012345678901234567890123456789012
     ms.getPointTransf(iModel, a, q, pTemp);
     int elemNo = a.getElementNumber();
-    String sym = (a.isDeleted() ? "Xx" : Elements
-        .elementSymbolFromNumber(elemNo));
+    String sym = (a.isDeleted() ? "Xx" : Elements.elementSymbolFromNumber(elemNo));
     int isotope = a.getIsotopeNumber();
     int charge = a.getFormalCharge();
     Object [] o = new Object[] { pTemp };
     if (asV3000) {
-      mol.append("M  V30 ").appendI(n).append(" ").append(sym)
-            .append(PT.sprintf(" %12.5p %12.5p %12.5p 0", "p", o));
+      mol.append("M  V30 ").appendI(n).append(" ").append(sym).append(PT.sprintf(" %12.5p %12.5p %12.5p 0", "p", o));
       if (charge != 0)
         mol.append(" CHG=").appendI(charge);
       if (isotope != 0)
@@ -230,8 +210,7 @@ public class MOLWriter {
         mol.append("\"c\":").appendI(charge).append(",");
       if (isotope != 0)
         mol.append("\"m\":").appendI(isotope).append(",");
-      mol.append("\"x\":").appendD(a.x).append(",\"y\":").appendD(a.y)
-          .append(",\"z\":").appendD(a.z).append("}");
+      mol.append("\"x\":").appendD(a.x).append(",\"y\":").appendD(a.y).append(",\"z\":").appendD(a.z).append("}");
     } else {
       mol.append(PT.sprintf("%10.4p%10.4p%10.4p", "p", o));
       mol.append(" ").append(sym);
@@ -248,8 +227,7 @@ public class MOLWriter {
       PT.rightJustify(mol, "   ", "" + (charge == 0 ? 0 : 4 - charge));
       mol.append("  ").append(getAtomParity(a));
       mol.append("  0  0  0\n");
-      String label = (tokValue == T.nada || asV3000 ? null : 
-        getAtomPropertyAsString(a, tokValue));
+      String label = (tokValue == T.nada || asV3000 ? null : getAtomPropertyAsString(a, tokValue));
       if (label != null && (label = label.trim()).length() > 0) {
         String sn = "   " + n + " ";
         atomValues.append("V  ").append(sn.substring(sn.length() - 4));
@@ -278,8 +256,7 @@ public class MOLWriter {
       if (nH < 3) {
         Arrays.sort(connections);
         Atom[] atoms = vwr.ms.at;
-        MeasureD.getNormalThroughPoints(atoms[connections[0]],
-            atoms[connections[1]], atoms[connections[2]], vNorm, vTemp);
+        MeasureD.getNormalThroughPoints(atoms[connections[0]], atoms[connections[1]], atoms[connections[2]], vNorm, vTemp);
         vTemp.sub2(atoms[connections[3]], atoms[connections[0]]);
         return (vTemp.dot(vNorm) > 0 ? "1" : "2");
       }
@@ -287,7 +264,6 @@ public class MOLWriter {
     return "0";
   }
   
-
   private String getAtomPropertyAsString(Atom a, int tok) {
     switch (tok & T.PROPERTYFLAGS) {
     case T.intproperty:
@@ -306,9 +282,7 @@ public class MOLWriter {
     }
   }
 
-  private void getBondRecordMOL(SB mol, int n, Bond b, int[] atomMap,
-                                boolean asV3000, boolean asJSON,
-                                boolean noAromatic, boolean is2d) {
+  private void getBondRecordMOL(SB mol, int n, Bond b, int[] atomMap, boolean asV3000, boolean asJSON, boolean noAromatic, boolean is2d) {
     //  1  2  1  0
     int a1 = atomMap[b.atom1.i];
     int a2 = atomMap[b.atom2.i];
@@ -375,9 +349,6 @@ public class MOLWriter {
       mol.append("  ").appendI(order).append(cfg).append("\n");
     }
   }
-
-  
-  
   
  /**
   * 
@@ -401,11 +372,5 @@ public class MOLWriter {
        mol.append("+");
      mol.append("\n");
    }
-
-   // TODO
-   
  }
-
-
-
 }

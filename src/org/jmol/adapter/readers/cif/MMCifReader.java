@@ -41,9 +41,7 @@ import javajs.util.P3d;
 import javajs.util.PT;
 import javajs.util.SB;
 
-
 /**
- * 
  * mmCIF files are recognized prior to class creation. 
  * Required fields include one of:
  * 
@@ -54,12 +52,9 @@ import javajs.util.SB;
  *   _audit_author.name
  *   _atom_site.
  * 
- * 
  * @author Bob Hanson (hansonr@stolaf.edu)
- * 
  */
 public class MMCifReader extends CifReader {
-
   protected boolean isBiomolecule;
   private boolean byChain, bySymop;
   private Map<String, P3d> chainAtomMap;
@@ -111,9 +106,7 @@ public class MMCifReader extends CifReader {
     // into the Resolver that made it so that ligand files were read by 
     // CifReader and not MMCifReader. This caused CHEM_COMP_BOND records to be 
     // skipped and so in the case of pdbAddHydrogen no hydrogens added.
-    isLigandBondBug = (stateScriptVersionInt >= 140204 && stateScriptVersionInt <= 140208
-        || stateScriptVersionInt >= 140304 && stateScriptVersionInt <= 140308);
-
+    isLigandBondBug = (stateScriptVersionInt >= 140204 && stateScriptVersionInt <= 140208 || stateScriptVersionInt >= 140304 && stateScriptVersionInt <= 140308);
   }
 
   @Override
@@ -154,8 +147,6 @@ public class MMCifReader extends CifReader {
       return processStructSiteBlock();
     if (key0.startsWith(FAMILY_CHEMCOMP_CAT))
       return processChemCompLoopBlock();
-//    if (key0.startsWith(FAMILY_PDBX_NONPOLY_CAT))
-//      return processNonpolyLoopBlock();
     if (key0.startsWith(FAMILY_STRUCTCONF_CAT))
       return processStructConfLoopBlock();
     if (key0.startsWith(FAMILY_SHEET_CAT))
@@ -211,14 +202,12 @@ public class MMCifReader extends CifReader {
           }
         }
       }
-
     }
     asc.atoms = newAtoms;
     asc.bsAtoms = bsAtomsNew;
     if (++lastSet < asc.atomSetCount)
       asc.atomSetCount = lastSet;
   }
-
 
   @Override
   protected boolean finalizeSubclass() throws Exception {
@@ -230,8 +219,7 @@ public class MMCifReader extends CifReader {
       asc.removeCurrentAtomSet();
     } else {
       if ((dssr != null || validation != null || addedData != null) && !isCourseGrained && !requiresSorting) {
-        MMCifValidationParser vs = ((MMCifValidationParser) getInterface("org.jmol.adapter.readers.cif.MMCifValidationParser"))
-            .set(this);
+        MMCifValidationParser vs = ((MMCifValidationParser) getInterface("org.jmol.adapter.readers.cif.MMCifValidationParser")).set(this);
         String note = null;
         if (addedData == null) {
           if (validation != null || dssr != null)
@@ -258,8 +246,7 @@ public class MMCifReader extends CifReader {
       if (thisBiomolecule != null) {
         if (iHaveFractionalCoordinates)
           fractionalizeCoordinates(false);
-        asc.getXSymmetry().applySymmetryBio(thisBiomolecule,
-            applySymmetryToBonds, filter);
+        asc.getXSymmetry().applySymmetryBio(thisBiomolecule, applySymmetryToBonds, filter);
         asc.xtalSymmetry = null;
         
       }
@@ -670,36 +657,6 @@ public class MMCifReader extends CifReader {
         addHetero(groupName, hetName, true, true);
     return true;
   }
-
-//  final private static byte NONPOLY_NAME = 0;
-//  final private static byte NONPOLY_COMP_ID = 1;
-//
-//  private static final String FAMILY_PDBX_NONPOLY_CAT = "_pdbx_entity_nonpoly.";
-//  
-//  final private static String[] nonpolyFields = {
-//      "_pdbx_entity_nonpoly_name",
-//      "_pdbx_entity_nonpoly_comp_id", };
-//
-//
-//  /**
-//   * 
-//   * a HETERO name definition field. Maybe not all hetero? nonpoly?
-//   * 
-//   * @return true if successful; false to skip
-//   * 
-//   * @throws Exception
-//   */
-//  private boolean processNonpolyLoopBlock() throws Exception {
-//    parseLoopParameters(nonpolyFields);
-//    String groupName, hetName;
-//    while (parser.getData()) {
-//      if (isNull(groupName = getField(NONPOLY_COMP_ID))
-//          || isNull(hetName = getField(NONPOLY_NAME)))
-//        return false;
-//      addHetero(groupName, hetName, true);
-//    }
-//    return true;
-//  }
 
   protected void addHetero(String groupName, String hetName, boolean doCheck, boolean addNote) {
     if (doCheck && !vwr.getJBR().isHetero(groupName))
@@ -1255,5 +1212,4 @@ public class MMCifReader extends CifReader {
       asc.setInfo("hetNames", htHetero);
     }    
   }
-
 }

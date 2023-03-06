@@ -26,13 +26,10 @@ package org.jmol.adapter.readers.molxyz;
 
 /**
  * 3D only
- *  
  */
 public class Mol3DReader extends MolReader {
-  
   @Override
   public void initializeReader() throws Exception {
     allow2D = false;
   }
-
 }

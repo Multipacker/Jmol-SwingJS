@@ -7,7 +7,6 @@ import javajs.util.P3d;
 import javajs.util.PT;
 
 public class XtlWriter {
-
   protected boolean haveUnitCell = true;
 
   private static final String[] twelfths = new String[] { 
@@ -48,12 +47,5 @@ public class XtlWriter {
 
   protected String cleanF(double f) {
     return clean(f);
-//    int t;
-//    if (!haveUnitCell || (t = twelfthsOf(f, 0.00015)) < 0) {
-//      String s =   "   " + f + "                 "; 
-//      return s.substring(0, 12);
-//    }
-//    return (f < 0 ? "  -" : "   ") + twelfthsF[t];
   }
-
 }

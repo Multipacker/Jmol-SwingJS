@@ -56,10 +56,7 @@ PDB files can be converted to PQR by the PDB2PQR software[3], which adds missing
 
  *  
  */
-
 public class PqrReader extends PdbReader {
-
-  
   @Override
   protected void setAdditionalAtomParameters(Atom atom) {
     if (gromacsWideFormat) {
@@ -73,4 +70,3 @@ public class PqrReader extends PdbReader {
     }
   }
 }
-
