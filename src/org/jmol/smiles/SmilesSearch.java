@@ -465,7 +465,7 @@ public class SmilesSearch extends JmolMolecule {
         continue;
       if (setAromatic && i >= 4 && i <= aromaticMax) {
         SmilesAromatic.setAromatic(i, targetAtoms, bsSelected, vR, bsAromatic,
-            strictness, isOpenNotStrict, justCheckBonding, checkExplicit, v, lstAromatic, lstSP2,
+            strictness, isOpenNotStrict, justCheckBonding, checkExplicit, lstAromatic, lstSP2,
             eCounts, doTestAromatic);
       }
       if (needRingData) {

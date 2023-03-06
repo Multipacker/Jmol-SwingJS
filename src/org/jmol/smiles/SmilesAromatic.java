@@ -53,7 +53,6 @@ public class SmilesAromatic {
    * @param isOpenSMILES
    * @param justCheckBonding
    * @param checkExplicit
-   * @param v
    * @param vOK
    * @param lstSP2
    * @param eCounts
@@ -62,7 +61,7 @@ public class SmilesAromatic {
   static void setAromatic(int n, Node[] jmolAtoms, BS bsSelected,
                           Lst<Object> vR, BS bsAromatic, int strictness,
                           boolean isOpenSMILES, boolean justCheckBonding, 
-                          boolean checkExplicit, VTemp v,
+                          boolean checkExplicit,
                           Lst<BS> vOK, Lst<SmilesRing> lstSP2,
                           int[] eCounts, boolean doTestAromatic) {
 

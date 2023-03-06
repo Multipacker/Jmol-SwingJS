@@ -925,7 +925,7 @@ public class SmilesGenerator {
     if (!allowBranches && !noStereo && polySmilesCenter == null
         && (v.size() == 5 || v.size() == 6)) {
       // only for first hypervalent atom; we are not allowing any branches here
-      atat = sortInorganic(atom, v, vTemp);
+      atat = sortInorganic(atom, v);
     }
     for (int i = 0; i < v.size(); i++) {
         Edge bond = v.get(i);
@@ -1162,10 +1162,9 @@ public class SmilesGenerator {
    * 
    * @param atom
    * @param v
-   * @param vTemp 
    * @return  "@" or "@@" or ""
    */
-  private String sortInorganic(SimpleNode atom, Lst<Edge> v, VTemp vTemp) {
+  private String sortInorganic(SimpleNode atom, Lst<Edge> v) {
     int atomIndex = atom.getIndex();
     int n = v.size();
     Lst<Edge[]> axialPairs = new  Lst<Edge[]>();
