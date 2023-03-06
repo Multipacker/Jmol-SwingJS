@@ -24,13 +24,11 @@
 
 package org.jmol.smiles;
 
-
 import javajs.util.P3d;
 import javajs.util.PT;
 import javajs.util.T3d;
 
 public class SmilesMeasure  {
-
   // processing of C(.d:1.5,1.6)C
   // or C(.d1:1.5)C(.d1:1.6)
   SmilesSearch search;
@@ -43,8 +41,7 @@ public class SmilesMeasure  {
   static final String TYPES = "__dat";
   final private double[] minmax;
   
-  SmilesMeasure(SmilesSearch search, int index, int type, boolean isNot,
-      double[] minmax) {
+  SmilesMeasure(SmilesSearch search, int index, int type, boolean isNot, double[] minmax) {
     this.search = search;
     this.type = Math.min(4, Math.max(type, 2));
     this.index = index;
@@ -59,11 +56,14 @@ public class SmilesMeasure  {
   }
 
   boolean addPoint(int index) {
-    if (nPoints == type)
+    if (nPoints == type) {
       return false;
-    if (nPoints == 0)
-      for (int i = 1; i < type; i++)
+	}
+    if (nPoints == 0) {
+      for (int i = 1; i < type; i++) {
         indices[i] = index + i;
+	  }
+	}
     indices[nPoints++] = index;
     return true;
   }
@@ -93,9 +93,11 @@ public class SmilesMeasure  {
       d = setTorsionData(points[0], points[1], points[2], points[3], search.v, true);
       break;
     }
-    for (int i = minmax.length - 2; i >= 0; i -= 2)
-      if (d >= minmax[i] && d <= minmax[i + 1])
+    for (int i = minmax.length - 2; i >= 0; i -= 2) {
+      if (d >= minmax[i] && d <= minmax[i + 1]) {
         return !isNot;
+	  }
+	}
     return isNot;
   }
 
@@ -109,9 +111,7 @@ public class SmilesMeasure  {
    * @param withDihedral
    * @return dihedral or 0
    */
-  public static double setTorsionData(T3d pt1a, T3d pt1,
-                                    T3d pt2, T3d pt2a,
-                                    VTemp v, boolean withDihedral) {
+  public static double setTorsionData(T3d pt1a, T3d pt1, T3d pt2, T3d pt2a, VTemp v, boolean withDihedral) {
     // We cross dihedral bonds with the bond axis
     // to get two vector projections in the
     // plane perpendicular to the bond axis
@@ -145,17 +145,16 @@ public class SmilesMeasure  {
     v.vTemp2.cross(v.vTemp2, v.vNorm2);
     v.vTemp2.normalize();
     v.vNorm3.cross(v.vTemp1, v.vTemp2);
-    return v.vTemp1.angle(v.vTemp2) / radiansPerDegree
-        * (v.vNorm2.dot(v.vNorm3) < 0 ? 1 : -1);
+    return v.vTemp1.angle(v.vTemp2) / radiansPerDegree * (v.vNorm2.dot(v.vNorm3) < 0 ? 1 : -1);
 
   }
   
   @Override
   public String toString() {
     String s = "(." + TYPES.charAt(type) + index + ":" + PT.toJSON(null, minmax) + ") for";
-    for (int i = 0; i < type; i++)
-      s+= " " + (i >= nPoints ? "?" : "" + indices[i]);
+    for (int i = 0; i < type; i++) {
+      s += " " + (i >= nPoints ? "?" : "" + indices[i]);
+	}
     return s;
   }
-
 }

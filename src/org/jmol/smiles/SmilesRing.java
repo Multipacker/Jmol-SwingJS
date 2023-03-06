@@ -36,7 +36,6 @@ import org.jmol.util.Edge;
  */
 
 class SmilesRing extends BS {
-
   SmilesRingSet set;
   Lst<Edge> edges;
   BS bsEdgesToCheck;
@@ -51,12 +50,12 @@ class SmilesRing extends BS {
   }
 
   void addEdges(Hashtable<String, SmilesRingSet> htEdgeMap) {
-    for (int i = edges.size(); --i >= 0;)
+    for (int i = edges.size(); --i >= 0;) {
       htEdgeMap.put(getKey(edges.get(i)), set);
+	}
   }
 
-  static SmilesRingSet getSetByEdge(Edge edge,
-                                           Hashtable<String, SmilesRingSet> htEdgeMap) {
+  static SmilesRingSet getSetByEdge(Edge edge, Hashtable<String, SmilesRingSet> htEdgeMap) {
     return htEdgeMap.get(getKey(edge));
   }
 
@@ -65,5 +64,4 @@ class SmilesRing extends BS {
     int j = e.getAtomIndex2();
     return (i < j ? i + "_" + j : j + "_" + i);
   }
-
 }

@@ -39,7 +39,6 @@ import org.jmol.util.Node;
 import org.jmol.util.SimpleNode;
 
 public class SmilesAromatic {
-
   /**
    * Main entry point. Note that unless bonds are pre-defined as aromatic, Jmol
    * will first check for a flat ring configuration. This is 3D, after all.
@@ -76,8 +75,9 @@ public class SmilesAromatic {
       for (int r = vR.size(); --r >= 0;) {
         BS bs = BSUtil.copy((BS) vR.get(r));
         bs.and(bsAromatic);
-        if (bs.cardinality() == n)
+        if (bs.cardinality() == n) {
           vOK.addLast(bs);
+		}
       }
       return;
     }
@@ -87,8 +87,9 @@ public class SmilesAromatic {
           (justCheckBonding ? Double.MAX_VALUE : strictness > 0 ? 0.1d : 0.01f),
           checkExplicit,
           strictness == 0);
-      if (!isOK)
+      if (!isOK) {
         continue;
+	  }
       bsAromatic.or(bs);
       if (doCheck) {
         // we will need to check these edges later
@@ -100,22 +101,24 @@ public class SmilesAromatic {
           for (int j = aedges.length; --j >= 0;) {
             SimpleNode a2 = aedges[j].getOtherNode(a);
             int a2i = a2.getIndex();
-            if (a2i > ai && bs.get(a2i))
+            if (a2i > ai && bs.get(a2i)) {
               edges.addLast(aedges[j]);
+			}
           }
         }
-        switch (checkHueckelAromatic(n, jmolAtoms, bsAromatic, bs,
-            strictness, eCounts)) {
+        switch (checkHueckelAromatic(n, jmolAtoms, bsAromatic, bs, strictness, eCounts)) {
         case -1: // absolutely not
           continue;
         case 0: // maybe -- needs fused ring check
           isOK = false;
           //$FALL-THROUGH$
         case 1:
-          if (lstSP2 != null)
+          if (lstSP2 != null) {
             lstSP2.addLast(new SmilesRing(n, bs, edges, isOK));
-          if (!isOK)
+		  }
+          if (!isOK) {
             continue;
+		  }
         }
       }
       vOK.addLast(bs);
@@ -133,8 +136,7 @@ public class SmilesAromatic {
    * @param bsAromatic 
    */
   static void checkAromaticDefined(Node[] jmolAtoms, BS bsSelected, BS bsAromatic) {
-    for (int i = bsSelected.nextSetBit(0); i >= 0; i = bsSelected
-        .nextSetBit(i + 1)) {
+    for (int i = bsSelected.nextSetBit(0); i >= 0; i = bsSelected.nextSetBit(i + 1)) {
       Edge[] bonds = jmolAtoms[i].getEdges();
       for (int j = 0; j < bonds.length; j++) {
         switch (bonds[j].getBondType()) {
@@ -177,10 +179,7 @@ public class SmilesAromatic {
    * @return true if standard deviation of vNorm.dot.vMean is less than cutoff
    */
 
-  private final static boolean isSp2Ring(int n, Node[] atoms, BS bsSelected,
-                                         BS bs, double cutoff,
-                                         boolean checkExplicit,
-                                         boolean allowSOxide) {
+  private final static boolean isSp2Ring(int n, Node[] atoms, BS bsSelected, BS bs, double cutoff, boolean checkExplicit, boolean allowSOxide) {
     ///
     // 
     // Bob Hanson, hansonr@stolaf.edu
@@ -238,19 +237,25 @@ public class SmilesAromatic {
     //      
 
     if (checkExplicit) {
-      for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1))
-        if (atoms[i].getCovalentBondCount() > 3)
+      for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
+        if (atoms[i].getCovalentBondCount() > 3) {
           return false;
+		}
+	  }
     } else {
-      for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1))
-        if (atoms[i].getCovalentBondCountPlusMissingH() > 3)
+      for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
+        if (atoms[i].getCovalentBondCountPlusMissingH() > 3) {
           return false;
+		}
+	  }
     }
-    if (cutoff == Double.MAX_VALUE)
+    if (cutoff == Double.MAX_VALUE) {
       return true;
+	}
 
-    if (cutoff <= 0)
+    if (cutoff <= 0) {
       cutoff = 0.01f;
+	}
 
     V3d vNorm = null;
     V3d vTemp = null;
@@ -269,13 +274,15 @@ public class SmilesAromatic {
       int r2 = -1;
       for (int k = bonds.length; --k >= 0;) {
         int iAtom = ringAtom.getBondedAtomIndex(k);
-        if (!bsSelected.get(iAtom))
+        if (!bsSelected.get(iAtom)) {
           continue;
+		}
         // OpenSMILES allows tetrahedral S
         if (!bs.get(iAtom)) {
           if (ringAtom.getElementNumber() == 16) {
-            if (!allowSOxide)
+            if (!allowSOxide) {
               return false;
+			}
             iAtom = -1;
           }
           iSub = iAtom;
@@ -296,13 +303,14 @@ public class SmilesAromatic {
       // check the normal for r1 - iSub - r2 plane
 
       for (int k = 0, j = i; k < 2; k++) {
-        MeasureD.getNormalThroughPoints((P3d) atoms[r1], (P3d) atoms[j], (P3d) atoms[r2],
-            vNorm, vTemp);
-        if (!addNormal(vNorm, vMean, maxDev))
+        MeasureD.getNormalThroughPoints((P3d) atoms[r1], (P3d) atoms[j], (P3d) atoms[r2], vNorm, vTemp);
+        if (!addNormal(vNorm, vMean, maxDev)) {
           return false;
+		}
         vNorms[nNorms++] = V3d.newV(vNorm);
-        if ((j = iSub) < 0)
+        if ((j = iSub) < 0) {
           break;
+		}
       }
     }
     return checkStandardDeviation(vNorms, vMean, nNorms, cutoff);
@@ -318,10 +326,12 @@ public class SmilesAromatic {
    */
   private final static boolean addNormal(V3d vTemp, V3d vMean, double maxDev) {
     double similarity = vMean.dot(vTemp);
-    if (similarity != 0 && Math.abs(similarity) < maxDev)
+    if (similarity != 0 && Math.abs(similarity) < maxDev) {
       return false;
-    if (similarity < 0)
+	}
+    if (similarity < 0) {
       vTemp.scale(-1);
+	}
     vMean.add(vTemp);
     vMean.normalize();
     return true;
@@ -337,8 +347,7 @@ public class SmilesAromatic {
    * @param cutoff
    * @return true if stddev < cutoff
    */
-  private final static boolean checkStandardDeviation(V3d[] vNorms, V3d vMean,
-                                                      int n, double cutoff) {
+  private final static boolean checkStandardDeviation(V3d[] vNorms, V3d vMean, int n, double cutoff) {
     double sum = 0;
     double sum2 = 0;
     for (int i = 0; i < n; i++) {
@@ -396,13 +405,10 @@ public class SmilesAromatic {
    * @param eCounts
    * 
    */
-  private static int checkHueckelAromatic(int nAtoms, Node[] jmolAtoms,
-                                                 BS bsAromatic, BS bsRing,
-                                                 int strictness, int[] eCounts) {
+  private static int checkHueckelAromatic(int nAtoms, Node[] jmolAtoms, BS bsAromatic, BS bsRing, int strictness, int[] eCounts) {
     int npi = 0; // total number of pi electrons
     int n1 = 0;  // total number of atoms contributing exactly 1 electron (for strictness==2)
-    for (int i = bsRing.nextSetBit(0); i >= 0 && npi >= 0; i = bsRing
-        .nextSetBit(i + 1)) {
+    for (int i = bsRing.nextSetBit(0); i >= 0 && npi >= 0; i = bsRing.nextSetBit(i + 1)) {
       Node atom = jmolAtoms[i];
       int z = atom.getElementNumber();
       int n = atom.getCovalentBondCountPlusMissingH();
@@ -410,8 +416,9 @@ public class SmilesAromatic {
       n -= 4;
       if (z == 6) {
         int fc = atom.getFormalCharge(); // add in charge for C
-        if (fc != Integer.MIN_VALUE) // SmilesAtom charge not set
+        if (fc != Integer.MIN_VALUE) {// SmilesAtom charge not set
           n += fc;
+		}
       }
       int pt = (z >= 5 && z <= 8 ? z - 5 // B, C, N, O
           : z == 15 ? 2 // P -> N
@@ -421,8 +428,9 @@ public class SmilesAromatic {
                           : -1);
       if (pt >= 0) {
         int[] a = OS_PI_COUNTS[pt];
-        if (n < 0 || n >= a.length)
+        if (n < 0 || n >= a.length) {
           return -1;
+		}
         switch (n = a[n]) {
         case -2:
           // not a connection/valence/charge of interest
@@ -434,28 +442,32 @@ public class SmilesAromatic {
           n = 0; // no double bond; sp2 c cation
           for (int j = bonds.length; --j >= 0;) {
             Edge b = bonds[j];
-            if (b.getCovalentOrder() != 2)
+            if (b.getCovalentOrder() != 2) {
               continue;
+			}
             // just check that the connected atom is either C or flat-aromatic
             // if it is, assign 1 pi electron; if it is not, set it to 0 as long
             // we are not being strict or discard this ring if we are.
             SimpleNode het = b.getOtherNode(atom);
-            n = (het.getElementNumber() == 6 || bsAromatic.get(het.getIndex()) ? 1
-                : strictness > 0 ? -100 : 0);
+            n = (het.getElementNumber() == 6 || bsAromatic.get(het.getIndex()) ? 1 : strictness > 0 ? -100 : 0);
             break;
           }
           //$FALL-THROUGH$
         default:
           // ok -- add in the number of pi electrons for this atom
-          if (n < 0)
+          if (n < 0) {
             return -1;
-          if (eCounts != null)
+		  }
+          if (eCounts != null) {
             eCounts[i] = n;
+		  }
           npi += n;
-          if (n == 1)
+          if (n == 1) {
             n1++;
-          if (Logger.debuggingHigh)
+		  }
+          if (Logger.debuggingHigh) {
             Logger.info("atom " + atom + " pi=" + n + " npi=" + npi);
+		  }
           // normal continuance
           continue;
         }
@@ -486,33 +498,28 @@ public class SmilesAromatic {
    *        remove noncyclic double bonds and do not allow bridging aromatic
    *        ring systems (/strict/ option)
    */
-  static void finalizeAromatic(Node[] jmolAtoms, BS bsAromatic,
-                               Lst<BS> lstAromatic, Lst<SmilesRing> lstSP2,
-                               int[] eCounts, boolean isOpenNotStrict,
-                               boolean isStrict) {
-
+  static void finalizeAromatic(Node[] jmolAtoms, BS bsAromatic, Lst<BS> lstAromatic, Lst<SmilesRing> lstSP2, int[] eCounts, boolean isOpenNotStrict, boolean isStrict) {
     // strictly speaking, there is no such thing as a bridged aromatic pi system    
-    if (isStrict)
+    if (isStrict) {
       removeBridgingRings(lstAromatic, lstSP2);
+	}
 
     // we allow for combined 4n+2 even if contributing rings are not (5+7 for azulene) 
     checkFusedRings(lstSP2, eCounts, lstAromatic);
 
     // regenerate bsAromatic, using only valid rings now
     bsAromatic.clearAll();
-    for (int i = lstAromatic.size(); --i >= 0;)
+    for (int i = lstAromatic.size(); --i >= 0;) {
       bsAromatic.or(lstAromatic.get(i));
+	}
 
     if (isStrict || isOpenNotStrict) {
-
       // Check each aromatic atom for 
       // (a) no exocyclic double bonds that are not part of an aromatic ring (biphenylene; strict only)
       // (b) no exocyclic double bonds to nonaromatic atoms ( strict only)
       // (c) at least two adjacent aromatic atoms (Hueckel cyclic requirement)
-      
-      
-      for (int i = bsAromatic.nextSetBit(0); i >= 0; i = bsAromatic
-          .nextSetBit(i + 1)) {
+
+      for (int i = bsAromatic.nextSetBit(0); i >= 0; i = bsAromatic.nextSetBit(i + 1)) {
         Edge[] bonds = jmolAtoms[i].getEdges();
         int naro = 0;
         for (int j = bonds.length; --j >= 0;) {
@@ -538,8 +545,7 @@ public class SmilesAromatic {
               }
             }
             naro++;
-          } else if (isStrict && otherAtom.getElementNumber() == 6
-              && order == 2) {
+          } else if (isStrict && otherAtom.getElementNumber() == 6 && order == 2) {
             // test (b)
             naro = -1;
             break;
@@ -563,38 +569,45 @@ public class SmilesAromatic {
    * @param lstSP2 
    */
   private static void removeBridgingRings(Lst<BS> lstAromatic, Lst<SmilesRing> lstSP2) {
-    BS bs = new BS();
-    BS bsBad = new BS();
+    BS bsBad  = new BS();
     BS bsBad2 = new BS();
-    checkBridges(lstAromatic, bsBad, lstAromatic, bsBad, bs);
-    checkBridges(lstSP2, bsBad2, lstSP2, bsBad2, bs);
-    checkBridges(lstAromatic, bsBad, lstSP2, bsBad2, bs);
-    for (int i = lstAromatic.size(); --i >= 0;)
-      if (bsBad.get(i))
+
+    checkBridges(lstAromatic, bsBad,  lstAromatic, bsBad);
+    checkBridges(lstSP2,      bsBad2, lstSP2,      bsBad2);
+    checkBridges(lstAromatic, bsBad,  lstSP2,      bsBad2);
+
+    for (int i = lstAromatic.size(); --i >= 0;) {
+      if (bsBad.get(i)) {
         lstAromatic.removeItemAt(i);
-    for (int i = lstSP2.size(); --i >= 0;)
-      if (bsBad2.get(i))
+	  }
+	}
+
+    for (int i = lstSP2.size(); --i >= 0;) {
+      if (bsBad2.get(i)) {
         lstSP2.removeItemAt(i);
+	  }
+	}
   }
 
-  private static void checkBridges(Lst<?> lst, BS bsBad, Lst<?> lst2,
-                                   BS bsBad2, BS bs) {
+  private static void checkBridges(Lst<?> lst, BS bsBad, Lst<?> lst2, BS bsBad2) {
     boolean isSameList = (lst == lst2);
     for (int i = lst.size(); --i >= 0;) {
       BS bs1 = (BS) lst.get(i);
-        for (int j0 = (isSameList ? i + 1 : 0), j = lst2.size(); --j >= j0;) {
-          BS bs2 = (BS) lst2.get(j);
-          if (bs2.equals(bs1))
-            continue;
-          bs.clearAll();
-          bs.or(bs1);
-          bs.and(bs2);
-          int n = bs.cardinality();
-          if (n > 2) {
-            bsBad.set(i);
-            bsBad2.set(j);
-          }
+      for (int j0 = (isSameList ? i + 1 : 0), j = lst2.size(); --j >= j0;) {
+        BS bs2 = (BS) lst2.get(j);
+        if (bs2.equals(bs1)) {
+          continue;
+	    }
+
+        BS bs = new BS();
+        bs.clearAll();
+        bs.or(bs1);
+        bs.and(bs2);
+        if (bs.cardinality() > 2) {
+          bsBad.set(i);
+          bsBad2.set(j);
         }
+      }
     }
   }
 
@@ -611,36 +624,52 @@ public class SmilesAromatic {
    * @param lstAromatic
    *        list to be appended to
    */
-  private static void checkFusedRings(Lst<SmilesRing> rings, int[] eCounts,
-                                    Lst<BS> lstAromatic) {
+  private static void checkFusedRings(Lst<SmilesRing> rings, int[] eCounts, Lst<BS> lstAromatic) {
     Hashtable<String, SmilesRingSet> htEdgeMap = new Hashtable<String, SmilesRingSet>();
     for (int i = rings.size(); --i >= 0;) {
       SmilesRing r = rings.get(i);
       Lst<Edge> edges = r.edges;
       for (int j = edges.size(); --j >= 0;) {
         SmilesRingSet set = SmilesRing.getSetByEdge(edges.get(j), htEdgeMap);
-        if (set == null || set == r.set)
+        if (set == null || set == r.set) {
           continue;
+		}
+
         // TODO what about bridging?
-        if (r.set != null)
+        if (r.set != null) {
           set.addSet(r.set, htEdgeMap);
-        else
+		} else {
           set.addRing(r);
+		}
       }
-      (r.set == null ? r.set = new SmilesRingSet() : r.set).addRing(r);
+
+	  if (r.set == null) {
+		  r.set = new SmilesRingSet();
+	  }
+      r.set.addRing(r);
       r.addEdges(htEdgeMap);
     }
-    SmilesRingSet set;
-    SmilesRing r;
+
     for (int i = rings.size(); --i >= 0;) {
-      if ((r = rings.get(i)).isOK || (set = r.set) == null || set.isEmpty())
+	  SmilesRing r = rings.get(i);
+      if (r.isOK) {
         continue;
-      if ((set.getElectronCount(eCounts) % 4) == 2)
-        for (int j = set.size(); --j >= 0;)
-          if (!(r = set.get(j)).isOK)
+	  }
+
+	  SmilesRingSet set = r.set;
+	  if (set == null || set.isEmpty()) {
+        continue;
+	  }
+
+      if (set.getElectronCount(eCounts) % 4 == 2) {
+        for (int j = set.size(); --j >= 0;) {
+          r = set.get(j);
+          if (!r.isOK) {
             lstAromatic.addLast(r);
+		  }
+		}
+	  }
       set.clear();
     }
   }
-
 }

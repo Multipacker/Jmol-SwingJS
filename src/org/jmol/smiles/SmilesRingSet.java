@@ -35,7 +35,6 @@ import javajs.util.BS;
  */
 
 class SmilesRingSet extends Lst<SmilesRing> {
-
   BS bs = new BS();
 
   SmilesRingSet() {
@@ -57,8 +56,9 @@ class SmilesRingSet extends Lst<SmilesRing> {
 
   int getElectronCount(int[] eCounts) {
     int eCount = 0;
-    for (int j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j + 1))
+    for (int j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j + 1)) {
       eCount += eCounts[j];
+	}
     return eCount;
   }
 }

@@ -38,11 +38,7 @@ import javajs.util.P3d;
 
 //import org.jmol.util.Logger;
 
-/**
- * This class represents an atom in a <code>SmilesMolecule</code>.
- */
 public class SmilesAtom extends P3d implements Node {
-
   //Jmol allows * in SMILES as a wild card
   static final String UNBRACKETED_SET = "B, C, N, O, P, S, F, Cl, Br, I, *,"; 
   
@@ -121,8 +117,7 @@ public class SmilesAtom extends P3d implements Node {
   }
 
   public boolean isDefined() {
-    return (hasSubpattern || iNested != 0 || isBioAtom || component != Integer.MIN_VALUE 
-    || elementNumber != -2 || nSubAtoms > 0);  
+    return (hasSubpattern || iNested != 0 || isBioAtom || component != Integer.MIN_VALUE || elementNumber != -2 || nSubAtoms > 0);  
   }
 
   void setBioAtom(char bioType) {
@@ -136,12 +131,15 @@ public class SmilesAtom extends P3d implements Node {
   }
 
   void setAtomName(String name) {
-    if (name == null)
+    if (name == null) {
       return;
-    if (name.length() > 0)
+	}
+    if (name.length() > 0) {
       bioAtomName = name;
-    if (name.equals("\0"))
+	}
+    if (name.equals("\0")) {
       isLeadAtom = true;
+	}
     // ensure that search does not skip groups
     if (parent != null) {
       parent.bioAtomName = name;
@@ -154,10 +152,12 @@ public class SmilesAtom extends P3d implements Node {
 
   SmilesAtom addSubAtom(SmilesAtom sAtom, boolean isAND) {
     this.isAND = isAND;
-    if (subAtoms == null)
+    if (subAtoms == null) {
       subAtoms = new SmilesAtom[2];
-    if (nSubAtoms >= subAtoms.length)
+	}
+    if (nSubAtoms >= subAtoms.length) {
       subAtoms = (SmilesAtom[]) AU.doubleLength(subAtoms);
+	}
     sAtom.setIndex(index);
     sAtom.parent = this;
     subAtoms[nSubAtoms++] = sAtom;
@@ -197,8 +197,7 @@ public class SmilesAtom extends P3d implements Node {
 
   boolean hasDoubleBond;
 
-  public SmilesAtom setTopoAtom(int iComponent, int ptAtom, String symbol,
-      int charge, int patternIndex) {
+  public SmilesAtom setTopoAtom(int iComponent, int ptAtom, String symbol, int charge, int patternIndex) {
     component = iComponent;
     index = ptAtom;
     this.patternIndex = patternIndex;
@@ -220,8 +219,9 @@ public class SmilesAtom extends P3d implements Node {
   public boolean setHydrogenCount() {
     // only called for SMILES search -- simple C or [C]
     missingHydrogenCount = explicitHydrogenCount;
-    if (explicitHydrogenCount != Integer.MIN_VALUE)
+    if (explicitHydrogenCount != Integer.MIN_VALUE) {
       return true;
+	}
     // Determining max count
     int charge = getFormalCharge();
     int count = getDefaultHCount(elementNumber, isAromatic, charge == Integer.MIN_VALUE ? 0 : charge);
@@ -232,9 +232,9 @@ public class SmilesAtom extends P3d implements Node {
 
     if (elementNumber == 7 && isAromatic && bondCount == 2) {
       // is it -N= or -NH- ? 
-      if (bonds[0].getBondType() == Edge.BOND_COVALENT_SINGLE
-           && bonds[1].getBondType() == Edge.BOND_COVALENT_SINGLE)
+      if (bonds[0].getBondType() == Edge.BOND_COVALENT_SINGLE && bonds[1].getBondType() == Edge.BOND_COVALENT_SINGLE) {
         count++;
+	  }
     }
     for (int i = 0; i < bondCount; i++) {
       SmilesBond bond = bonds[i];
@@ -301,11 +301,6 @@ public class SmilesAtom extends P3d implements Node {
     }
   }
 
-  /**
-   * Returns the atom index of the atom.
-   * 
-   * @return Atom index.
-   */
   @Override
   public int getIndex() {
     return index;
@@ -336,13 +331,14 @@ public class SmilesAtom extends P3d implements Node {
     aromaticAmbiguous = false;
     if (symbol.equals("a") || symbol.equals("A")) {
       // allow #6a ??
-      if (elementNumber < 0)
+      if (elementNumber < 0) {
         elementNumber = -1;
+	  }
       return true;
     }
-    if (isAromatic)
-      symbol = symbol.substring(0, 1).toUpperCase()
-          + (symbol.length() == 1 ? "" : symbol.substring(1));
+    if (isAromatic) {
+      symbol = symbol.substring(0, 1).toUpperCase() + (symbol.length() == 1 ? "" : symbol.substring(1));
+	}
     elementNumber = Elements.elementNumberFromSymbol(symbol, true);
     return (elementNumber != 0);
   }
@@ -357,11 +353,6 @@ public class SmilesAtom extends P3d implements Node {
     return elementNumber;
   }
 
-  /**
-   * Returns the atomic mass of the atom.
-   * 
-   * @return Atomic mass.
-   */
   public int getAtomicMass() {
     return atomicMass;
   }
@@ -374,29 +365,14 @@ public class SmilesAtom extends P3d implements Node {
     return atomNumber;
   } 
 
-  /**
-   * Sets the atomic mass of the atom.
-   * 
-   * @param mass Atomic mass.
-   */
   public void setAtomicMass(int mass) {
     atomicMass = mass;
   }
 
-  /**
-   * Returns the charge of the atom.
-   * 
-   * @return Charge.
-   */
   public int getCharge() {
     return charge;
   }
 
-  /**
-   * Sets the charge of the atom.
-   * 
-   * @param charge Charge.
-   */
   public void setCharge(int charge) {
     this.charge = charge;
   }
@@ -526,16 +502,10 @@ public class SmilesAtom extends P3d implements Node {
     return residueChar == null ? "" : residueChar;
   }
 
-  /**
-   * Add a bond to the atom.
-   * 
-   * @param bond Bond to add.
-   */
   void addBond(SmilesBond bond) {
-    if (bondCount >= bonds.length)
+    if (bondCount >= bonds.length) {
       bonds = (SmilesBond[]) AU.doubleLength(bonds);
-    //if (Logger.debugging)
-    //Logger.debug("adding bond " + bondCount + " to " + this + ": " + bond.atom1 + " " + bond.atom2);
+	}
     bonds[bondCount] = bond;
     if (bond.order == 2) {
       hasDoubleBond = true;
@@ -544,10 +514,12 @@ public class SmilesAtom extends P3d implements Node {
   }
 
   public void setBondArray() {
-    if (bonds.length > bondCount) 
+    if (bonds.length > bondCount)  {
       bonds = (SmilesBond[]) AU.arrayCopyObject(bonds, bondCount);
-    if (subAtoms != null && subAtoms.length > nSubAtoms)
+	}
+    if (subAtoms != null && subAtoms.length > nSubAtoms) {
       subAtoms = (SmilesAtom[]) AU.arrayCopyObject(subAtoms, subAtoms.length);
+	}
     for (int i = 0; i < bonds.length; i++) {
       SmilesBond b = bonds[i];
       if (isBioAtom && b.getBondType() == SmilesBond.TYPE_AROMATIC) {
@@ -573,22 +545,11 @@ public class SmilesAtom extends P3d implements Node {
     return (parent != null ? parent.getEdges() : bonds);
   }
 
-  /**
-   * Returns the bond at index <code>number</code>.
-   * 
-   * @param number Bond number.
-   * @return Bond.
-   */
   public SmilesBond getBond(int number) {
     return (parent != null ? parent.getBond(number) : number >= 0
         && number < bondCount ? bonds[number] : null);
   }
 
-  /**
-   * Returns the number of bonds of this atom.
-   * 
-   * @return Number of bonds.
-   */
   @Override
   public int getCovalentBondCount() {
     return getBondCount();
@@ -621,41 +582,49 @@ public class SmilesAtom extends P3d implements Node {
   }
 
   public int getMatchingBondedAtom(int i) {
-    if (parent != null)
+    if (parent != null) {
       return parent.getMatchingBondedAtom(i);
-    if (i >= bondCount)
+	}
+    if (i >= bondCount) {
       return -1;
+	}
     SmilesBond b = bonds[i];
     return (b.atom1 == this ? b.atom2 : b.atom1).matchingIndex;
   }
 
   @Override
   public int getBondedAtomIndex(int j) {
-    return (parent != null ? parent.getBondedAtomIndex(j) : bonds[j]
-        .getOtherAtom(this).index);
+    return (parent != null ? parent.getBondedAtomIndex(j) : bonds[j].getOtherAtom(this).index);
   }
 
   @Override
   public int getCovalentHydrogenCount() {
-    if (covalentHydrogenCount >= 0)
+    if (covalentHydrogenCount >= 0) {
       return covalentHydrogenCount;
-    if (parent != null)
+	}
+    if (parent != null) {
       return (covalentHydrogenCount = parent.getCovalentHydrogenCount());
+	}
     covalentHydrogenCount = 0;
-    for (int k = 0; k < bonds.length; k++)
-      if (bonds[k].getOtherAtom(this).elementNumber == 1)
+    for (int k = 0; k < bonds.length; k++) {
+      if (bonds[k].getOtherAtom(this).elementNumber == 1) {
         covalentHydrogenCount++;
+	  }
+	}
     return covalentHydrogenCount;
   }
 
   @Override
   public int getValence() {
-    if (parent != null)
+    if (parent != null) {
       return parent.getValence();
+	}
     int n = valence;
-    if (n <= 0 && bonds != null)
-      for (int i = bondCount; --i >= 0;)
+    if (n <= 0 && bonds != null) {
+      for (int i = bondCount; --i >= 0;) {
         n += bonds[i].getValence();
+	  }
+	}
     valence = n;
     return n;
   }
@@ -674,15 +643,17 @@ public class SmilesAtom extends P3d implements Node {
    * @return  bond
    */
   SmilesBond getBondTo(SmilesAtom atom) {
-    if (parent != null)
+    if (parent != null) {
       return parent.getBondTo(atom);
+	}
     SmilesBond bond;
     for (int k = 0; k < bonds.length; k++) {
-      if ((bond = bonds[k]) == null)
+      if ((bond = bonds[k]) == null) {
         continue;
-      if (atom == null ? bond.atom2 == this 
-          : bond.getOtherAtom(this) == atom)
+	  }
+      if (atom == null ? bond.atom2 == this : bond.getOtherAtom(this) == atom) {
         return bond;
+	  }
     }
     return null;
   }
@@ -690,11 +661,13 @@ public class SmilesAtom extends P3d implements Node {
   SmilesBond getBondNotTo(SmilesAtom atom, boolean allowH) {
     SmilesBond bond;
     for (int k = 0; k < bonds.length; k++) {
-      if ((bond = bonds[k]) == null)
+      if ((bond = bonds[k]) == null) {
         continue;
+	  }
       SmilesAtom atom2 = bond.getOtherAtom(this);
-      if (atom != atom2 && (allowH || atom2.elementNumber != 1))
+      if (atom != atom2 && (allowH || atom2.elementNumber != 1)) {
         return bond;
+	  }
     }
     return null;
   }
@@ -707,12 +680,14 @@ public class SmilesAtom extends P3d implements Node {
   @Override
   public int getOffsetResidueAtom(String name, int offset) {
     if (isBioAtom) {
-      if (offset == 0)
+      if (offset == 0) {
         return index;
-      for (int k = 0; k < bonds.length; k++)
-        if (bonds[k].getAtomIndex1() == index
-            && bonds[k].getBondType() == SmilesBond.TYPE_BIO_SEQUENCE)
+	  }
+      for (int k = 0; k < bonds.length; k++) {
+        if (bonds[k].getAtomIndex1() == index && bonds[k].getBondType() == SmilesBond.TYPE_BIO_SEQUENCE) {
           return bonds[k].getOtherAtom(this).index;
+		}
+	  }
     }
     return -1;
   }
@@ -734,8 +709,9 @@ public class SmilesAtom extends P3d implements Node {
     boolean haveCrossLinks = false;
     for (int k = 0; k < bonds.length; k++)
       if (bonds[k].order == SmilesBond.TYPE_BIO_CROSSLINK) {
-        if (vLinks == null)
+        if (vLinks == null) {
           return true;
+		}
         vLinks.addLast(Integer.valueOf(this.index));
         vLinks.addLast(Integer.valueOf(bonds[k].getOtherAtom(this).index));
         vLinks.addLast(Integer.valueOf(bonds[k].getOtherAtom(this).index));
@@ -783,22 +759,18 @@ public class SmilesAtom extends P3d implements Node {
    * @param is2D 
    * @return label
    */
-  static String getAtomLabel(int atomicNumber, int isotopeNumber, int valence,
-                             int charge, double osclass, int nH, boolean isAromatic,
-                             String stereo, boolean is2D) {
+  static String getAtomLabel(int atomicNumber, int isotopeNumber, int valence, int charge, double osclass, int nH, boolean isAromatic, String stereo, boolean is2D) {
     String sym = Elements.elementSymbolFromNumber(atomicNumber);
-    if (atomicNumber == 1 
-        || isAromatic && !(sym = sym.toLowerCase()).equals("c") && !sym.equals("o") && !sym.equals("s")) {
+    if (atomicNumber == 1 || isAromatic && !(sym = sym.toLowerCase()).equals("c") && !sym.equals("o") && !sym.equals("s")) {
       // force [n]
       valence = Integer.MAX_VALUE;
     }
-    boolean simple = (valence != Integer.MAX_VALUE && isotopeNumber <= 0 
-        && charge == 0 && Double.isNaN(osclass) 
-        && (stereo == null || stereo.length() == 0)); 
+    boolean simple = (valence != Integer.MAX_VALUE && isotopeNumber <= 0 && charge == 0 && Double.isNaN(osclass) && (stereo == null || stereo.length() == 0)); 
     int norm = getDefaultHCount(atomicNumber, false, charge == Integer.MIN_VALUE ? 0 : charge);
     if (is2D && nH == 0) {
-      if (simple && atomicNumber == 6)
+      if (simple && atomicNumber == 6) {
         return sym;    
+	  }
       nH = norm - valence;
     }
     return (simple && norm == valence ? sym : 
@@ -871,8 +843,9 @@ public class SmilesAtom extends P3d implements Node {
 
   @Override
   public double getDoubleProperty(String property) {
-    if (property == "property_atomclass") // == is OK here.  
+    if (property == "property_atomclass") {// == is OK here.  
       return atomClass;
+	}
     return Double.NaN;
   }
 
@@ -929,15 +902,8 @@ public class SmilesAtom extends P3d implements Node {
     return null;
   }
 
-  /**
-   * @param i2  
-   * @param iA
-   * @param iB
-   * @return TRUE if opposite
-   */
   public Boolean isStereoOpposite(int i2, int iA, int iB) {
     // InChIJNI.java subclass only
     return null;
   }
-
 }

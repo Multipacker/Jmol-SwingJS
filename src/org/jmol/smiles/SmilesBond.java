@@ -27,11 +27,7 @@ package org.jmol.smiles;
 import org.jmol.util.Edge;
 import org.jmol.util.SimpleNode;
 
-/**
- * Bond in a SmilesMolecule
- */
 public class SmilesBond extends Edge {
-
   // Bond orders
   // See also Edge
   public final static int TYPE_UNKNOWN = -1;
@@ -44,56 +40,35 @@ public class SmilesBond extends Edge {
   
   // NOTE: ` is reserved for atropisomer ^^ conversion; ~ is for Jmol bioSMARTS
   
-  private static final String ALL_BONDS =    "-=#$:/\\.~^`+!,&;@"; // >> for reaction --> .  
+  private static final String ALL_BONDS    = "-=#$:/\\.~^`+!,&;@"; // >> for reaction --> .  
   private static final String SMILES_BONDS = "-=#$:/\\.~^`";  
 
   static String getBondOrderString(int order) {
     switch (order) {
-    case 2:
-      return "=";
-    case 3:
-      return "#";
-    case 4:
-      return "$";
-    default:
-      return "";
+      case 2:  return "=";
+      case 3:  return "#";
+      case 4:  return "$";
+      default: return "";
     }
   }
 
-  /**
-   * @param code Bond code
-   * @return Bond type
-   */
   static int getBondTypeFromCode(char code) {
     switch (code) {
-    case '.':
-      return TYPE_NONE;
-    case '-':
-      return BOND_COVALENT_SINGLE;
-    case '=':
-      return BOND_COVALENT_DOUBLE;
-    case '#':
-      return BOND_COVALENT_TRIPLE;
-    case '$':
-      return BOND_COVALENT_QUADRUPLE;
-    case ':':
-      return TYPE_AROMATIC;
-    case '/':
-      return BOND_STEREO_NEAR;
-    case '\\':
-      return BOND_STEREO_FAR;
-    case '^':
-      return TYPE_ATROPISOMER;
-    case '`': // replacement for ^^
-      return TYPE_ATROPISOMER_REV;
-    case '@':
-      return TYPE_RING;
-    case '~':
-      return TYPE_ANY;
-    case '+':
-      return TYPE_BIO_SEQUENCE;
+      case '.':  return TYPE_NONE;
+      case '-':  return BOND_COVALENT_SINGLE;
+      case '=':  return BOND_COVALENT_DOUBLE;
+      case '#':  return BOND_COVALENT_TRIPLE;
+      case '$':  return BOND_COVALENT_QUADRUPLE;
+      case ':':  return TYPE_AROMATIC;
+      case '/':  return BOND_STEREO_NEAR;
+      case '\\': return BOND_STEREO_FAR;
+      case '^':  return TYPE_ATROPISOMER;
+      case '`':  return TYPE_ATROPISOMER_REV; // replacement for ^^
+      case '@':  return TYPE_RING;
+      case '~':  return TYPE_ANY;
+      case '+':  return TYPE_BIO_SEQUENCE;
+	  default:   return TYPE_UNKNOWN;
     }
-    return TYPE_UNKNOWN;
   }
 
   SmilesAtom atom1;
@@ -138,8 +113,9 @@ public class SmilesBond extends Edge {
   }
   
   SmilesBond addBondOr() {
-    if (bondsOr == null)
+    if (bondsOr == null) {
       bondsOr = new SmilesBond[2];
+	}
     if (nBondsOr >= bondsOr.length) {
       SmilesBond[] tmp = new SmilesBond[bondsOr.length * 2];
       System.arraycopy(bondsOr, 0, tmp, 0, bondsOr.length);
@@ -152,8 +128,9 @@ public class SmilesBond extends Edge {
   }
 
   SmilesBond addPrimitive() {
-    if (primitives == null)
+    if (primitives == null) {
       primitives = new SmilesBond[2];
+	}
     if (nPrimitives >= primitives.length) {
       SmilesBond[] tmp = new SmilesBond[primitives.length * 2];
       System.arraycopy(primitives, 0, tmp, 0, primitives.length);
@@ -170,16 +147,7 @@ public class SmilesBond extends Edge {
     return atom1 + " -" + (isNot ? "!" : "") + order + "- " + atom2;
   }
 
-  /**
-   * SmilesBond constructor
-   * 
-   * @param atom1 First atom
-   * @param atom2 Second atom
-   * @param bondType Bond type
-   * @param isNot 
-   */
-  public SmilesBond(SmilesAtom atom1, SmilesAtom atom2, int bondType,
-      boolean isNot) {
+  public SmilesBond(SmilesAtom atom1, SmilesAtom atom2, int bondType, boolean isNot) {
     set2(bondType, isNot);
     set2a(atom1, atom2);
   }
@@ -196,8 +164,9 @@ public class SmilesBond extends Edge {
     }
     if (a2 != null) {
       atom2 = a2;
-      if (a2.isBioAtomWild && atom1.isBioAtomWild)
+      if (a2.isBioAtomWild && atom1.isBioAtomWild) {
         order = TYPE_BIO_SEQUENCE;
+	  }
       a2.isFirst = false;
       a2.addBond(this);
     }
@@ -226,15 +195,16 @@ public class SmilesBond extends Edge {
     return (!isConnection && atom2 == atom);
  }
 
-  static int isBondType(char ch, boolean isSearch, boolean isBioSequence)
-      throws InvalidSmilesException {
-    if (ch == '>')
+  static int isBondType(char ch, boolean isSearch, boolean isBioSequence) throws InvalidSmilesException {
+    if (ch == '>') {
       return 1;
-    if (ALL_BONDS.indexOf(ch) < 0)
+	}
+    if (ALL_BONDS.indexOf(ch) < 0) {
       return 0;
-    if (!isSearch && SMILES_BONDS.indexOf(ch) < 0)
-      throw new InvalidSmilesException("SMARTS bond type " + ch
-          + " not allowed in SMILES");
+	}
+    if (!isSearch && SMILES_BONDS.indexOf(ch) < 0) {
+      throw new InvalidSmilesException("SMARTS bond type " + ch + " not allowed in SMILES");
+	}
     switch (ch) {
     case '~':
       return(isBioSequence? 0 : 1);
@@ -317,13 +287,13 @@ public class SmilesBond extends Edge {
 
   public int getRealCovalentOrder() {
     switch (order & BOND_RENDER_MASK) {
-    case TYPE_ATROPISOMER:
-    case TYPE_ATROPISOMER_REV:
-    case BOND_STEREO_NEAR:
-    case BOND_STEREO_FAR:
-      return BOND_COVALENT_SINGLE;
+      case TYPE_ATROPISOMER:
+      case TYPE_ATROPISOMER_REV:
+      case BOND_STEREO_NEAR:
+      case BOND_STEREO_FAR:
+        return BOND_COVALENT_SINGLE;
+	  default: return order & BOND_RENDER_MASK;
     }
-    return order & BOND_RENDER_MASK;
   }
 
   public Edge getMatchingBond() {
@@ -334,5 +304,4 @@ public class SmilesBond extends Edge {
   public SimpleNode getAtom(int i) {
     return (i == 1 ? atom2 : atom1);
   }
-
 }

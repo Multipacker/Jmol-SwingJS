@@ -7,7 +7,6 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 
 class PolyhedronStereoSorter implements Comparator<Object[]> {
-
   private V3d vTemp = new V3d();
   private V3d vRef;
 
@@ -27,7 +26,7 @@ class PolyhedronStereoSorter implements Comparator<Object[]> {
   public int compare(Object[] a, Object[] b) {
     double torA = ((Number) a[1]).doubleValue();
     double torB = ((Number) b[1]).doubleValue();
-      if (Math.abs(torA - torB) < 1d) {
+    if (Math.abs(torA - torB) < 1d) {
       torA = 0;
       vTemp.sub2((P3d) b[2], (P3d) a[2]);
       torB = vRef.dot(vTemp);
@@ -38,7 +37,7 @@ class PolyhedronStereoSorter implements Comparator<Object[]> {
   private V3d align1 = new V3d();
   private V3d align2 = new V3d();
 
-  private static final double MIN_ALIGNED = (10d/180*Math.PI);
+  private static final double MIN_ALIGNED = (10d / 180 * Math.PI);
 
   /**
    * check alignment, within 10 degrees is considered aligned.
@@ -54,6 +53,4 @@ class PolyhedronStereoSorter implements Comparator<Object[]> {
     double angle = align1.angle(align2);
     return (angle < MIN_ALIGNED);
   }
-
-
 }

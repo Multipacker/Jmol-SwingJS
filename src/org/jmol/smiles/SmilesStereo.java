@@ -142,8 +142,7 @@ public class SmilesStereo {
       case SEESAW:
       case OCTAHEDRAL:
       case TRIGONAL_BIPYRAMIDAL:
-        if (nBonds != (chiralClass == SEESAW ? 4 : chiralClass)
-            || !normalizeClass(sAtom))
+        if (nBonds != (chiralClass == SEESAW ? 4 : chiralClass) || !normalizeClass(sAtom))
           sAtom.stereo = null;
         break;
       case POLYHEDRAL:
@@ -537,9 +536,7 @@ public class SmilesStereo {
     double f0 = 0;//(nb > 2 ? 360 : 0);
     for (int i = nb; --i >= 0;) {
       SimpleNode a = bonds[i].getOtherNode(atom);
-      double f = f0 + (a == ref ? 0 : 
-        checkAlign && sorter.isAligned((T3d) a, center, (T3d) ref) ? -999 : 
-          MeasureD.computeTorsion((T3d) ref, (T3d) atom, center, (T3d) a, true));
+      double f = f0 + (a == ref ? 0 : checkAlign && sorter.isAligned((T3d) a, center, (T3d) ref) ? -999 : MeasureD.computeTorsion((T3d) ref, (T3d) atom, center, (T3d) a, true));
       aTemp[i] = new Object[] { bonds[i], Double.valueOf(f), a };
     }
     Arrays.sort(aTemp, sorter);
