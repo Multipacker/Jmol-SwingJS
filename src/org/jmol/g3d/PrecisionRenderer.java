@@ -53,14 +53,12 @@ package org.jmol.g3d;
  * 
  */
 public class PrecisionRenderer {
-
   protected double a, b;
   boolean isOrthographic;
 
   protected int getZCurrent(double a, double b, int x) {
     return (int) Math.round(a == Double.MIN_VALUE ? b : isOrthographic ? a * x + b : a / (b - x));
   }
-
   
   protected void setRastABFloat(double xa, double za, double xb, double zb) {
     double zdif = (zb - za);
@@ -115,5 +113,4 @@ public class PrecisionRenderer {
       b = (xb * zb - xa * za) / zdif;
     }
   }
-
 }

@@ -31,18 +31,7 @@ import javajs.util.P3i;
 import org.jmol.util.GData;
 import org.jmol.util.Shader;
 
-/**
- *<p>
- * Draws shaded cylinders in 3D.
- *</p>
- *<p>
- * Cylinders are used to draw bonds.
- *</p>
- *
- * @author Miguel, miguel@jmol.org
- */
 class CylinderRenderer {
-
   private final Graphics3D g3d;
   private final LineRenderer line3d;
   private final Shader shader;
@@ -100,13 +89,10 @@ class CylinderRenderer {
     dyB = yb - ya;
     dzB = zb - za;
     if (diameter <= 1) {
-      line3d.plotLineDeltaOld(g.getColorArgbOrGray(colixA), g
-          .getColorArgbOrGray(colixB), xa, ya, za, dxB, dyB, dzB,
-          clipped);
+      line3d.plotLineDeltaOld(g.getColorArgbOrGray(colixA), g.getColorArgbOrGray(colixB), xa, ya, za, dxB, dyB, dzB, clipped);
       return;
     }
-    boolean drawBackside = (screen == 0 && (clipped 
-        || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
+    boolean drawBackside = (screen == 0 && (clipped || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
     this.diameter = diameter;
     this.xA = xa;
     this.yA = ya;
@@ -143,23 +129,17 @@ class CylinderRenderer {
       int z = zr[i];
       if (endCapHidden && argbEndcap != 0) {
         if (clipped) {
-          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z
-              - 1, width, zbuf, p);
-          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z
-              - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         } else {
-          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap
-              - z - 1, width, zbuf, p);
-          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap
-              + z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         }
       }
       
-      line3d.plotLineDeltaAOld(shadesA, shadesB, screen,
-          fpz, xA + x, yA + y, zA - z, dxB, dyB, dzB, clipped);
+      line3d.plotLineDeltaAOld(shadesA, shadesB, screen, fpz, xA + x, yA + y, zA - z, dxB, dyB, dzB, clipped);
       if (drawBackside) {
-        line3d.plotLineDeltaOld(shadesA[fpzBack], shadesB[fpzBack], xA
-            - x, yA - y, zA + z, dxB, dyB, dzB,clipped);
+        line3d.plotLineDeltaOld(shadesA[fpzBack], shadesB[fpzBack], xA - x, yA - y, zA + z, dxB, dyB, dzB,clipped);
       }
     }
     g.setZMargin(0);
@@ -211,8 +191,7 @@ class CylinderRenderer {
       this.yAf = ptA.y;
       this.zAf = ptA.z;
     }
-    boolean drawBackside = (screen == 0 && (clipped 
-        || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
+    boolean drawBackside = (screen == 0 && (clipped || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
     this.xA = (int) xAf;
     this.yA = (int) yAf;
     this.zA = (int) zAf;
@@ -246,15 +225,11 @@ class CylinderRenderer {
       int z = zr[i];
       if (endCapHidden && argbEndcap != 0) {
         if (clipped) {
-          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap
-              - z - 1, width, zbuf, p);
-          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap
-              + z - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         } else {
-          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap
-              - z - 1, width, zbuf, p);
-          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap
-              + z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         }
       }
       ptA0.set(xA + x, yA + y, zA - z);
@@ -321,8 +296,7 @@ class CylinderRenderer {
       yAf = ptA.y;
       zAf = ptA.z;
     }
-    boolean drawBackside = (screen == 0 && (clipped 
-        || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
+    boolean drawBackside = (screen == 0 && (clipped || endcaps == GData.ENDCAPS_FLAT || endcaps == GData.ENDCAPS_NONE));
     xA = (int) xAf;
     yA = (int) yAf;
     zA = (int) zAf;
@@ -356,15 +330,11 @@ class CylinderRenderer {
       int z = zr[i];
       if (endCapHidden && argbEndcap != 0) {
         if (clipped) {
-          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap
-              - z - 1, width, zbuf, p);
-          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap
-              + z - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelClippedArgb(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         } else {
-          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap
-              - z - 1, width, zbuf, p);
-          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap
-              + z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap + x, yEndcap + y, zEndcap - z - 1, width, zbuf, p);
+          g.plotPixelUnclipped(argbEndcap, xEndcap - x, yEndcap - y, zEndcap + z - 1, width, zbuf, p);
         }
       }
       ptA0i.set(xA + x, yA + y, zA - z);
@@ -412,14 +382,12 @@ class CylinderRenderer {
     Pixelator p = g3d.pixel;
     int width = g3d.width;
     int[] zbuf = g3d.zbuf;
-    g3d.plotPixelClippedArgb(shadesA[shadeIndexTip], (int) xtip,
-        (int) ytip, (int) ztip, width, zbuf, p);
+    g3d.plotPixelClippedArgb(shadesA[shadeIndexTip], (int) xtip, (int) ytip, (int) ztip, width, zbuf, p);
 
     this.diameter = diameter;
     if (diameter <= 1) {
       if (diameter == 1)
-        line3d.plotLineDeltaOld(colixA, colixA, xA,
-            yA, zA, dxB, dyB, dzB, clipped);
+        line3d.plotLineDeltaOld(colixA, colixA, xA, yA, zA, dxB, dyB, dzB, clipped);
       return;
     }
     this.endcaps = endcap;
@@ -443,29 +411,19 @@ class CylinderRenderer {
       double xDn = xAf - x, yDn = yAf - y, zDn = zAf + z;
       int argb = sA[0];
       if (doOpen) {
-        g3d.plotPixelClippedArgb(argbEndcap, (int) xUp, (int) yUp,
-            (int) zUp, width, zbuf, p);
-        g3d.plotPixelClippedArgb(argbEndcap, (int) xDn, (int) yDn,
-            (int) zDn, width, zbuf, p);
+        g3d.plotPixelClippedArgb(argbEndcap, (int) xUp, (int) yUp, (int) zUp, width, zbuf, p);
+        g3d.plotPixelClippedArgb(argbEndcap, (int) xDn, (int) yDn, (int) zDn, width, zbuf, p);
       }
       if (argb != 0) {
-        line3d.plotLineDeltaAOld(sA, sA, 0, fpz,
-            (int) xUp, (int) yUp, (int) zUp, (int) Math.ceil(xTip - xUp),
-            (int) Math.ceil(yTip - yUp), (int) Math.ceil(zTip - zUp), true);
+        line3d.plotLineDeltaAOld(sA, sA, 0, fpz, (int) xUp, (int) yUp, (int) zUp, (int) Math.ceil(xTip - xUp), (int) Math.ceil(yTip - yUp), (int) Math.ceil(zTip - zUp), true);
         
         if (doFill) { //rockets, not arrows
-          line3d.plotLineDeltaAOld(sA, sA, 0, fpz,
-            (int) xUp, (int) yUp + 1, (int) zUp, (int) Math.ceil(xTip - xUp),
-            (int) Math.ceil(yTip - yUp) + 1, (int) Math.ceil(zTip - zUp), true);
-          line3d.plotLineDeltaAOld(sA, sA, 0, fpz,
-            (int) xUp + 1, (int) yUp, (int) zUp, (int) Math.ceil(xTip - xUp) + 1,
-            (int) Math.ceil(yTip - yUp), (int) Math.ceil(zTip - zUp), true);
+          line3d.plotLineDeltaAOld(sA, sA, 0, fpz, (int) xUp, (int) yUp + 1, (int) zUp, (int) Math.ceil(xTip - xUp), (int) Math.ceil(yTip - yUp) + 1, (int) Math.ceil(zTip - zUp), true);
+          line3d.plotLineDeltaAOld(sA, sA, 0, fpz, (int) xUp + 1, (int) yUp, (int) zUp, (int) Math.ceil(xTip - xUp) + 1, (int) Math.ceil(yTip - yUp), (int) Math.ceil(zTip - zUp), true);
         }    
     
         if (!isBarb && !(endcaps != GData.ENDCAPS_FLAT && dzB > 0)) {
-          line3d.plotLineDeltaOld(argb, argb, (int) xDn,
-              (int) yDn, (int) zDn, (int) Math.ceil(xTip - xDn), (int) Math
-                  .ceil(yTip - yDn), (int) Math.ceil(zTip - zDn), true);
+          line3d.plotLineDeltaOld(argb, argb, (int) xDn, (int) yDn, (int) zDn, (int) Math.ceil(xTip - xDn), (int) Math.ceil(yTip - yDn), (int) Math.ceil(zTip - zDn), true);
         }
       }
     }
@@ -505,8 +463,7 @@ class CylinderRenderer {
     }
   }
 
-  private void calcRotatedPoint(double t, int i, boolean isPrecision,
-                                int[][] xyzf, double[][] xyzt) {
+  private void calcRotatedPoint(double t, int i, boolean isPrecision, int[][] xyzf, double[][] xyzt) {
     xyzt[3][i] = t;
     double tPI = t * Math.PI;
     double xT = Math.sin(tPI) * cosTheta;
@@ -547,8 +504,7 @@ class CylinderRenderer {
     return rasterCount++;
   }
 
- private void interpolate(int iLower, int iUpper, 
-                          int[][] xyzf, double[][] xyzt) {
+ private void interpolate(int iLower, int iUpper, int[][] xyzf, double[][] xyzt) {
    int[] x = xyzf[0];
    int[] y = xyzf[1];
     
@@ -569,8 +525,7 @@ class CylinderRenderer {
     for (int j = 4; --j >= 0;) {
       double tMid = (tLower + tUpper) / 2;
       calcRotatedPoint(tMid, iMid, false, xyzf, xyzt);
-      if ((x[iMid] == x[iLower])
-          && (y[iMid] == y[iLower])) {
+      if ((x[iMid] == x[iLower]) && (y[iMid] == y[iLower])) {
         f[iLower] = (f[iLower] + f[iMid]) >>> 1;
         tLower = tMid;
       } else if ((x[iMid] == x[iUpper])
@@ -591,12 +546,10 @@ class CylinderRenderer {
     double[] x = xyzt[0];
     double[] y = xyzt[1];
     
-    int dx = (int) Math.floor(x[iUpper])
-        - (int) Math.floor(x[iLower]);
+    int dx = (int) Math.floor(x[iUpper]) - (int) Math.floor(x[iLower]);
     if (dx < 0)
       dx = -dx;
-    double dy = (int) Math.floor(y[iUpper])
-        - (int) Math.floor(y[iLower]);
+    double dy = (int) Math.floor(y[iUpper]) - (int) Math.floor(y[iLower]);
     if (dy < 0)
       dy = -dy;
     if ((dx + dy) <= 1)
@@ -612,16 +565,10 @@ class CylinderRenderer {
     for (int j = 4; --j >= 0;) {
       double tMid = (tLower + tUpper) / 2;
       calcRotatedPoint(tMid, iMid, true, xyzf, xyzt);
-      if (((int) Math.floor(x[iMid]) == (int) Math
-          .floor(x[iLower]))
-          && ((int) Math.floor(y[iMid]) == (int) Math
-              .floor(y[iLower]))) {
+      if (((int) Math.floor(x[iMid]) == (int) Math.floor(x[iLower])) && ((int) Math.floor(y[iMid]) == (int) Math.floor(y[iLower]))) {
         f[iLower] = (f[iLower] + f[iMid]) >>> 1;
         tLower = tMid;
-      } else if (((int) Math.floor(x[iMid]) == (int) Math
-          .floor(x[iUpper]))
-          && ((int) Math.floor(y[iMid]) == (int) Math
-              .floor(y[iUpper]))) {
+      } else if (((int) Math.floor(x[iMid]) == (int) Math.floor(x[iUpper])) && ((int) Math.floor(y[iMid]) == (int) Math.floor(y[iUpper]))) {
         f[iUpper] = (f[iUpper] + f[iMid]) >>> 1;
         tUpper = tMid;
       } else {
@@ -718,8 +665,7 @@ class CylinderRenderer {
       }
       int count = xMax - xMin + 1;
       g3d.setColorNoisy(endcapShadeIndex);
-      g3d.plotPixelsClippedRaster(count, xT + xMin, yT + y, zT - zXMin - 1, zT
-          - zXMax - 1, null, null);
+      g3d.plotPixelsClippedRaster(count, xT + xMin, yT + y, zT - zXMin - 1, zT - zXMax - 1, null, null);
     }
   }
 
@@ -775,5 +721,4 @@ class CylinderRenderer {
     argbEndcap = shadesEndcap[endcapShadeIndex];
     endCapHidden = (endcaps == GData.ENDCAPS_HIDDEN);
   }
-
 }

@@ -25,9 +25,6 @@
 
 package org.jmol.g3d;
 
-/**
- * 
- */
 class Pixelator {
   protected final Graphics3D g;
   Pixelator p0;
@@ -35,10 +32,6 @@ class Pixelator {
   int width;
   int bgcolor;
 
-
-  /**
-   * @param graphics3d
-   */
   Pixelator(Graphics3D graphics3d) {
     g = graphics3d;
     bgcolor = g.bgcolor;
@@ -48,28 +41,21 @@ class Pixelator {
   void setBuf() {
     zb = g.zbuf;
     pb = g.pbuf;
-    
   }
 
   void clearPixel(int offset, int z) {
     // first-pass only; ellipsoids
-    if (zb[offset] > z)
+    if (zb[offset] > z) {
       zb[offset] = Integer.MAX_VALUE;
+	}
   }
   
   void addPixel(int offset, int z, int p) {
-//    if (offset == 5) {
-//System.out.println("pixelator " + Integer.toHexString(p) + " " + z);
-//System.out.println("---");
-//    }
     zb[offset] = z;
     pb[offset] = p;
   }
 
-  public void addImagePixel(byte shade, int tLog, int offset, int z, int argb,
-                            int bgargb) {
-//    if (zb != g.zbuf)
-//System.out.println("OH");
+  public void addImagePixel(byte shade, int tLog, int offset, int z, int argb, int bgargb) {
     if (z < zb[offset]) {
       switch (shade) {
       case 0:
@@ -83,14 +69,13 @@ class Pixelator {
         shade += tLog;
         if (shade <= 7) {
           int p = pb[offset];
-          if (bgargb != 0)
+          if (bgargb != 0) {
             p = Graphics3D.mergeBufferPixel(p, bgargb, bgargb);
-          p = Graphics3D.mergeBufferPixel(p, (argb & 0xFFFFFF)
-              | (shade << 24), bgcolor);
+		  }
+          p = Graphics3D.mergeBufferPixel(p, (argb & 0xFFFFFF) | (shade << 24), bgcolor);
           addPixel(offset, z, p);
         }
       }
     }
   }
-
 }

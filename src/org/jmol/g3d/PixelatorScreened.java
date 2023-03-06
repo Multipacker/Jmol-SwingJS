@@ -28,14 +28,8 @@ package org.jmol.g3d;
 /**
  * A class to create a "screened" translucent effect by 
  * discarding pixels in a checkerboard fashion.
- * 
  */
 class PixelatorScreened extends Pixelator {
-
-  /**
-   * @param g 
-   * @param p0 
-   */
   PixelatorScreened(Graphics3D g, Pixelator p0) {
     super(g);
     width = g.width;
@@ -47,7 +41,8 @@ class PixelatorScreened extends Pixelator {
   */
   @Override
   void addPixel(int offset, int z, int p) {
-    if ((offset % width) % 2 == (offset / width) % 2)
+    if ((offset % width) % 2 == (offset / width) % 2) {
       p0.addPixel(offset, z, p);
+	}
   }
 }

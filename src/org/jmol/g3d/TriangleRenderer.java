@@ -40,7 +40,6 @@ import org.jmol.util.Rgb16;
  * @author Miguel, miguel@jmol.org
  */
 public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
-
   private Graphics3D g3d;
 
   private final static int DEFAULT = 64;
@@ -54,7 +53,6 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
   private final Rgb16 rgb16t1 = new Rgb16();
   private final Rgb16 rgb16t2 = new Rgb16();
 
-  
   //private final static boolean VERIFY = false;
 
   public TriangleRenderer() {    
@@ -71,8 +69,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
       }
       this.g3d = (Graphics3D) g3d;
       rgb16sGouraud = new Rgb16[3];
-      for (int i = 3; --i >= 0;)
+      for (int i = 3; --i >= 0;) {
         rgb16sGouraud[i] = new Rgb16();
+	  }
     } catch (Exception e) {
       // must be export; not a problem
     }
@@ -129,8 +128,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
     az[0] = screenA.z;
     az[1] = screenB.z;
     az[2] = screenC.z;
-    if (az[0] <= 1 || az[1] <= 1 || az[2] <= 1)
+    if (az[0] <= 1 || az[1] <= 1 || az[2] <= 1) {
       return;
+	}
     int cc0 = g3d.clipCode3(ax[0], ay[0], az[0]);
     int cc1 = g3d.clipCode3(ax[1], ay[1], az[1]);
     int cc2 = g3d.clipCode3(ax[2], ay[2], az[2]);
@@ -143,10 +143,12 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
       }
     }
     int iMinY = 0;
-    if (ay[1] < ay[iMinY])
+    if (ay[1] < ay[iMinY]) {
       iMinY = 1;
-    if (ay[2] < ay[iMinY])
+	}
+    if (ay[2] < ay[iMinY]) {
       iMinY = 2;
+	}
     int iMidY = (iMinY + 1) % 3;
     int iMaxY = (iMinY + 2) % 3;
     if (ay[iMidY] > ay[iMaxY]) {
@@ -158,8 +160,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
     int yMid = ay[iMidY];
     int yMax = ay[iMaxY];
     int nLines = yMax - yMin + 1;
-    if (nLines > g3d.height * 3)
+    if (nLines > g3d.height * 3) {
       return;
+	}
     if (nLines > axW.length) {
       int n = (nLines + 31) & ~31;
       axW = new int[n];
@@ -217,8 +220,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
       int dxMaxMin = ax[iMaxY] - ax[iMinY];
       int roundFactor;
       roundFactor = GData.roundInt(nLines / 2);
-      if (dxMaxMin < 0)
+      if (dxMaxMin < 0) {
         roundFactor = -roundFactor;
+	  }
       int axSplit = ax[iMinY] + (dxMaxMin * dyMidMin + roundFactor) / nLines;
       if (axSplit < ax[iMidY]) {
         /*
@@ -234,9 +238,7 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
         // raster on each segment, but then we always throw out the FIRST raster
         generateRaster(nLines, iMinY, iMaxY, axW, azW, 0, gouraudW);
         generateRaster(dyMidMin + 1, iMinY, iMidY, axE, azE, 0, gouraudE);
-        generateRaster(nLines - dyMidMin, iMidY, iMaxY, axE, azE, dyMidMin,
-            gouraudE);
-
+        generateRaster(nLines - dyMidMin, iMidY, iMaxY, axE, azE, dyMidMin, gouraudE);
       } else {
 
         /*
@@ -250,8 +252,7 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
          */
 
         generateRaster(dyMidMin + 1, iMinY, iMidY, axW, azW, 0, gouraudW);
-        generateRaster(nLines - dyMidMin, iMidY, iMaxY, axW, azW, dyMidMin,
-            gouraudW);
+        generateRaster(nLines - dyMidMin, iMidY, iMaxY, axW, azW, dyMidMin, gouraudW);
         generateRaster(nLines, iMinY, iMaxY, axE, azE, 0, gouraudE);
       }
     }
@@ -272,9 +273,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
       if (isClipped) {
         for (; --nLines >= pass2Row; ++yMin, ++i) {
           int pixelCount = axE[i] - (xW = axW[i]) + pass2Off;
-          if (pixelCount > 0)
-            g3d.plotPixelsClippedRaster(pixelCount, xW, yMin, azW[i], azE[i],
-                rgb16sW[i], rgb16sE[i]);
+          if (pixelCount > 0) {
+            g3d.plotPixelsClippedRaster(pixelCount, xW, yMin, azW[i], azE[i], rgb16sW[i], rgb16sE[i]);
+		  }
         }
       } else {
         for (; --nLines >= pass2Row; ++yMin, ++i) {
@@ -288,18 +289,18 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
             pixelCount = 1;
             xW--;
           }
-          if (pixelCount > 0)
-            g3d.plotPixelsUnclippedRaster(pixelCount, xW, yMin, azW[i], azE[i],
-                rgb16sW[i], rgb16sE[i]);
+          if (pixelCount > 0) {
+            g3d.plotPixelsUnclippedRaster(pixelCount, xW, yMin, azW[i], azE[i], rgb16sW[i], rgb16sE[i]);
+		  }
         }
       }
     } else {
       if (isClipped) {
         for (; --nLines >= pass2Row; ++yMin, ++i) {
           int pixelCount = axE[i] - (xW = axW[i]) + pass2Off;
-          if (pixelCount > 0)
-            g3d.plotPixelsClippedRasterBits(pixelCount, xW, yMin, azW[i],
-                azE[i], null, null, aa[i], bb[i]);
+          if (pixelCount > 0) {
+            g3d.plotPixelsClippedRasterBits(pixelCount, xW, yMin, azW[i], azE[i], null, null, aa[i], bb[i]);
+		  }
         }
       } else {
         for (; --nLines >= pass2Row; ++yMin, ++i) {
@@ -313,18 +314,16 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
             pixelCount = 1;
             xW--;
           }
-          if (pixelCount > 0)
-            g3d.plotPixelsUnclippedRasterBits(pixelCount, xW, yMin, null, null,
-                aa[i], bb[i]);
+          if (pixelCount > 0) {
+            g3d.plotPixelsUnclippedRasterBits(pixelCount, xW, yMin, null, null, aa[i], bb[i]);
+		  }
         }
       }
     }
     g3d.setZMargin(0);
   }
  
-  private void generateRaster(int dy, int iN, int iS, int[] axRaster,
-                              int[] azRaster, int iRaster,
-                              Rgb16[] gouraud) {
+  private void generateRaster(int dy, int iN, int iS, int[] axRaster, int[] azRaster, int iRaster, Rgb16[] gouraud) {
     int xN = ax[iN];
     int xS = ax[iS];
     int dx = xS - xN;
@@ -376,9 +375,9 @@ public class TriangleRenderer extends PrecisionRenderer implements G3DRenderer {
       rgb16Base.setRgb(rgb16sGouraud[iN]);
       Rgb16 rgb16Increment = rgb16t2;
       rgb16Increment.diffDiv(rgb16sGouraud[iS], rgb16Base, dy);
-      for (int i = iRaster, iMax = iRaster + dy; i < iMax; ++i)
+      for (int i = iRaster, iMax = iRaster + dy; i < iMax; ++i) {
         gouraud[i].setAndIncrement(rgb16Base, rgb16Increment);
+	  }
     }
   }
-
 }

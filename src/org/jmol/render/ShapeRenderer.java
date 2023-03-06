@@ -34,7 +34,6 @@ import org.jmol.viewer.TransformManager;
 import org.jmol.viewer.Viewer;
 
 public abstract class ShapeRenderer {
-
   //public void finalize() {
   //System.out.println("ShapeRenderer " + shapeID + " " + this + " finalized");
   //}
@@ -83,13 +82,9 @@ public abstract class ShapeRenderer {
     this.shape = shape;
     exportType = g3d.getExportType();
     isExport = (exportType != GData.EXPORT_NOT);
-    
   }
 
   protected boolean isVisibleForMe(Atom a) {
     return a != null && a.isVisible(myVisibilityFlag | Atom.ATOM_INFRAME_NOTHIDDEN);
   }
-
- 
 }
-

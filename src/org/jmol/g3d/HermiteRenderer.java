@@ -24,10 +24,7 @@
 
 package org.jmol.g3d;
 
-
-
 import javajs.util.Lst;
-
 
 import org.jmol.api.JmolRendererInterface;
 import org.jmol.util.GData;
@@ -36,7 +33,6 @@ import javajs.util.P3d;
 import javajs.util.P3i;
 
 import javajs.util.V3d;
-
 
 /**
  *<p>
@@ -59,12 +55,10 @@ import javajs.util.V3d;
  * @author Miguel, miguel@jmol.org
  */
 public class HermiteRenderer implements G3DRenderer {
-
   private static V3d vAB = new V3d();
   private static V3d vAC = new V3d();
 
   /* really a private class to g3d and export3d */
-
   
   private JmolRendererInterface g3d;
   private GData gdata;
@@ -101,9 +95,7 @@ public class HermiteRenderer implements G3DRenderer {
     }
   }
 
-  public void renderHermiteRope(boolean fill, int tension,
-                     int diameterBeg, int diameterMid, int diameterEnd,
-                     P3d p0, P3d p1, P3d p2, P3d p3) {
+  public void renderHermiteRope(boolean fill, int tension, int diameterBeg, int diameterMid, int diameterEnd, P3d p0, P3d p1, P3d p2, P3d p3) {
     int z1 = (int) p1.z;
     int z2 = (int) p2.z;
     if (p0.z == 1 ||z1 == 1 ||z2 == 1 ||p3.z == 1)
@@ -141,9 +133,7 @@ public class HermiteRenderer implements G3DRenderer {
           // but drawing spheres was faster
           double s = sLeft[sp];
           if (fill) {
-            int d =(s < 0.5d
-                    ? diameterBeg + (int)(dDiameterFirstHalf * s)
-                    : diameterMid + (int)(dDiameterSecondHalf * (s - 0.5d)));
+            int d =(s < 0.5d ? diameterBeg + (int)(dDiameterFirstHalf * s) : diameterMid + (int)(dDiameterSecondHalf * (s - 0.5d)));
             g3d.fillSphereI(d, a);
           } else {
             g3d.plotPixelClippedP3i(a);
@@ -212,8 +202,7 @@ public class HermiteRenderer implements G3DRenderer {
                                   //bottom strand segment
                                   P3d p4, P3d p5, P3d p6,
                                   P3d p7, int aspectRatio, int fillType) {
-    if (p0.z == 1 || p1.z == 1 || p2.z == 1 || p3.z == 1 || p4.z == 1
-        || p5.z == 1 || p6.z == 1 || p7.z == 1)
+    if (p0.z == 1 || p1.z == 1 || p2.z == 1 || p3.z == 1 || p4.z == 1 || p5.z == 1 || p6.z == 1 || p7.z == 1)
       return;
     if (!fill) {
       tension = Math.abs(tension);
@@ -401,9 +390,6 @@ public class HermiteRenderer implements G3DRenderer {
     int numTopStrandPoints = 2; //first and last points automatically included
     double numPointsPerSegment = 5.0d;//use 5 for mesh
 
-    //if (fill)
-      //numPointsPerSegment = 10.0d;
-
     double interval = (1.0d / numPointsPerSegment);
     double currentInt = 0.0d;
 
@@ -474,8 +460,9 @@ public class HermiteRenderer implements G3DRenderer {
            double h2 = -2 * s3 + 3 * s2;
            double h3 = s3 - 2 * s2 + s;
            double h4 = s3 - s2;
-           if (sp >= 15)
+           if (sp >= 15) {
              break;
+		   }
            P3i pMid = pRight[sp + 1];
            pMid.x = (int) (h1 * x1 + h2 * x2 + h3 * xT1 + h4 * xT2);
            pMid.y = (int) (h1 * y1 + h2 * y2 + h3 * yT1 + h4 * yT2);
@@ -492,35 +479,8 @@ public class HermiteRenderer implements G3DRenderer {
        points.addLast(endPoints[whichPoint++]);
      } //end of for loop - processed top and bottom strands
      int size = points.size();
-   /*  
-     if (fill) {//RIBBONS
-       Point3i t1 = null;
-       Point3i b1 = null;
-       Point3i t2 = null;
-       Point3i b2 = null;
-       int top = 1;
-       for (;top < numTopStrandPoints && (top + numTopStrandPoints) < size; top++) {
-         t1 = (Point3i) points.elementAt(top - 1);
-         b1 = (Point3i) points.elementAt(numTopStrandPoints + (top - 1));
-         t2 = (Point3i) points.elementAt(top);
-         b2 = (Point3i) points.elementAt(numTopStrandPoints + top);
-
-         g3d.fillTriangle(t1, b1, t2);
-         g3d.fillTriangle(b2, t2, b1);
-       }
-       if((numTopStrandPoints*2) != size){//BUG(DC09_MAY_2004): not sure why but
-         //sometimes misses triangle at very start of segment
-         //temp fix - will inestigate furture
-         g3d.fillTriangle(p1, p5, t2);
-         g3d.fillTriangle(b2, t2, p5);
-       }
-     }
-     else {//MESH
-     */
-       for (int top = 0;
-            top < numTopStrandPoints && (top + numTopStrandPoints) < size; top++)
-         g3d.drawLineAB(points.get(top),
-             points.get(top + numTopStrandPoints));
+     for (int top = 0; top < numTopStrandPoints && (top + numTopStrandPoints) < size; top++) {
+       g3d.drawLineAB(points.get(top), points.get(top + numTopStrandPoints));
+	 }
   }
-
 }

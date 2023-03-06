@@ -23,7 +23,6 @@
  */
 package org.jmol.rendercgo;
 
-
 import org.jmol.renderspecial.DrawRenderer;
 import org.jmol.script.T;
 import org.jmol.shape.Mesh;
@@ -34,7 +33,6 @@ import javajs.util.Lst;
 import org.jmol.util.Logger;
 import javajs.util.P3d;
 import javajs.util.P3i;
-
 
 /**
  * Something like a PyMOL Compiled Graphical Object, but more interesting!

@@ -35,7 +35,6 @@ import org.jmol.viewer.TransformManager;
 import javajs.util.P3i;
 
 class TextRenderer {
-  
   static final int MODE_IS_ANTIALIASED = 4;
   
   static boolean render(TransformManager tm, Text text, JmolRendererInterface g3d,
@@ -43,18 +42,19 @@ class TextRenderer {
                         double[] boxXY, double[] temp,
                         P3i pTemp, short pointerColix,
                         int pointerWidth, int mode) {
-    if (text == null
-        || text.image == null && !text.doFormatText && text.lines == null)
+    if (text == null || text.image == null && !text.doFormatText && text.lines == null) {
       return false;
+	}
     boolean isAbsolute = ((mode & JC.LABEL_EXPLICIT) != 0);
     boolean doPointer = ((mode & JC.LABEL_POINTER_ON) != 0);
     boolean isAntialiased = ((mode & MODE_IS_ANTIALIASED) != 0);
     boolean showText = g3d.setC(text.colix);
-    if (!showText && (text.image == null
-        && (text.bgcolix == 0 || !g3d.setC(text.bgcolix))))
+    if (!showText && (text.image == null && (text.bgcolix == 0 || !g3d.setC(text.bgcolix)))) {
       return false;
-    if (tm != null && text.valign == JC.ECHO_XYZ)
+	}
+    if (tm != null && text.valign == JC.ECHO_XYZ) {
       calcBarPixelsXYZ(tm, text, pTemp, false);
+	}
     text.setPosition(scalePixelsPerMicron, imageFontScaling, isAbsolute, boxXY);
     int barPixels = (tm != null && text.valign == JC.ECHO_XYZ ? calcBarPixelsXYZ(tm, text, pTemp, false) : text.barPixels);
     
@@ -68,29 +68,29 @@ class TextRenderer {
               (int) text.boxY + text.boxYoff2 * 2, text.z + 2, text.zSlab,
               (int) text.boxWidth + barPixels, (int) text.boxHeight, text.fontScale,
               !text.isEcho);
-        if (!showText)
+        if (!showText) {
           return false;
+		}
       } // now write properly aligned text
       for (int i = 0; i < text.lines.length; i++) {
         text.setXYA(temp, i);
-        if (text.xyz != null)
+        if (text.xyz != null) {
           temp[1] += 2; // fudge
-        g3d.drawString(text.lines[i], text.font, (int) temp[0], (int) temp[1],
-            text.z, text.zSlab, text.bgcolix);
+		}
+        g3d.drawString(text.lines[i], text.font, (int) temp[0], (int) temp[1], text.z, text.zSlab, text.bgcolix);
       }
       if (text.barPixels > 0) {
         renderScale(g3d, text, temp, barPixels, isAntialiased);
       }
     } else {
-      g3d.drawImage(text.image, (int) text.boxX, (int) text.boxY, text.z,
-          text.zSlab, text.bgcolix, (int) text.boxWidth, (int) text.boxHeight);
+      g3d.drawImage(text.image, (int) text.boxX, (int) text.boxY, text.z, text.zSlab, text.bgcolix, (int) text.boxWidth, (int) text.boxHeight);
     }
     // now draw the pointer, if requested
 
-    if (!doPointer)
+    if (!doPointer) {
       return true;
-    drawLineXYZ(g3d, text.atomX, text.atomY, text.atomZ, text.boxX, text.boxY,
-        text.zSlab, text.boxWidth, text.boxHeight, pointerColix, pointerWidth * (isAntialiased ? 2 : 1));
+	}
+    drawLineXYZ(g3d, text.atomX, text.atomY, text.atomZ, text.boxX, text.boxY, text.zSlab, text.boxWidth, text.boxHeight, pointerColix, pointerWidth * (isAntialiased ? 2 : 1));
     return true;
   }
 
@@ -98,8 +98,9 @@ class TextRenderer {
     int barPixels = t.barPixels;
     if (t.xyz != null) {
       tm.transformPtScr(t.xyz, pTemp);
-      if (andSet)
+      if (andSet) {
         t.setXYZs(pTemp.x, pTemp.y, pTemp.z, pTemp.z);
+	  }
       if (barPixels > 0 && tm.perspectiveDepth) {
         double d = tm.unscaleToScreen(pTemp.z, barPixels);
         barPixels = t.barPixelsXYZ = (int) (barPixels * t.barDistance / d);
@@ -156,19 +157,17 @@ class TextRenderer {
 
     // Set picking label and then drag!
 
-    if (offsetX <= 0 && -offsetX <= w
-      && offsetY <= 0 && -offsetY <= h)
+    if (offsetX <= 0 && -offsetX <= w && offsetY <= 0 && -offsetY <= h) {
       return;
+	}
     
     boolean setX = (offsetY > 0 || offsetY < -h);
     double pt = Double.NaN;
-    x1 += (setX ? (offsetX > w/2 ? 0 : offsetX < -w*3/2 ? w : (pt = w / 2))
-        : (offsetX > 0 ? 0 : w));
+    x1 += (setX ? (offsetX > w/2 ? 0 : offsetX < -w*3/2 ? w : (pt = w / 2)) : (offsetX > 0 ? 0 : w));
     boolean setY = !Double.isNaN(pt);
     y1 += (setY && offsetY > 0 ? 0 : setY && offsetY < -h ? h : h / 2);
     if (pointerWidth > 1) {
-      g3d.fillCylinderXYZ(pointerColix, pointerColix, GData.ENDCAPS_FLAT,
-          pointerWidth, x0, y0, z0, (int) x1, (int) y1, z1);
+      g3d.fillCylinderXYZ(pointerColix, pointerColix, GData.ENDCAPS_FLAT, pointerWidth, x0, y0, z0, (int) x1, (int) y1, z1);
     } else {
       g3d.setC(pointerColix);
       g3d.drawLineXYZ(x0, y0, z0, (int) x1, (int) y1, z1);
@@ -199,13 +198,11 @@ class TextRenderer {
     double x = boxXY[0];
     double y = boxXY[1];
     if (bgcolix != 0 && g3d.setC(bgcolix)) {
-      showBox(g3d, colix, (int) x, (int) y, z, zSlab, (int) w,
-          (int) h, 1, true);
+      showBox(g3d, colix, (int) x, (int) y, z, zSlab, (int) w, (int) h, 1, true);
     } else {
       g3d.setC(colix);
     }
-    g3d.drawString(strLabel, font, (int) (x + 4), (int) (y + 4 + ascent), z - 1,
-        zSlab, bgcolix);
+    g3d.drawString(strLabel, font, (int) (x + 4), (int) (y + 4 + ascent), z - 1, zSlab, bgcolix);
     if (doPointer && (xOffset != 0 || yOffset != 0)) {
       drawLineXYZ(g3d, x0, y0, zSlab, x, y, zSlab, w, h, pointerColix, pointerWidth * (isAntialiased ? 2 : 1));
     }
@@ -217,8 +214,9 @@ class TextRenderer {
                               double imageFontScaling, boolean atomBased) {
     g3d.fillTextRect(x, y, z, zSlab, boxWidth, boxHeight);
     g3d.setC(colix);
-    if (!atomBased)
+    if (!atomBased) {
       return;
+	}
     if (imageFontScaling >= 2) {
       g3d.drawRect(x + 3, y + 3, z - 1, zSlab, boxWidth - 6, boxHeight - 6);
       //g3d.drawRect(x + 40, y + 4, z - 1, zSlab, boxWidth - 8, boxHeight - 8);
@@ -226,5 +224,4 @@ class TextRenderer {
       g3d.drawRect(x + 1, y + 1, z - 1, zSlab, boxWidth - 2, boxHeight - 2);
     }
   }
-
 }

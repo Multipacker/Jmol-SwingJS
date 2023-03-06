@@ -27,18 +27,12 @@ package org.jmol.g3d;
 
 /**
  * A class to do Z Shading of pixels.
- * 
  */
 class PixelatorShaded extends Pixelator {
-
-
   private int[] bgRGB, tmp;
   private int zSlab, zDepth;
   int zShadePower;
 
-  /**
-   * @param g
-   */
   PixelatorShaded(Graphics3D g) {
     super(g);
     tmp = new int[3];
@@ -46,8 +40,7 @@ class PixelatorShaded extends Pixelator {
   
   Pixelator set(int zSlab, int zDepth, int zShadePower) {
     bgcolor = g.bgcolor;
-    bgRGB = new int[] { bgcolor & 0xFF, (bgcolor >> 8) & 0xFF,
-        (g.bgcolor >> 16) & 0xFF };
+    bgRGB = new int[] { bgcolor & 0xFF, (bgcolor >> 8) & 0xFF, (g.bgcolor >> 16) & 0xFF };
     this.zSlab = zSlab < 0 ? 0 : zSlab;
     this.zDepth = zDepth < 0 ? 0 : zDepth;
     this.zShadePower = zShadePower;

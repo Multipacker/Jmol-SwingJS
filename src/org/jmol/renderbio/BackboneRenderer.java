@@ -30,7 +30,6 @@ import org.jmol.shapebio.BioShape;
 import org.jmol.util.C;
 
 public class BackboneRenderer extends BioShapeRenderer {
-
   private boolean isDataFrame;
 
   @Override
@@ -39,17 +38,14 @@ public class BackboneRenderer extends BioShapeRenderer {
     isDataFrame = ms.isJmolDataFrameForModel(bioShape.modelIndex);
     int n = monomerCount;
     Atom[] atoms = ms.at;
-    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible
-        .nextSetBit(i + 1)) {
+    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible.nextSetBit(i + 1)) {
       Atom atomA = atoms[leadAtomIndices[i]];
       short cA = colixes[i];
       mad = mads[i];
       int i1 = (i + 1) % n;
       Atom atomB = atoms[leadAtomIndices[i1]];
       short cB = colixes[i1];
-      if (atomA.nBackbonesDisplayed > 0 && atomB.nBackbonesDisplayed > 0
-          && !ms.isAtomHidden(atomB.i)
-          && (isDataFrame || atomA.distanceSquared(atomB) < 100)) {
+      if (atomA.nBackbonesDisplayed > 0 && atomB.nBackbonesDisplayed > 0 && !ms.isAtomHidden(atomB.i) && (isDataFrame || atomA.distanceSquared(atomB) < 100)) {
         cA = C.getColixInherited(cA, atomA.colixAtom);
         cB = C.getColixInherited(cB, atomB.colixAtom);
         if (!checkPass2 || setBioColix(cA) || setBioColix(cB))
@@ -70,5 +66,4 @@ public class BackboneRenderer extends BioShapeRenderer {
       //      }  
     }
   }
-  
 }

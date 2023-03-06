@@ -48,7 +48,6 @@ import javajs.util.V3d;
    * 
  */
 abstract class BioShapeRenderer extends ShapeRenderer {
-
   //ultimately this renderer calls MeshRenderer.render1(mesh)
 
   private boolean invalidateMesh;
@@ -464,9 +463,7 @@ abstract class BioShapeRenderer extends ShapeRenderer {
         (int) aspectRatio, colixBack);
     g3d.setC(colix);
     if (ribbonBorder && aspectRatio == 0) {
-      g3d.fillCylinderBits(GData.ENDCAPS_SPHERICAL,
-          3,  
-          screenArrowTop, screenArrowBot);
+      g3d.fillCylinderBits(GData.ENDCAPS_SPHERICAL, 3,  screenArrowTop, screenArrowBot);
     }
   }
   
@@ -479,11 +476,8 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     if (mad < 0) {
       g3d.drawLine(colixA, colixB, xA, yA, zA, xB, yB, zB);
     } else {
-      int width = (int) (isExport ? mad : vwr.tm.scaleToScreen((zA + zB) / 2,
-          mad));
-      g3d.fillCylinderXYZ(colixA, colixB, GData.ENDCAPS_SPHERICAL, width, xA,
-          yA, zA, xB, yB, zB);
+      int width = (int) (isExport ? mad : vwr.tm.scaleToScreen((zA + zB) / 2, mad));
+      g3d.fillCylinderXYZ(colixA, colixB, GData.ENDCAPS_SPHERICAL, width, xA, yA, zA, xB, yB, zB);
     }
   }  
-
 }

@@ -32,8 +32,6 @@ import org.jmol.util.Font;
 
 import javajs.util.CU;
 
-
-
 /**
  * implementation for text rendering
  *<p>

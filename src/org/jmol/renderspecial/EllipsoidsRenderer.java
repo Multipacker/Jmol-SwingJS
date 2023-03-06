@@ -47,7 +47,6 @@ import org.jmol.shapespecial.Ellipsoids;
 import org.jmol.viewer.JC;
 
 final public class EllipsoidsRenderer extends ShapeRenderer {
-  
   // final because we are initializing static fields using static{}
   
   private Ellipsoids ellipsoids;
@@ -136,8 +135,7 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
     bGlobals[OPT_DOTS] = vwr.getBooleanProperty("ellipsoidDots");
     bGlobals[OPT_FILL] = vwr.getBooleanProperty("ellipsoidFill");
     bGlobals[OPT_WIREFRAME] = !isExport && !vwr.checkMotionRendering(T.ellipsoid);
-    diameter0 = (int) Math.round (((Number) vwr.getP("ellipsoidAxisDiameter"))
-        .doubleValue() * 1000);    
+    diameter0 = (int) Math.round (((Number) vwr.getP("ellipsoidAxisDiameter")).doubleValue() * 1000);    
     M4d m4 = tm.matrixTransform;
     mat.setRow(0, m4.m00, m4.m01, m4.m02);
     mat.setRow(1, m4.m10, m4.m11, m4.m12);
@@ -193,8 +191,7 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
     }
 
     if (bOptions[OPT_DOTS]) {
-      dotCount = ((Integer) vwr.getP("ellipsoidDotCount"))
-          .intValue();
+      dotCount = ((Integer) vwr.getP("ellipsoidDotCount")).intValue();
       if (coords == null || coords.length != dotCount * 3)
         coords = new int[dotCount * 3];
     }
@@ -275,7 +272,6 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
   }
 
   private void setMatrices() {
-
     // Create a matrix that transforms cartesian coordinates
     // into ellipsoidal coordinates, where in that system we 
     // are drawing a sphere. 
@@ -327,30 +323,21 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
     for (int i = 0; i < 6; i++) {
       int iAxis = axisPoints[i];
       int i012 = Math.abs(iAxis) - 1;
-      points[i].scaleAdd2(factoredLengths[i012] * (iAxis < 0 ? -1 : 1),
-          axes[i012], center);
+      points[i].scaleAdd2(factoredLengths[i012] * (iAxis < 0 ? -1 : 1), axes[i012], center);
       pt1.setT(unitAxisVectors[i]);
-      //pt1.scale(f);
 
       matEllipsoidToScreen.rotate(pt1);
-      screens[i].set(Math.round(s0.x + pt1.x * perspectiveFactor), Math
-          .round(s0.y + pt1.y * perspectiveFactor), Math.round(pt1.z + s0.z));
-      screens[i + 32].set(Math.round(s0.x + pt1.x * perspectiveFactor * 1.05d),
-          Math.round(s0.y + pt1.y * perspectiveFactor * 1.05d), Math
-              .round(pt1.z * 1.05d + s0.z));
+      screens[i].set(Math.round(s0.x + pt1.x * perspectiveFactor), Math.round(s0.y + pt1.y * perspectiveFactor), Math.round(pt1.z + s0.z));
+      screens[i + 32].set(Math.round(s0.x + pt1.x * perspectiveFactor * 1.05d), Math.round(s0.y + pt1.y * perspectiveFactor * 1.05d), Math.round(pt1.z * 1.05d + s0.z));
     }
-    dx = 2 + (int) vwr.tm.scaleToScreen((int) s0.z, (int) Math
-        .round((Double.isNaN(factoredLengths[maxPt]) ? 1.0d
-            : factoredLengths[maxPt]) * 1000));
+    dx = 2 + (int) vwr.tm.scaleToScreen((int) s0.z, (int) Math .round((Double.isNaN(factoredLengths[maxPt]) ? 1.0d : factoredLengths[maxPt]) * 1000));
   }
 
   private void renderBall() {
     setSelectedOctant();
     // get equation and differential
-    Ellipsoid.getEquationForQuadricWithCenter(s0.x, s0.y, s0.z, 
-        matScreenToEllipsoid, v1, mTemp, coefs, mDeriv);
-    g3d.fillEllipsoid(center, points, (int) s0.x, (int) s0.y, (int) s0.z, dx + dx, matScreenToEllipsoid,
-        coefs, mDeriv, selectedOctant, selectedOctant >= 0 ? selectedPoints : null);
+    Ellipsoid.getEquationForQuadricWithCenter(s0.x, s0.y, s0.z, matScreenToEllipsoid, v1, mTemp, coefs, mDeriv);
+    g3d.fillEllipsoid(center, points, (int) s0.x, (int) s0.y, (int) s0.z, dx + dx, matScreenToEllipsoid, coefs, mDeriv, selectedOctant, selectedOctant >= 0 ? selectedPoints : null);
   }
 
   private void renderArrows() {
@@ -394,42 +381,20 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
 
   private void renderAxes() {
     if (bOptions[OPT_BALL] && bOptions[OPT_FILL]) {
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0,
-          selectedPoints[0]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0,
-          selectedPoints[1]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0,
-          selectedPoints[2]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0, selectedPoints[0]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0, selectedPoints[1]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s0, selectedPoints[2]);
       return;
     }
 
-//    if (Logger.debugging) {
-//      g3d.setColix(GData.RED);
-//      g3d.fillCylinder(GData.ENDCAPS_FLAT, diameter, screens[0],
-//          screens[1]);
-//      g3d.setColix(GData.GREEN);
-//      g3d.fillCylinder(GData.ENDCAPS_FLAT, diameter, screens[2],
-//          screens[3]);
-//      g3d.setColix(GData.BLUE);
-//      g3d.fillCylinder(GData.ENDCAPS_FLAT, diameter, screens[4],
-//          screens[5]);
-//      g3d.setColix(colix);
-//    } else {
     if (bOptions[OPT_BALL]) {
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[32],
-          screens[33]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[34],
-          screens[35]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[36],
-          screens[37]);
-//    }
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[32], screens[33]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[34], screens[35]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[36], screens[37]);
     } else {
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[0],
-          screens[1]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[2],
-          screens[3]);
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[4],
-          screens[5]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[0], screens[1]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[2], screens[3]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens[4], screens[5]);
     }
 
   }
@@ -488,8 +453,7 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
       if (fillArc) {
 //       colix = (short) Math.ceil(Math.random()  * 20);
 //        if (i < 4 && i > 1)
-        g3d.fillTriangle3CNBits(s0, colix, normix, s1, colix, normix, s2, colix,
-            normix, true);
+        g3d.fillTriangle3CNBits(s0, colix, normix, s1, colix, normix, s2, colix, normix, true);
       }
       else if (bOptions[OPT_WIREFRAME])
         g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s1, s2);
@@ -509,7 +473,6 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
       }
     }
   }
-
 
   private void setSelectedOctant() {
     int zMin = Integer.MAX_VALUE;

@@ -32,8 +32,6 @@ import javajs.util.P3d;
 
 import org.jmol.util.Shader;
 
-
-
 /**
  *<p>
  * Implements high performance rendering of shaded spheres.
@@ -56,7 +54,6 @@ import org.jmol.util.Shader;
  * @author Miguel, miguel@jmol.org
  */
 public class SphereRenderer {
-
   private final Graphics3D g3d;
   private final Shader shader;
   
@@ -81,22 +78,22 @@ public class SphereRenderer {
   private int slab;
   private int offsetPbufBeginLine;
 
-  void render(int[] shades, int diameter, int x, int y,
-              int z, M3d mat, double[] coef, M4d mDeriv,
-              int selectedOctant, P3d[] octantPoints) {
-    //System.out.println("sphere " + x  + " " + y  + " " + z + " " + diameter);
+  void render(int[] shades, int diameter, int x, int y, int z, M3d mat, double[] coef, M4d mDeriv, int selectedOctant, P3d[] octantPoints) {
     if (z == 1)
       return;
-    if (diameter > maxOddSizeSphere)
+    if (diameter > maxOddSizeSphere) {
       diameter &= ~1;
-    if (g3d.isClippedXY(diameter, x, y))
+	}
+    if (g3d.isClippedXY(diameter, x, y)) {
       return;
+	}
     slab = g3d.slab;
     depth = g3d.depth;
     int radius = (diameter + 1) >> 1;
     int minZ = z - radius;
-    if (z + radius < slab || minZ > depth)
+    if (z + radius < slab || minZ > depth) {
       return;
+	}
     int minX = x - radius;
     int maxX = x + radius;
     int minY = y - radius;
@@ -112,8 +109,9 @@ public class SphereRenderer {
       this.coef = coef;
       this.mDeriv = mDeriv;
       this.selectedOctant = selectedOctant;
-      if (sh.ellipsoidShades == null)
+      if (sh.ellipsoidShades == null) {
         sh.createEllipsoidShades();
+	  }
       if (octantPoints != null) {
         planeShade = -1;
         for (int i = 0; i < 3; i ++) {
@@ -155,8 +153,9 @@ public class SphereRenderer {
           for (int j = 0; j < radius; ++j, ++xs) {
             double x2 = xs * xs;
             double z2 = radiusF2 - y2 - x2;
-            if (z2 >= 0)
+            if (z2 >= 0) {
               ++countSE;
+			}
           }
         }        
         ss = new int[countSE];
@@ -175,11 +174,7 @@ public class SphereRenderer {
               int shadeIndexSW = sh.getShadeN(-xs,  ys, zs, radiusF);
               int shadeIndexNE = sh.getShadeN( xs, -ys, zs, radiusF);
               int shadeIndexNW = sh.getShadeN(-xs, -ys, zs, radiusF);
-              int packed = (height |
-                            (shadeIndexSE << 7) |
-                            (shadeIndexSW << 13) |
-                            (shadeIndexNE << 19) |
-                            (shadeIndexNW << 25));
+              int packed = (height | (shadeIndexSE << 7) | (shadeIndexSW << 13) | (shadeIndexNE << 19) | (shadeIndexNW << 25));
               ss[offset++] = packed;
             }
           }
@@ -187,11 +182,11 @@ public class SphereRenderer {
         }
         sh.sphereShapeCache[diameter - 1] = ss;
       }
-      if (minX < 0 || maxX >= width || minY < 0 || maxY >= height
-          || minZ < slab || z > depth)
+      if (minX < 0 || maxX >= width || minY < 0 || maxY >= height || minZ < slab || z > depth) {
         renderSphereClipped(ss, x, y, z, diameter, shades);
-      else
+	  } else {
         renderSphereUnclipped(ss, z, diameter, shades);
+	  }
     }
     zbuf = null;
   } 
@@ -214,18 +209,18 @@ public class SphereRenderer {
         do {
           packed = sphereShape[offsetSphere++];
           int zPixel = z - (packed & 0x7F);
-          if (zPixel < zbuf[offsetSE])
-            p.addPixel(offsetSE, zPixel,
-                shades[((packed >> 7) & 0x3F)]);
-          if (zPixel < zbuf[offsetSW])
-            p.addPixel(offsetSW, zPixel,
-                shades[((packed >> 13) & 0x3F)]);
-          if (zPixel < zbuf[offsetNE])
-            p.addPixel(offsetNE, zPixel,
-                shades[((packed >> 19) & 0x3F)]);
-          if (zPixel < zbuf[offsetNW])
-            p.addPixel(offsetNW, zPixel,
-                shades[((packed >> 25) & 0x3F)]);
+          if (zPixel < zbuf[offsetSE]) {
+            p.addPixel(offsetSE, zPixel, shades[((packed >> 7) & 0x3F)]);
+		  }
+          if (zPixel < zbuf[offsetSW]) {
+            p.addPixel(offsetSW, zPixel, shades[((packed >> 13) & 0x3F)]);
+		  }
+          if (zPixel < zbuf[offsetNE]) {
+            p.addPixel(offsetNE, zPixel, shades[((packed >> 19) & 0x3F)]);
+		  }
+          if (zPixel < zbuf[offsetNW]) {
+            p.addPixel(offsetNW, zPixel, shades[((packed >> 25) & 0x3F)]);
+		  }
           ++offsetSE;
           --offsetSW;
           ++offsetNE;
@@ -285,30 +280,22 @@ public class SphereRenderer {
           zPixel = sl;
         if (zPixel >= sl && zPixel <= de) {
           if (tSouthVisible) {
-            if (tEastVisible
-                && zPixel < zb[offsetSE]) {
-              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 7) & 0x07)
-                  : (packed >> 7) & 0x3F);
+            if (tEastVisible && zPixel < zb[offsetSE]) {
+              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 7) & 0x07) : (packed >> 7) & 0x3F);
               p.addPixel(offsetSE, zPixel, sh[i]);
             }
-            if (tWestVisible
-                && zPixel < zb[offsetSW]) {
-              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 13) & 0x07)
-                  : (packed >> 13) & 0x3F);
+            if (tWestVisible && zPixel < zb[offsetSW]) {
+              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 13) & 0x07) : (packed >> 13) & 0x3F);
               p.addPixel(offsetSW, zPixel, sh[i]);
             }
           }
           if (tNorthVisible) {
-            if (tEastVisible
-                && zPixel < zb[offsetNE]) {
-              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 19) & 0x07)
-                  : (packed >> 19) & 0x3F);
+            if (tEastVisible && zPixel < zb[offsetNE]) {
+              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 19) & 0x07) : (packed >> 19) & 0x3F);
               p.addPixel(offsetNE, zPixel, sh[i]);
             }
-            if (tWestVisible
-                && zPixel < zb[offsetNW]) {
-              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 25) & 0x07)
-                  : (packed >> 25) & 0x3F);
+            if (tWestVisible && zPixel < zb[offsetNW]) {
+              int i = (isCore ? SHADE_SLAB_CLIPPED - 3 + ((randu >> 25) & 0x07) : (packed >> 25) & 0x3F);
               p.addPixel(offsetNW, zPixel, sh[i]);
             }
           }
@@ -319,8 +306,9 @@ public class SphereRenderer {
         --offsetNW;
         ++xEast;
         --xWest;
-        if (isCore)
+        if (isCore) {
           randu = ((randu << 16) + (randu << 1) + randu) & 0x7FFFFFFF;
+		}
       } while (packed >= 0);
       offsetSouthCenter += w;
       offsetNorthCenter -= w;
@@ -339,23 +327,23 @@ public class SphereRenderer {
   private void renderQuadrant(int xSign, int ySign, int x, int y, int z, int diameter, int[] shades) {
     int radius = diameter / 2;
     int t = x + radius * xSign;
-    int xStatus = (x < 0 ? -1 : x < width ? 0 : 1)
-        + (t < 0 ? -2 : t < width ? 0 : 2);
-    if (xStatus == -3 || xStatus == 3)
+    int xStatus = (x < 0 ? -1 : x < width ? 0 : 1) + (t < 0 ? -2 : t < width ? 0 : 2);
+    if (xStatus == -3 || xStatus == 3) {
       return;
+	}
 
     t = y + radius * ySign;
-    int yStatus = (y < 0 ? -1 : y < height ? 0 : 1)
-        + (t < 0 ? -2 : t < height ? 0 : 2);
-    if (yStatus == -3 || yStatus == 3)
+    int yStatus = (y < 0 ? -1 : y < height ? 0 : 1) + (t < 0 ? -2 : t < height ? 0 : 2);
+    if (yStatus == -3 || yStatus == 3) {
       return;
+	}
 
-    boolean unclipped = (mat == null && xStatus == 0 && yStatus == 0 
-        && z - radius >= slab  && z <= depth);
-    if (unclipped)
+    boolean unclipped = (mat == null && xStatus == 0 && yStatus == 0 && z - radius >= slab  && z <= depth);
+    if (unclipped) {
       renderQuadrantUnclipped(radius, xSign, ySign, z, shades);
-    else
+	} else {
       renderQuadrantClipped(radius, xSign, ySign, x, y, z, shades);
+	}
   }
 
   private void renderQuadrantUnclipped(int radius, int xSign, int ySign, int z, int[] s) {
@@ -366,22 +354,20 @@ public class SphereRenderer {
     int[] zb = zbuf;
     Pixelator p = g3d.pixel;
     byte[] indexes = shader.sphereShadeIndexes;
-    for (int i = 0, i2 = 0; i2 <= r2; 
-        i2 += i + (++i),
-        ptLine += lineIncrement) {
+    for (int i = 0, i2 = 0; i2 <= r2; i2 += i + (++i), ptLine += lineIncrement) {
       int offset = ptLine;
       int s2 = r2 - i2;
       int z0 = z - radius;
       int y8 = ((i * ySign + radius) << 8) / dDivisor;
-      for (int j = 0, j2 = 0; j2 <= s2;
-           j2 += j + (++j),
-           offset += xSign) {
-          if (zb[offset] <= z0)
+      for (int j = 0, j2 = 0; j2 <= s2; j2 += j + (++j), offset += xSign) {
+          if (zb[offset] <= z0) {
             continue;
+		  }
           int k = (int)Math.sqrt(s2 - j2);
           z0 = z - k;
-          if (zb[offset] <= z0)
+          if (zb[offset] <= z0) {
             continue;
+		  }
           int x8 = ((j * xSign + radius) << 8) / dDivisor;
           p.addPixel(offset,z0, s[indexes[((y8 << 8) + x8)]]);
       }
@@ -425,13 +411,15 @@ public class SphereRenderer {
 
     for (int i = 0, i2 = 0, yC = y; i2 <= r2; i2 += i + (++i), ptLine += lineIncrement, yC += ySign) {
       if (yC < 0) {
-        if (ySign < 0)
+        if (ySign < 0) {
           return;
+		}
         continue;
       }
       if (yC >= h) {
-        if (ySign > 0)
+        if (ySign > 0) {
           return;
+		}
         continue;
       }
       int s2 = r2 - (isEllipsoid ? 0 : i2);
@@ -442,13 +430,15 @@ public class SphereRenderer {
       int xC = x0;
       for (int j = 0, j2 = 0, iRoot = -1, mode = 1, offset = ptLine; j2 <= s2; j2 += j + (++j), offset += xSign, xC += xSign) {
         if (xC < 0) {
-          if (xSign < 0)
+          if (xSign < 0) {
             break;
+		  }
           continue;
         }
         if (xC >= w) {
-          if (xSign > 0)
+          if (xSign > 0) {
             break;
+		  }
           continue;
         }
         int zPixel;
@@ -467,9 +457,7 @@ public class SphereRenderer {
            */
 
           double b_2a = (c[4] * xC + c[5] * yC + c[8]) / c[2] / 2;
-          double c_a = (c[0] * xC * xC + c[1] * yC * yC + c[3] * xC * yC + c[6]
-              * xC + c[7] * yC - 1)
-              / c[2];
+          double c_a = (c[0] * xC * xC + c[1] * yC * yC + c[3] * xC * yC + c[6] * xC + c[7] * yC - 1) / c[2];
           double f = b_2a * b_2a - c_a;
           if (f < 0) {
             if (iRoot >= 0) {
@@ -482,20 +470,24 @@ public class SphereRenderer {
           rt[0] = (-b_2a - f);
           rt[1] = (-b_2a + f);
           iRoot = (z0 < sl ? 1 : 0);
-          if ((zPixel = (int) rt[iRoot]) == 0)
+          if ((zPixel = (int) rt[iRoot]) == 0) {
             zPixel = z0;
+		  }
           mode = 2;
           z1 = zPixel;
           if (checkOctant) {
             pt.set(xC - x0, yC - y0, zPixel - z0);
             m.rotate(pt);
             int thisOctant = 0;
-            if (pt.x < 0)
+            if (pt.x < 0) {
               thisOctant |= 1;
-            if (pt.y < 0)
+			}
+            if (pt.y < 0) {
               thisOctant |= 2;
-            if (pt.z < 0)
+			}
+            if (pt.z < 0) {
               thisOctant |= 4;
+			}
             if (thisOctant == oct) {
               if (ps >= 0) {
                 iShade = ps;
@@ -504,11 +496,10 @@ public class SphereRenderer {
                 double dz;
                 double zMin = Double.MAX_VALUE;
                 for (int ii = 0; ii < 3; ii++) {
-                  if ((dz = xyz[ii][2]) == 0)
+                  if ((dz = xyz[ii][2]) == 0) {
                     continue;
-                  double ptz = z0
-                      + (-xyz[ii][0] * (xC - x) - xyz[ii][1]
-                          * (yC - y0)) / dz;
+				  }
+                  double ptz = z0 + (-xyz[ii][0] * (xC - x) - xyz[ii][1] * (yC - y0)) / dz;
                   if (ptz < zMin) {
                     zMin = ptz;
                     iMin = ii;
@@ -533,8 +524,9 @@ public class SphereRenderer {
               mode = 0;
             }
           }
-          if (zPixel < sl || zPixel > de || zb[offset] <= z1)
+          if (zPixel < sl || zPixel > de || zb[offset] <= z1) {
             continue;
+		  }
         } else {
           int zOffset = (int) Math.sqrt(s2 - j2);
           zPixel = z0 + (z0 < sl ? zOffset : -zOffset);
@@ -543,8 +535,9 @@ public class SphereRenderer {
             zPixel = sl;
             mode = 0;
           }
-          if (zPixel < sl || zPixel > de || zb[offset] <= zPixel)
+          if (zPixel < sl || zPixel > de || zb[offset] <= zPixel) {
             continue;
+		  }
         }
         switch (mode) {
         case 0: //core
@@ -569,5 +562,4 @@ public class SphereRenderer {
       randu = ((randu + xC + yC) | 1) & 0x7FFFFFFF;
     }
   }
-
 }

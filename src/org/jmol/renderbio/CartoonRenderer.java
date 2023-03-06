@@ -31,7 +31,6 @@ import org.jmol.script.T;
 import org.jmol.shapebio.BioShape;
 
 public class CartoonRenderer extends RocketsRenderer {
-
   private NucleicRenderer nucleicRenderer;
   
   @Override
@@ -102,5 +101,4 @@ public class CartoonRenderer extends RocketsRenderer {
     if (doRockets)
       renderRockets();
   }
-
 }

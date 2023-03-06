@@ -41,7 +41,6 @@ import org.jmol.util.Logger;
 import org.jmol.util.Normix;
 
 public class BioMeshRenderer extends MeshRenderer {
-
   private Mesh[] meshes;
   private boolean[] meshReady;
   private BS bsRenderMesh;
@@ -78,8 +77,7 @@ public class BioMeshRenderer extends MeshRenderer {
 
   public void setFancyRibbon(int i) {
     try {
-      if ((meshes[i] == null || !meshReady[i])
-          && !createMesh(i, bsr.madBeg, bsr.madMid, bsr.madEnd, bsr.aspectRatio, bsr.isNucleic ? 4 : 7))
+      if ((meshes[i] == null || !meshReady[i]) && !createMesh(i, bsr.madBeg, bsr.madMid, bsr.madEnd, bsr.aspectRatio, bsr.isNucleic ? 4 : 7))
         return;
       meshes[i].setColix(bsr.colix);
       meshes[i].setColixBack(bsr.colixBack);
@@ -94,8 +92,7 @@ public class BioMeshRenderer extends MeshRenderer {
 
   public void setFancyConic(int i, int tension) {
     try {
-      if ((meshes[i] == null || !meshReady[i])
-          && !createMesh(i, bsr.madBeg, bsr.madMid, bsr.madEnd, 1, tension))
+      if ((meshes[i] == null || !meshReady[i]) && !createMesh(i, bsr.madBeg, bsr.madMid, bsr.madEnd, 1, tension))
         return;
       meshes[i].setColix(bsr.colix);
       bsRenderMesh.set(i);
@@ -104,7 +101,6 @@ public class BioMeshRenderer extends MeshRenderer {
       bsRenderMesh.clear(i);
       meshes[i] = null;
       Logger.error("render mesh error hermiteConic: " + e.toString());
-      //System.out.println(e.getMessage());
     }
   }
 
@@ -112,10 +108,7 @@ public class BioMeshRenderer extends MeshRenderer {
     try {
       doCap0 = true;
       doCap1 = false;
-      if ((meshes[i] == null || !meshReady[i])
-          && !createMesh(i, (int) Math.floor(bsr.madBeg * 1.2),
-              (int) Math.floor(bsr.madBeg * 0.6), 0,
-              (bsr.aspectRatio == 1 ? bsr.aspectRatio : bsr.aspectRatio / 2), 7))
+      if ((meshes[i] == null || !meshReady[i]) && !createMesh(i, (int) Math.floor(bsr.madBeg * 1.2), (int) Math.floor(bsr.madBeg * 0.6), 0, (bsr.aspectRatio == 1 ? bsr.aspectRatio : bsr.aspectRatio / 2), 7))
         return;
       meshes[i].setColix(bsr.colix);
       bsRenderMesh.set(i);
@@ -124,7 +117,6 @@ public class BioMeshRenderer extends MeshRenderer {
       bsRenderMesh.clear(i);
       meshes[i] = null;
       Logger.error("render mesh error hermiteArrowHead: " + e.toString());
-      //System.out.println(e.getMessage());
     }
   }
 
@@ -161,8 +153,7 @@ public class BioMeshRenderer extends MeshRenderer {
    * @param tension 
    * @return true if deferred rendering is required due to normals averaging
    */
-  private boolean createMesh(int i, int madBeg, int madMid, int madEnd,
-                             double aspectRatio, int tension) {
+  private boolean createMesh(int i, int madBeg, int madMid, int madEnd, double aspectRatio, int tension) {
     bsr.setNeighbors(i);
     P3d[] cp = bsr.controlPoints;
     if (cp[i].distanceSquared(cp[bsr.iNext]) == 0)
@@ -181,8 +172,7 @@ public class BioMeshRenderer extends MeshRenderer {
 
     int nHermites = (bsr.hermiteLevel + 1) * 2 + 1; // 5 for hermiteLevel = 1; 13 for hermitelevel 5
     int nPer = (isFlatMesh ? 4 : (bsr.hermiteLevel + 1) * 4 - 2); // 6 for hermiteLevel 1; 22 for hermiteLevel 5
-    double angle = ((isFlatMesh ? Math.PI / (nPer - 1) : 2 * Math.PI
-        / nPer));
+    double angle = ((isFlatMesh ? Math.PI / (nPer - 1) : 2 * Math.PI / nPer));
     Mesh mesh = meshes[i] = new Mesh().mesh1(vwr, "mesh_" + shapeID + "_" + i, (short) 0, i);
     boolean variableRadius = (madBeg != madMid || madMid != madEnd);
 
@@ -191,28 +181,24 @@ public class BioMeshRenderer extends MeshRenderer {
     if (controlHermites == null || controlHermites.length < nHermites + 1) {
       controlHermites = new P3d[nHermites + 1];
     }
-    GData.getHermiteList(tension, cp[bsr.iPrev],
-        cp[i], cp[bsr.iNext], cp[bsr.iNext2],
-        cp[bsr.iNext3], controlHermites, 0, nHermites, true);
+    GData.getHermiteList(tension, cp[bsr.iPrev], cp[i], cp[bsr.iNext], cp[bsr.iNext2], cp[bsr.iNext3], controlHermites, 0, nHermites, true);
     // wing hermites determine the orientation of the cartoon
     if (wingHermites == null || wingHermites.length < nHermites + 1) {
       wingHermites = new V3d[nHermites + 1];
     }
 
     wing.setT(bsr.wingVectors[bsr.iPrev]);
-    if (madEnd == 0)
+    if (madEnd == 0) {
       wing.scale(2.0d); //adds a flair to an arrow
-    GData.getHermiteList(tension, wing, bsr.wingVectors[i],
-        bsr.wingVectors[bsr.iNext], bsr.wingVectors[bsr.iNext2], bsr.wingVectors[bsr.iNext3],
-        wingHermites, 0, nHermites, false);
+	}
+    GData.getHermiteList(tension, wing, bsr.wingVectors[i], bsr.wingVectors[bsr.iNext], bsr.wingVectors[bsr.iNext2], bsr.wingVectors[bsr.iNext3], wingHermites, 0, nHermites, false);
     //    }
     // radius hermites determine the thickness of the cartoon
     double radius1 = madBeg / 2000d;
     double radius2 = madMid / 2000d;
     double radius3 = madEnd / 2000d;
     if (variableRadius) {
-      if (radiusHermites == null
-          || radiusHermites.length < ((nHermites + 1) >> 1) + 1) {
+      if (radiusHermites == null || radiusHermites.length < ((nHermites + 1) >> 1) + 1) {
         radiusHermites = new P3d[((nHermites + 1) >> 1) + 1];
       }
       ptPrev.set(radius1, radius1, 0);
@@ -220,8 +206,7 @@ public class BioMeshRenderer extends MeshRenderer {
       pt1.set(radius2, radius3, 0);
       ptNext.set(radius3, radius3, 0);
       // two for the price of one!
-      GData.getHermiteList(4, ptPrev, pt, pt1, ptNext, ptNext,
-          radiusHermites, 0, (nHermites + 1) >> 1, true);
+      GData.getHermiteList(4, ptPrev, pt, pt1, ptNext, ptNext, radiusHermites, 0, (nHermites + 1) >> 1, true);
     }
 
     // now create the cartoon polygon
@@ -230,13 +215,11 @@ public class BioMeshRenderer extends MeshRenderer {
     int iMid = nHermites >> 1;
     int kpt1 = (nPer + 2) / 4;
     int kpt2 = (3 * nPer + 2) / 4;
-    int mode = (!isEccentric ? MODE_TUBE : isFlatMesh ? MODE_FLAT
-        : isElliptical ? MODE_ELLIPTICAL : MODE_NONELLIPTICAL);
+    int mode = (!isEccentric ? MODE_TUBE : isFlatMesh ? MODE_FLAT : isElliptical ? MODE_ELLIPTICAL : MODE_NONELLIPTICAL);
     boolean useMat = (mode == MODE_TUBE || mode == MODE_NONELLIPTICAL);
     for (int p = 0; p < nHermites; p++) {
       norm.sub2(controlHermites[p + 1], controlHermites[p]);
-      double scale = (!variableRadius ? radius1 : p < iMid ? radiusHermites[p].x
-          : radiusHermites[p - iMid].y);
+      double scale = (!variableRadius ? radius1 : p < iMid ? radiusHermites[p].x : radiusHermites[p - iMid].y);
       wing.setT(wingHermites[p]);
       wing1.setT(wing);
       switch (mode) {
@@ -325,8 +308,7 @@ public class BioMeshRenderer extends MeshRenderer {
           mesh.addV(vs[l], true);
         nPoints += nPer;
         for (int k = bsr.hermiteLevel * 2; --k >= 0;)
-          mesh.addQuad(nPoints - nPer + k + 2, nPoints - nPer + k + 1, nPoints
-              - nPer + (nPer - k) % nPer, nPoints - k - 1);
+          mesh.addQuad(nPoints - nPer + k + 2, nPoints - nPer + k + 1, nPoints - nPer + (nPer - k) % nPer, nPoints - k - 1);
       }
       if (doCap1) {
         T3d[] vs = mesh.getVertices();
@@ -334,8 +316,7 @@ public class BioMeshRenderer extends MeshRenderer {
           mesh.addV(vs[nPointsPreCap - nPer + l], true);
         nPoints += nPer;
         for (int k = bsr.hermiteLevel * 2; --k >= 0;)
-          mesh.addQuad(nPoints - k - 1, nPoints - nPer + (nPer - k) % nPer,
-              nPoints - nPer + k + 1, nPoints - nPer + k + 2);
+          mesh.addQuad(nPoints - k - 1, nPoints - nPer + (nPer - k) % nPer, nPoints - nPer + k + 1, nPoints - nPer + k + 2);
       }
     }
     meshReady[i] = true;
@@ -358,9 +339,7 @@ public class BioMeshRenderer extends MeshRenderer {
   void adjustCartoonSeamNormals(int i, int nPer) {
     if (bsTemp == null)
       bsTemp = Normix.newVertexBitSet();
-    if (i == bsr.iNext - 1 && bsr.iNext < bsr.monomerCount
-        && bsr.monomers[i].getStrucNo() == bsr.monomers[bsr.iNext].getStrucNo()
-        && meshReady[i] && meshReady[bsr.iNext]) {
+    if (i == bsr.iNext - 1 && bsr.iNext < bsr.monomerCount && bsr.monomers[i].getStrucNo() == bsr.monomers[bsr.iNext].getStrucNo() && meshReady[i] && meshReady[bsr.iNext]) {
       try {
         V3d[] normals2 = meshes[bsr.iNext].getNormalsTemp();
         V3d[] normals = meshes[i].getNormalsTemp();
@@ -382,8 +361,7 @@ public class BioMeshRenderer extends MeshRenderer {
     if (bsRenderMesh.isEmpty())
       return;
     setColix(bsr.colix);
-    for (int i = bsRenderMesh.nextSetBit(0); i >= 0; i = bsRenderMesh
-        .nextSetBit(i + 1))
+    for (int i = bsRenderMesh.nextSetBit(0); i >= 0; i = bsRenderMesh.nextSetBit(i + 1))
       renderBioMesh(meshes[i]);
   }
 
@@ -403,28 +381,4 @@ public class BioMeshRenderer extends MeshRenderer {
   private boolean checkDiameter(int d) {
     return (bsr.isHighRes && d > ABSOLUTE_MIN_MESH_SIZE || d >= MIN_MESH_RENDER_SIZE);
   }
-
-  /*
-  private void dumpPoint(Point3f pt, short color) {
-    Point3i pt1 = tm.transformPoint(pt);
-    g3d.fillSphereCentered(color, 20, pt1);
-  }
-
-  private void dumpVector(Point3f pt, Vector3f v, short color) {
-    Point3f p1 = new Point3f();
-    Point3i pt1 = new Point3i();
-    Point3i pt2 = new Point3i();
-    p1.add(pt, v);
-    pt1.set(tm.transformPoint(pt));
-    pt2.set(tm.transformPoint(p1));
-    System.out.print("draw pt" + ("" + Math.random()).substring(3, 10) + " {"
-        + pt.x + " " + pt.y + " " + pt.z + "} {" + p1.x + " " + p1.y + " "
-        + p1.z + "}" + ";" + " ");
-    g3d.fillCylinder(color, GData.ENDCAPS_FLAT, 2, pt1.x, pt1.y, pt1.z,
-        pt2.x, pt2.y, pt2.z);
-    g3d.fillSphereCentered(color, 5, pt2);
-  }
-  */
-
-
 }

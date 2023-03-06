@@ -6,9 +6,7 @@ import org.jmol.util.Font;
 
 import javajs.util.P3i;
 
-
 class TextString extends P3i implements Comparator<TextString> {
-  
   String text;
   Font font;
   int argb, bgargb;

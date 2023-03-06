@@ -26,15 +26,7 @@ package org.jmol.g3d;
 import org.jmol.api.JmolRendererInterface;
 import org.jmol.util.GData;
 
-/**
- * <p>
- * Implements flat circle drawing/filling routines.
- * </p>
- * 
- * @author Miguel, miguel@jmol.org
- */
 public final class CircleRenderer implements G3DRenderer {
-
   private Graphics3D g3d;
 
   public CircleRenderer() {
@@ -51,8 +43,7 @@ public final class CircleRenderer implements G3DRenderer {
     return this;
   }
 
-  void plotCircleCenteredClipped(int xCenter, int yCenter, int zCenter,
-                                 int diameter) {
+  void plotCircleCenteredClipped(int xCenter, int yCenter, int zCenter, int diameter) {
     Graphics3D g = g3d;
     int c = g.argbCurrent;
     int width = g.width;
@@ -67,23 +58,15 @@ public final class CircleRenderer implements G3DRenderer {
     int yChange = 1;
     int radiusError = 0;
     while (x >= y) {
-      g.plotPixelClippedArgb(c, xCenter + x - sizeCorrection, yCenter + y
-          - sizeCorrection, zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter + x - sizeCorrection, yCenter - y,
-          zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter - x, yCenter + y - sizeCorrection,
-          zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter - x, yCenter - y, zCenter, width, zbuf,
-          p);
+      g.plotPixelClippedArgb(c, xCenter + x - sizeCorrection, yCenter + y - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter + x - sizeCorrection, yCenter - y, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter - x, yCenter + y - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter - x, yCenter - y, zCenter, width, zbuf, p);
 
-      g.plotPixelClippedArgb(c, xCenter + y - sizeCorrection, yCenter + x
-          - sizeCorrection, zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter + y - sizeCorrection, yCenter - x,
-          zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter - y, yCenter + x - sizeCorrection,
-          zCenter, width, zbuf, p);
-      g.plotPixelClippedArgb(c, xCenter - y, yCenter - x, zCenter, width, zbuf,
-          p);
+      g.plotPixelClippedArgb(c, xCenter + y - sizeCorrection, yCenter + x - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter + y - sizeCorrection, yCenter - x, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter - y, yCenter + x - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelClippedArgb(c, xCenter - y, yCenter - x, zCenter, width, zbuf, p);
       ++y;
       radiusError += yChange;
       yChange += 2;
@@ -95,8 +78,7 @@ public final class CircleRenderer implements G3DRenderer {
     }
   }
 
-  void plotCircleCenteredUnclipped(int xCenter, int yCenter, int zCenter,
-                                   int diameter) {
+  void plotCircleCenteredUnclipped(int xCenter, int yCenter, int zCenter, int diameter) {
     int r = diameter / 2;
     int sizeCorrection = 1 - (diameter & 1);
     int x = r;
@@ -111,20 +93,14 @@ public final class CircleRenderer implements G3DRenderer {
     int c = g.argbCurrent;
 
     while (x >= y) {
-      g.plotPixelUnclipped(c, xCenter + x - sizeCorrection, yCenter + y
-          - sizeCorrection, zCenter, width, zbuf, p);
-      g.plotPixelUnclipped(c, xCenter + x - sizeCorrection, yCenter - y,
-          zCenter, width, zbuf, p);
-      g.plotPixelUnclipped(c, xCenter - x, yCenter + y - sizeCorrection,
-          zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter + x - sizeCorrection, yCenter + y - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter + x - sizeCorrection, yCenter - y, zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter - x, yCenter + y - sizeCorrection, zCenter, width, zbuf, p);
       g.plotPixelUnclipped(c, xCenter - x, yCenter - y, zCenter, width, zbuf, p);
 
-      g.plotPixelUnclipped(c, xCenter + y - sizeCorrection, yCenter + x
-          - sizeCorrection, zCenter, width, zbuf, p);
-      g.plotPixelUnclipped(c, xCenter + y - sizeCorrection, yCenter - x,
-          zCenter, width, zbuf, p);
-      g.plotPixelUnclipped(c, xCenter - y, yCenter + x - sizeCorrection,
-          zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter + y - sizeCorrection, yCenter + x - sizeCorrection, zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter + y - sizeCorrection, yCenter - x, zCenter, width, zbuf, p);
+      g.plotPixelUnclipped(c, xCenter - y, yCenter + x - sizeCorrection, zCenter, width, zbuf, p);
       g.plotPixelUnclipped(c, xCenter - y, yCenter - x, zCenter, width, zbuf, p);
       ++y;
       radiusError += yChange;
@@ -137,8 +113,7 @@ public final class CircleRenderer implements G3DRenderer {
     }
   }
 
-  void plotFilledCircleCenteredClipped(int xCenter, int yCenter, int zCenter,
-                                       int diameter) {
+  void plotFilledCircleCenteredClipped(int xCenter, int yCenter, int zCenter, int diameter) {
     // for halo only
     int r = diameter / 2;
     int sizeCorrection = 1 - (diameter & 1);
@@ -155,14 +130,10 @@ public final class CircleRenderer implements G3DRenderer {
     Pixelator p = g.pixel;
 
     while (x >= y) {
-      plotPixelsClipped(c, 2 * x + 1 - sizeCorrection, xCenter - x, yCenter
-          + y - sizeCorrection, zCenter, width, height, zbuf, p);
-      plotPixelsClipped(c, 2 * x + 1 - sizeCorrection, xCenter - x, yCenter
-          - y, zCenter, width, height, zbuf, p);
-      plotPixelsClipped(c, 2 * y + 1 - sizeCorrection, xCenter - y, yCenter
-          + x - sizeCorrection, zCenter, width, height, zbuf, p);
-      plotPixelsClipped(c, 2 * y + 1 - sizeCorrection, xCenter - y, yCenter
-          - x, zCenter, width, height, zbuf, p);
+      plotPixelsClipped(c, 2 * x + 1 - sizeCorrection, xCenter - x, yCenter + y - sizeCorrection, zCenter, width, height, zbuf, p);
+      plotPixelsClipped(c, 2 * x + 1 - sizeCorrection, xCenter - x, yCenter - y, zCenter, width, height, zbuf, p);
+      plotPixelsClipped(c, 2 * y + 1 - sizeCorrection, xCenter - y, yCenter + x - sizeCorrection, zCenter, width, height, zbuf, p);
+      plotPixelsClipped(c, 2 * y + 1 - sizeCorrection, xCenter - y, yCenter - x, zCenter, width, height, zbuf, p);
       ++y;
       radiusError += yChange;
       yChange += 2;
@@ -174,8 +145,7 @@ public final class CircleRenderer implements G3DRenderer {
     }
   }
 
-  private void plotPixelsClipped(int argb, int count, int x, int y, int z, int width,
-                         int height, int[] zbuf, Pixelator p) {
+  private void plotPixelsClipped(int argb, int count, int x, int y, int z, int width, int height, int[] zbuf, Pixelator p) {
     // for circle only; i.e. halo 
     // simple Z/window clip
     if (y < 0 || y >= height || x >= width)
@@ -197,8 +167,7 @@ public final class CircleRenderer implements G3DRenderer {
     }
   }
 
-  void plotFilledCircleCenteredUnclipped(int xCenter, int yCenter, int zCenter,
-                                         int diameter) {
+  void plotFilledCircleCenteredUnclipped(int xCenter, int yCenter, int zCenter, int diameter) {
     // for halo only
     int r = diameter / 2;
     int x = r;
@@ -212,14 +181,10 @@ public final class CircleRenderer implements G3DRenderer {
     int[] zbuf = g.zbuf;
     Pixelator p = g.pixel;
     while (x >= y) {
-      g.plotPixelsUnclippedCount(c, 2 * x + 1, xCenter - x, yCenter + y,
-          zCenter, width, zbuf, p);
-      g.plotPixelsUnclippedCount(c, 2 * x + 1, xCenter - x, yCenter - y,
-          zCenter, width, zbuf, p);
-      g.plotPixelsUnclippedCount(c, 2 * y + 1, xCenter - y, yCenter + x,
-          zCenter, width, zbuf, p);
-      g.plotPixelsUnclippedCount(c, 2 * y + 1, xCenter - y, yCenter - x,
-          zCenter, width, zbuf, p);
+      g.plotPixelsUnclippedCount(c, 2 * x + 1, xCenter - x, yCenter + y, zCenter, width, zbuf, p);
+      g.plotPixelsUnclippedCount(c, 2 * x + 1, xCenter - x, yCenter - y, zCenter, width, zbuf, p);
+      g.plotPixelsUnclippedCount(c, 2 * y + 1, xCenter - y, yCenter + x, zCenter, width, zbuf, p);
+      g.plotPixelsUnclippedCount(c, 2 * y + 1, xCenter - y, yCenter - x, zCenter, width, zbuf, p);
       ++y;
       radiusError += yChange;
       yChange += 2;
@@ -230,5 +195,4 @@ public final class CircleRenderer implements G3DRenderer {
       }
     }
   }
-
 }

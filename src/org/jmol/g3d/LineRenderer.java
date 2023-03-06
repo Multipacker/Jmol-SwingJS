@@ -53,7 +53,6 @@ import org.jmol.util.GData;
 import org.jmol.util.Shader;
 
 final class LineRenderer extends PrecisionRenderer {
-
   private final Graphics3D g3d;
   private final Shader shader;
 
@@ -115,8 +114,7 @@ final class LineRenderer extends PrecisionRenderer {
     //nCached = 0;
   }
 
-  void plotLineOld(int argbA, int argbB, int xA, int yA, int zA, int xB,
-                   int yB, int zB) {
+  void plotLineOld(int argbA, int argbB, int xA, int yA, int zA, int xB, int yB, int zB) {
     // primary method for mesh triangle, quadrilateral, hermite, backbone,
     // sticks, and stars
     x1t = xA;
@@ -133,8 +131,7 @@ final class LineRenderer extends PrecisionRenderer {
     case VISIBILITY_OFFSCREEN:
       return;
     }
-    plotLineClippedOld(argbA, argbB, xA, yA, zA, xB - xA, yB - yA, zB - zA,
-        clipped, 0, 0);
+    plotLineClippedOld(argbA, argbB, xA, yA, zA, xB - xA, yB - yA, zB - zA, clipped, 0, 0);
   }
 
   /**
@@ -150,8 +147,7 @@ final class LineRenderer extends PrecisionRenderer {
    * @param dzBA
    * @param clipped
    */
-  void plotLineDeltaOld(int argbA, int argbB, int xA, int yA, int zA, int dxBA,
-                        int dyBA, int dzBA, boolean clipped) {
+  void plotLineDeltaOld(int argbA, int argbB, int xA, int yA, int zA, int dxBA, int dyBA, int dzBA, boolean clipped) {
     // from cylinder -- endcaps open or flat, diameter 1, cone
     // cartoon rockets, low-precision z-buffer
     x1t = xA;
@@ -168,8 +164,7 @@ final class LineRenderer extends PrecisionRenderer {
         clipped = false;
         break;
       }
-    plotLineClippedOld(argbA, argbB, xA, yA, zA, dxBA, dyBA, dzBA, clipped, 0,
-        0);
+    plotLineClippedOld(argbA, argbB, xA, yA, zA, dxBA, dyBA, dzBA, clipped, 0, 0);
   }
 
   /**
@@ -187,9 +182,7 @@ final class LineRenderer extends PrecisionRenderer {
    * @param dz
    * @param clipped
    */
-  void plotLineDeltaAOld(int[] shades1, int[] shades2, int screenMask,
-                         int shadeIndex, int x, int y, int z, int dx, int dy,
-                         int dz, boolean clipped) {
+  void plotLineDeltaAOld(int[] shades1, int[] shades2, int screenMask, int shadeIndex, int x, int y, int z, int dx, int dy, int dz, boolean clipped) {
     // from cylinder -- standard bond with two colors or cone with one color
     x1t = x;
     x2t = x + dx;
@@ -197,13 +190,14 @@ final class LineRenderer extends PrecisionRenderer {
     y2t = y + dy;
     z1t = z;
     z2t = z + dz;
-    if (clipped)
+    if (clipped) {
       switch (getTrimmedLineImpl()) {
       case VISIBILITY_OFFSCREEN:
         return;
       case VISIBILITY_UNCLIPPED:
         clipped = false;
       }
+	}
     // special shading for bonds
     int[] zbuf = g3d.zbuf;
     int width = g3d.width;
@@ -212,8 +206,7 @@ final class LineRenderer extends PrecisionRenderer {
     int run = 1;
     int offset = y * width + x;
     int offsetMax = g3d.bufferSize;
-    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1
-        : shadeIndex);
+    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1 : shadeIndex);
     int shadeIndexDn = (shadeIndex > 0 ? shadeIndex - 1 : shadeIndex);
     int argb1 = shades1[shadeIndex];
     int argb1Up = shades1[shadeIndexUp];
@@ -227,11 +220,12 @@ final class LineRenderer extends PrecisionRenderer {
       p = g3d.setScreened((screenMask & 1) == 1);
       g3d.currentShadeIndex = 0;
     }
-    if (argb != 0 && !clipped && offset >= 0 && offset < offsetMax
-        && z < zbuf[offset])
+    if (argb != 0 && !clipped && offset >= 0 && offset < offsetMax && z < zbuf[offset]) {
       p.addPixel(offset, z, argb);
-    if (dx == 0 && dy == 0)
+	}
+    if (dx == 0 && dy == 0) {
       return;
+	}
     int xIncrement = 1;
     int yOffsetIncrement = width;
     int x2 = x + dx;
@@ -254,8 +248,9 @@ final class LineRenderer extends PrecisionRenderer {
     int argbDn = argb1Dn;
     if (dy <= dx) {
       int roundingFactor = dx - 1;
-      if (dz < 0)
+      if (dz < 0) {
         roundingFactor = -roundingFactor;
+	  }
       int zIncrementScaled = ((dz << 10) + roundingFactor) / dx;
       int twoDxAccumulatedYError = 0;
       int n1 = Math.abs(x2 - x2t) - 1;
@@ -263,8 +258,9 @@ final class LineRenderer extends PrecisionRenderer {
       for (int n = dx - 1, nMid = n / 2; --n >= n1;) {
         if (n == nMid) {
           argb = argb2;
-          if (argb == 0)
+          if (argb == 0) {
             return;
+		  }
           argbUp = argb2Up;
           argbDn = argb2Dn;
           if (screenMask % 3 != 0) {
@@ -279,21 +275,20 @@ final class LineRenderer extends PrecisionRenderer {
           offset += yOffsetIncrement;
           twoDxAccumulatedYError -= twoDx;
         }
-        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax
-            && runIndex < rise) {
+        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax && runIndex < rise) {
           int zCurrent = zCurrentScaled >> 10;
           if (zCurrent < zbuf[offset]) {
             int rand8 = shader.nextRandom8Bit();
-            p.addPixel(offset, zCurrent, rand8 < 85 ? argbDn
-                : (rand8 > 170 ? argbUp : argb));
+            p.addPixel(offset, zCurrent, rand8 < 85 ? argbDn : (rand8 > 170 ? argbUp : argb));
           }
         }
         runIndex = (runIndex + 1) % run;
       }
     } else {
       int roundingFactor = dy - 1;
-      if (dz < 0)
+      if (dz < 0) {
         roundingFactor = -roundingFactor;
+	  }
       int zIncrementScaled = ((dz << 10) + roundingFactor) / dy;
       int twoDyAccumulatedXError = 0;
       int n1 = Math.abs(y2 - y2t) - 1;// + 1;
@@ -301,8 +296,9 @@ final class LineRenderer extends PrecisionRenderer {
       for (int n = dy - 1, nMid = n / 2; --n >= n1;) {
         if (n == nMid) {
           argb = argb2;
-          if (argb == 0)
+          if (argb == 0) {
             return;
+		  }
           argbUp = argb2Up;
           argbDn = argb2Dn;
           if (screenMask % 3 != 0) {
@@ -317,13 +313,11 @@ final class LineRenderer extends PrecisionRenderer {
           offset += xIncrement;
           twoDyAccumulatedXError -= twoDy;
         }
-        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax
-            && runIndex < rise) {
+        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax && runIndex < rise) {
           int zCurrent = zCurrentScaled >> 10;
           if (zCurrent < zbuf[offset]) {
             int rand8 = g3d.shader.nextRandom8Bit();
-            p.addPixel(offset, zCurrent, rand8 < 85 ? argbDn
-                : (rand8 > 170 ? argbUp : argb));
+            p.addPixel(offset, zCurrent, rand8 < 85 ? argbDn : (rand8 > 170 ? argbUp : argb));
           }
         }
         runIndex = (runIndex + 1) % run;
@@ -331,8 +325,7 @@ final class LineRenderer extends PrecisionRenderer {
     }
   }
 
-  void plotLineDeltaABitsFloat(int[] shades1, int[] shades2, int shadeIndex, P3d ptA,
-                          P3d ptB, int screenMask, boolean clipped) {
+  void plotLineDeltaABitsFloat(int[] shades1, int[] shades2, int shadeIndex, P3d ptA, P3d ptB, int screenMask, boolean clipped) {
     // from cylinder -- cartoonRockets - somewhat higher precision, because
     // particularly for draw, we can have very short distances.
     int x = (int) Math.round(ptA.x);
@@ -350,16 +343,16 @@ final class LineRenderer extends PrecisionRenderer {
     y2t = by;
     z1t = z;
     z2t = bz;
-    if (clipped && getTrimmedLineImpl() == VISIBILITY_OFFSCREEN)
+    if (clipped && getTrimmedLineImpl() == VISIBILITY_OFFSCREEN) {
       return;
+	}
     // special shading for rockets; somewhat slower than above;
     int[] zbuf = g3d.zbuf;
     int width = g3d.width;
     int runIndex = 0;
     int rise = Integer.MAX_VALUE;
     int run = 1;
-    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1
-        : shadeIndex);
+    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1 : shadeIndex);
     int shadeIndexDn = (shadeIndex > 0 ? shadeIndex - 1 : shadeIndex);
     int argb1 = shades1[shadeIndex];
     int argb1Up = shades1[shadeIndexUp];
@@ -412,12 +405,14 @@ final class LineRenderer extends PrecisionRenderer {
     //0-------<-------------------|----w
 
     for (int i = i0, iBits = i0;; i += iIncrement, iBits += iIncrement) {
-      if (i == i1)
+      if (i == i1) {
         isInWindow = true;
+	  }
       if (i == iMid) {
         argb = argb2;
-        if (argb == 0)
+        if (argb == 0) {
           return;
+		}
         argbUp = argb2Up;
         argbDn = argb2Dn;
         if (screenMask % 3 != 0) {
@@ -425,29 +420,28 @@ final class LineRenderer extends PrecisionRenderer {
           g3d.currentShadeIndex = 0;
         }
       }
-      if (argb != 0 && isInWindow && offset >= 0 && offset < offsetMax
-          && runIndex < rise) {
+      if (argb != 0 && isInWindow && offset >= 0 && offset < offsetMax && runIndex < rise) {
         zCurrent = getZCurrent(a, b, i);
         if (zCurrent < zbuf[offset]) {
           int rand8 = shader.nextRandom8Bit();
-          p.addPixel(offset, (int) zCurrent, rand8 < 85 ? argbDn
-              : (rand8 > 170 ? argbUp : argb));
+          p.addPixel(offset, (int) zCurrent, rand8 < 85 ? argbDn : (rand8 > 170 ? argbUp : argb));
         }
       }
-      if (i == i2)
+      if (i == i2) {
         break;
+	  }
       runIndex = (runIndex + 1) % run;
       offset += xIncrement;
-      while (iBits < 0)
+      while (iBits < 0) {
         iBits += nBits;
+	  }
       if (lineBits.get(iBits % nBits)) {
         offset += yOffsetIncrement;
       }
     }
   }
 
-  void plotLineDeltaABitsInt(int[] shades1, int[] shades2, int shadeIndex, P3i ptA,
-                          P3i ptB, int screenMask, boolean clipped) {
+  void plotLineDeltaABitsInt(int[] shades1, int[] shades2, int shadeIndex, P3i ptA, P3i ptB, int screenMask, boolean clipped) {
     // from cylinder -- cartoonRockets
     int x = ptA.x;
     int y = ptA.y;
@@ -464,16 +458,16 @@ final class LineRenderer extends PrecisionRenderer {
     y2t = by;
     z1t = z;
     z2t = bz;
-    if (clipped && getTrimmedLineImpl() == VISIBILITY_OFFSCREEN)
+    if (clipped && getTrimmedLineImpl() == VISIBILITY_OFFSCREEN) {
       return;
+	}
     // special shading for rockets; somewhat slower than above;
     int[] zbuf = g3d.zbuf;
     int width = g3d.width;
     int runIndex = 0;
     int rise = Integer.MAX_VALUE;
     int run = 1;
-    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1
-        : shadeIndex);
+    int shadeIndexUp = (shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1 : shadeIndex);
     int shadeIndexDn = (shadeIndex > 0 ? shadeIndex - 1 : shadeIndex);
     int argb1 = shades1[shadeIndex];
     int argb1Up = shades1[shadeIndexUp];
@@ -526,12 +520,14 @@ final class LineRenderer extends PrecisionRenderer {
     //0-------<-------------------|----w
 
     for (int i = i0, iBits = i0;; i += iIncrement, iBits += iIncrement) {
-      if (i == i1)
+      if (i == i1) {
         isInWindow = true;
+	  }
       if (i == iMid) {
         argb = argb2;
-        if (argb == 0)
+        if (argb == 0) {
           return;
+		}
         argbUp = argb2Up;
         argbDn = argb2Dn;
         if (screenMask % 3 != 0) {
@@ -539,21 +535,21 @@ final class LineRenderer extends PrecisionRenderer {
           g3d.currentShadeIndex = 0;
         }
       }
-      if (argb != 0 && isInWindow && offset >= 0 && offset < offsetMax
-          && runIndex < rise) {
+      if (argb != 0 && isInWindow && offset >= 0 && offset < offsetMax && runIndex < rise) {
         zCurrent = getZCurrent(a, b, i);
         if (zCurrent < zbuf[offset]) {
           int rand8 = shader.nextRandom8Bit();
-          p.addPixel(offset, (int) zCurrent, rand8 < 85 ? argbDn
-              : (rand8 > 170 ? argbUp : argb));
+          p.addPixel(offset, (int) zCurrent, rand8 < 85 ? argbDn : (rand8 > 170 ? argbUp : argb));
         }
       }
-      if (i == i2)
+      if (i == i2) {
         break;
+	  }
       runIndex = (runIndex + 1) % run;
       offset += xIncrement;
-      while (iBits < 0)
+      while (iBits < 0) {
         iBits += nBits;
+	  }
       if (lineBits.get(iBits % nBits)) {
         offset += yOffsetIncrement;
       }
@@ -563,8 +559,9 @@ final class LineRenderer extends PrecisionRenderer {
   void plotLineBits(int argbA, int argbB, P3i ptA, P3i ptB, int run, int rise, boolean andClip) {
     // standard, dashed or not dashed
     // measures, axes, bbcage, mesh, cylinders 
-    if (ptA.z <= 1 || ptB.z <= 1)
+    if (ptA.z <= 1 || ptB.z <= 1) {
       return;
+	}
     boolean zclipped = true;
     x1t = ptA.x;
     y1t = ptA.y;
@@ -604,12 +601,13 @@ final class LineRenderer extends PrecisionRenderer {
     //boolean tScreened = tScreened1;
     int argb = argbA;
     Pixelator p = g3d.pixel;
-    if (argb != 0 && !zclipped && offset >= 0 && offset < offsetMax
-        && z < zbuf[offset])
+    if (argb != 0 && !zclipped && offset >= 0 && offset < offsetMax && z < zbuf[offset]) {
       p.addPixel(offset, z, argb);
+	}
 
-    if (dx == 0 && dy == 0)
+    if (dx == 0 && dy == 0) {
       return;
+	}
     int xIncrement = 1, yIncrement = 1;
     int yOffsetIncrement = width;
 
@@ -635,8 +633,9 @@ final class LineRenderer extends PrecisionRenderer {
       for (int n = dx - 1, nMid = n / 2; --n >= n1;) {
         if (n == nMid) {
           argb = argbB;
-          if (argb == 0)
+          if (argb == 0) {
             return;
+		  }
         }
         offset += xIncrement;
         x += xIncrement;
@@ -645,11 +644,11 @@ final class LineRenderer extends PrecisionRenderer {
           offset += yOffsetIncrement;
           twoDxAccumulatedYError -= twoDx;
         }
-        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax
-            && runIndex < rise) {
+        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax && runIndex < rise) {
           int zCurrent = getZCurrent(a, b, x);
-          if (zCurrent < zbuf[offset])
+          if (zCurrent < zbuf[offset]) {
             p.addPixel(offset, zCurrent, argb);
+		  }
         }
         runIndex = (runIndex + 1) % run;
       }
@@ -662,8 +661,9 @@ final class LineRenderer extends PrecisionRenderer {
       for (int n = dy - 1, nMid = n / 2; --n >= n1;) {
         if (n == nMid) {
           argb = argbB;
-          if (argb == 0)
+          if (argb == 0) {
             return;
+		  }
         }
         offset += yOffsetIncrement;
         y += yIncrement;
@@ -672,11 +672,11 @@ final class LineRenderer extends PrecisionRenderer {
           offset += xIncrement;
           twoDyAccumulatedXError -= twoDy;
         }
-        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax
-            && runIndex < rise) {
+        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax && runIndex < rise) {
           int zCurrent = getZCurrent(a, b, y);
-          if (zCurrent < zbuf[offset])
+          if (zCurrent < zbuf[offset]) {
             p.addPixel(offset, zCurrent, argb);
+		  }
         }
         runIndex = (runIndex + 1) % run;
       }
@@ -712,17 +712,20 @@ final class LineRenderer extends PrecisionRenderer {
     int cc1 = g3d.clipCode3(x1t, y1t, z1t);
     int cc2 = g3d.clipCode3(x2t, y2t, z2t);
     int c = (cc1 | cc2);
-    if ((cc1 | cc2) == 0)
+    if ((cc1 | cc2) == 0) {
       return VISIBILITY_UNCLIPPED;
-    if (c == -1)
+	}
+    if (c == -1) {
       return VISIBILITY_OFFSCREEN;
+	}
     int xLast = g3d.xLast;
     int yLast = g3d.yLast;
     int slab = g3d.slab;
     int depth = g3d.depth;
     do {
-      if ((cc1 & cc2) != 0)
+      if ((cc1 & cc2) != 0) {
         return VISIBILITY_OFFSCREEN;
+	  }
 
       double dx = x2t - x1t;
       double dy = y2t - y1t;
@@ -804,9 +807,7 @@ final class LineRenderer extends PrecisionRenderer {
    * @param run
    * @param rise
    */
-  private void plotLineClippedOld(int argb1, int argb2, int x, int y, int z,
-                                  int dx, int dy, int dz, boolean clipped,
-                                  int run, int rise) {
+  private void plotLineClippedOld(int argb1, int argb2, int x, int y, int z, int dx, int dy, int dz, boolean clipped, int run, int rise) {
     // standard, dashed or not dashed -- isosurface mesh
     int[] zbuf = g3d.zbuf;
     int width = g3d.width;
@@ -855,7 +856,6 @@ final class LineRenderer extends PrecisionRenderer {
       int n2 = Math.abs(x2 - x1t) - 1;
       for (int n = dx - 1, nMid = n / 2; --n >= n1;) {
         if (n == nMid) {
-
           //          tScreened = tScreened2;
 
           argb = argb2;
@@ -870,8 +870,7 @@ final class LineRenderer extends PrecisionRenderer {
           twoDxAccumulatedYError -= twoDx;
           //          flipflop = !flipflop;
         }
-        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax
-            && runIndex < rise) {
+        if (argb != 0 && n < n2 && offset >= 0 && offset < offsetMax && runIndex < rise) {
           int zCurrent = zCurrentScaled >> 10;
           if (zCurrent < zbuf[offset])
             p.addPixel(offset, zCurrent, argb);
@@ -910,5 +909,4 @@ final class LineRenderer extends PrecisionRenderer {
       }
     }
   }
-
 }

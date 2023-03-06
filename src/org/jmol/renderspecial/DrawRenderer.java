@@ -23,9 +23,6 @@
  */
 package org.jmol.renderspecial;
 
-
-
-
 import javajs.util.BS;
 import org.jmol.render.MeshRenderer;
 import org.jmol.script.T;
@@ -49,7 +46,6 @@ import org.jmol.viewer.ActionManager;
 import org.jmol.viewer.JC;
 
 public class DrawRenderer extends MeshRenderer {
-
   private EnumDrawType drawType;
   protected DrawMesh dmesh;
 
@@ -248,17 +244,14 @@ public class DrawRenderer extends MeshRenderer {
 
   }
 
-  private int setArc(T3d v1, T3d v2, T3d ptRef, double nDegreesOffset,
-                       double theta, double fractionalOffset, double scale) {
+  private int setArc(T3d v1, T3d v2, T3d ptRef, double nDegreesOffset, double theta, double fractionalOffset, double scale) {
     vTemp.sub2(v2, v1);
     // crossing point
     pt1f.scaleAdd2(fractionalOffset, vTemp, v1);
     // define rotational axis
-    M3d mat = new M3d().setAA(A4d.newVA(vTemp,
-        (nDegreesOffset * Math.PI / 180)));
+    M3d mat = new M3d().setAA(A4d.newVA(vTemp, (nDegreesOffset * Math.PI / 180)));
     // vector to rotate
-    vTemp2.sub2(ptRef,
-        v1);
+    vTemp2.sub2(ptRef, v1);
     vTemp2.cross(vTemp, vTemp2);
     vTemp2.cross(vTemp2, vTemp);
     vTemp2.normalize();
@@ -293,8 +286,7 @@ public class DrawRenderer extends MeshRenderer {
   private void getConnectionPoints() {
     // now we screens and any adjustment to positions
     // we need to set the actual control points
-    
-    
+
     vertexCount = 3;
     double dmax = Double.MAX_VALUE;
     int i0 = 0;
@@ -411,9 +403,7 @@ public class DrawRenderer extends MeshRenderer {
   private P3d s1f;
   private P3d s2f;
 
-  private void renderArrowHead(T3d pt1, T3d pt2, double factor2,
-                               boolean isTransformed, boolean withShaft,
-                               boolean isBarb) {
+  private void renderArrowHead(T3d pt1, T3d pt2, double factor2, boolean isTransformed, boolean withShaft, boolean isBarb) {
     if (dmesh.noHead)
       return;
     if (s0d == null) {
@@ -460,8 +450,7 @@ public class DrawRenderer extends MeshRenderer {
     if (diameter < 1)
       diameter = 1;
     if (headDiameter > 2)
-      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headDiameter, s1f, s2f,
-          isBarb);
+      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headDiameter, s1f, s2f, isBarb);
     if (withShaft)
       g3d.fillCylinderScreen3I(GData.ENDCAPS_FLAT, diameter, s0d, s1f, null, null, 0);
   }
@@ -483,8 +472,7 @@ public class DrawRenderer extends MeshRenderer {
     case NONE:
       return;
     default:
-      short colixFill = C.getColixTranslucent3(C.GOLD, true,
-          0.5d);
+      short colixFill = C.getColixTranslucent3(C.GOLD, true, 0.5d);
       bsHandles.clearAll();
       g3d.addRenderer(T.circle);
       for (int i = dmesh.pc; --i >= 0;) {
@@ -498,8 +486,7 @@ public class DrawRenderer extends MeshRenderer {
           if (bsHandles.get(k))
             continue;
           bsHandles.set(k);
-          g3d.drawFilledCircle(C.GOLD, colixFill, diameter,
-              screens[k].x, screens[k].y, screens[k].z);
+          g3d.drawFilledCircle(C.GOLD, colixFill, diameter, screens[k].x, screens[k].y, screens[k].z);
         }
       }
       break;
@@ -507,8 +494,7 @@ public class DrawRenderer extends MeshRenderer {
   }
 
   private void renderInfo() {
-    if (isExport || mesh.title == null || vwr.getDrawHover()
-        || !g3d.setC(vwr.cm.colixBackgroundContrast))
+    if (isExport || mesh.title == null || vwr.getDrawHover() || !g3d.setC(vwr.cm.colixBackgroundContrast))
       return;
     Font f0 = (Font) vwr.shm.getShapePropertyIndex(JC.SHAPE_DRAW, "font", -1);
     Font f = f0;
@@ -542,5 +528,4 @@ public class DrawRenderer extends MeshRenderer {
         break;
       }
   }
-
 }

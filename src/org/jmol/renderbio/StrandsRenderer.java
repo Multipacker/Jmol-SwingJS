@@ -24,14 +24,12 @@
 
 package org.jmol.renderbio;
 
-
 import javajs.util.P3d;
 
 import org.jmol.shapebio.BioShape;
 import org.jmol.shapebio.Strands;
 
 public class StrandsRenderer extends BioShapeRenderer {
-
   protected int strandCount = 1;
   protected double strandSeparation;
   protected double baseStrandOffset;

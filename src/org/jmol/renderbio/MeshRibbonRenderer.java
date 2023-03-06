@@ -27,7 +27,6 @@ package org.jmol.renderbio;
 import org.jmol.shapebio.BioShape;
 
 public class MeshRibbonRenderer extends StrandsRenderer {
-
   @Override
   protected void renderBioShape(BioShape bioShape) {
     if (wireframeOnly)

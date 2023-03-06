@@ -25,7 +25,6 @@
 
 package org.jmol.render;
 
-
 import javajs.util.BS;
 import org.jmol.modelset.Atom;
 import org.jmol.script.T;
@@ -33,7 +32,6 @@ import org.jmol.shape.Balls;
 import org.jmol.shape.Shape;
 
 public class BallsRenderer extends ShapeRenderer {
-
   @Override
   protected boolean render() {
     boolean needTranslucent = false;
@@ -42,11 +40,11 @@ public class BallsRenderer extends ShapeRenderer {
       short[] colixes = ((Balls) shape).colixes;
       BS bsOK = vwr.shm.bsRenderableAtoms;
       for (int i = bsOK.nextSetBit(0); i >= 0; i = bsOK.nextSetBit(i + 1)) {
-        if (atoms == null || atoms[i] == null)
+        if (atoms == null || atoms[i] == null) {
           return false;
+		}
         Atom atom = atoms[i];
-        if (atom.sD > 0
-            && (atom.shapeVisibilityFlags & myVisibilityFlag) != 0) {
+        if (atom.sD > 0 && (atom.shapeVisibilityFlags & myVisibilityFlag) != 0) {
           if (g3d.setC(colixes == null ? atom.colixAtom : Shape.getColix(colixes, i, atom))) {
             g3d.drawAtom(atom, 0);
           } else {
@@ -57,5 +55,4 @@ public class BallsRenderer extends ShapeRenderer {
     }
     return needTranslucent;
   }
-
 }

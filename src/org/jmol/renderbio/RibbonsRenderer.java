@@ -26,9 +26,7 @@ package org.jmol.renderbio;
 
 import org.jmol.shapebio.BioShape;
 
-
 public class RibbonsRenderer extends MeshRibbonRenderer {
-
   @Override
   protected void renderBioShape(BioShape bioShape) {
     if (wingVectors == null)
