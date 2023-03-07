@@ -30,7 +30,6 @@ import org.jmol.thread.JmolThread;
 import org.jmol.viewer.Viewer;
 
 class FileLoadThread extends JmolThread {
-
   String fileName;
   private String cacheName;
   private String key;
@@ -43,7 +42,6 @@ class FileLoadThread extends JmolThread {
    * @param fileName
    * @param key 
    * @param cacheName 
-   * 
    */
   public FileLoadThread(JmolScriptEvaluator eval, Viewer vwr, String fileName, String key, String cacheName) {
     setViewer(vwr, "FileLoadThread");
@@ -105,18 +103,14 @@ class FileLoadThread extends JmolThread {
    *        unused in Jmol
    * @throws InterruptedException
    */
-  void setData(String fileName, String fileName0, Object data, Object myData)
-      throws InterruptedException {
+  void setData(String fileName, String fileName0, Object data, Object myData) throws InterruptedException {
     //System.out.println("FileLoadThread async setData " + fileName);
     boolean isCanceled = fileName.equals("#CANCELED#");
-    sc.parentContext.htFileCache.put(key, (isCanceled ? fileName
-        : (cacheName = cacheName.substring(0, cacheName.lastIndexOf("_") + 1)
-            + fileName)));
+    sc.parentContext.htFileCache.put(key, (isCanceled ? fileName : (cacheName = cacheName.substring(0, cacheName.lastIndexOf("_") + 1) + fileName)));
     vwr.cachePut(cacheName, data);
     if (fileName0 != null) {
       vwr.cachePut(vwr.fm.getFilePath(fileName, true, false), data);
     }
     run1(FINISH);
   }
-  
 }

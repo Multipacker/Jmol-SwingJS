@@ -30,12 +30,10 @@ import org.jmol.thread.JmolThread;
 import org.jmol.viewer.Viewer;
 
 class ScriptDelayThread extends JmolThread {
-
   public static final int PAUSE_DELAY = -100;
   private int millis;
 
   /**
-   * 
    * @param eval
    * @param vwr
    * @param millis    negative to bypass pop/hold sequence

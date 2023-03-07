@@ -26,19 +26,11 @@
 package org.jmol.script;
 
 public class ScriptException extends Exception {
-
   private final ScriptEval eval;
   String message;
   String untranslated;
   boolean isError;
 
-  /**
-   * @param se 
-   * @param msg 
-   * @param untranslated 
-   * @param isError
-   *  
-   */
   ScriptException(ScriptError se, String msg, String untranslated, boolean isError) {
     eval = (ScriptEval) se;
     message = msg;

@@ -34,7 +34,6 @@ import java.util.Map;
 import org.jmol.api.JmolScriptFunction;
 
 public class ScriptFunction implements JmolScriptFunction {
-
   // / functions
 
   /**
@@ -95,16 +94,11 @@ public class ScriptFunction implements JmolScriptFunction {
       SV var = (i < nParameters && i < nParams ? params.get(i) : null);
       if (var != null && var.tok != T.varray)  // TODO: list type?
         var = SV.newT(var);
-      contextVariables.put(name, (var == null ? 
-          SV.newS("").setName(name) : var));
+      contextVariables.put(name, (var == null ?  SV.newS("").setName(name) : var));
     }
     if (tok != T.trycmd) {
       contextVariables.put("_argcount", SV.newI(params == null ? 0 : params.size()));
-      contextVariables.put(
-          "_arguments",
-          (params == null ? SV.getVariableAI(new int[] {}) : SV
-              .getVariableList(params)));
-
+      contextVariables.put( "_arguments", (params == null ? SV.getVariableAI(new int[] {}) : SV.getVariableList(params)));
     }
       
     contextVariables.put("_retval", SV.newI(tok == T.trycmd ? Integer.MAX_VALUE : 0));
@@ -135,9 +129,7 @@ public class ScriptFunction implements JmolScriptFunction {
       nParameters++;
   }
 
-  static void setFunction(ScriptFunction function, String script,
-                          int ichCurrentCommand, int pt, short[] lineNumbers,
-                          int[][] lineIndices, Lst<T[]> lltoken) {
+  static void setFunction(ScriptFunction function, String script, int ichCurrentCommand, int pt, short[] lineNumbers, int[][] lineIndices, Lst<T[]> lltoken) {
     int cmdpt0 = function.cmdpt0;
     int chpt0 = function.chpt0;
     int nCommands = pt - cmdpt0;
@@ -157,8 +149,7 @@ public class ScriptFunction implements JmolScriptFunction {
       if (aatoken[i].length > 0) {
         T tokenCommand = aatoken[i][0];
         if (T.tokAttr(tokenCommand.tok, T.flowCommand))
-          tokenCommand.intValue -= (tokenCommand.intValue < 0 ? -cmdpt0
-              : cmdpt0);
+          tokenCommand.intValue -= (tokenCommand.intValue < 0 ? -cmdpt0 : cmdpt0);
       }
     }
     for (int i = pt; --i >= cmdpt0;) {
@@ -175,8 +166,7 @@ public class ScriptFunction implements JmolScriptFunction {
 
   @Override
   public String toString() {
-    SB s = new SB().append("/*\n * ").append(name)
-        .append("\n */\n").append(getSignature()).append(" {\n");
+    SB s = new SB().append("/*\n * ").append(name).append("\n */\n").append(getSignature()).append(" {\n");
     if (script != null)
       s.append(script);
     s.append("}\n");
@@ -187,8 +177,7 @@ public class ScriptFunction implements JmolScriptFunction {
   public String getSignature() {
     if (typeName == null)
       return T.nameOf(tok);
-    SB s = new SB().append(typeName)
-      .append(" ").append(name).append("(");
+    SB s = new SB().append(typeName).append(" ").append(name).append("(");
     for (int i = 0; i < nParameters; i++) {
       if (i > 0)
         s.append(", ");

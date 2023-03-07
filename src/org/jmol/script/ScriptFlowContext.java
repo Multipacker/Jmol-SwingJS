@@ -178,9 +178,7 @@ class ScriptFlowContext {
   boolean checkForceEndIf(int offset) {
     if (ptCommand == compiler.iCommand && addLine > 0)
       addLine++;
-    boolean test = forceEndIf 
-        && ptCommand < compiler.iCommand 
-        && ptLine + (addLine == 0 ? 0 : addLine + offset) == compiler.lineCurrent;
+    boolean test = forceEndIf && ptCommand < compiler.iCommand && ptLine + (addLine == 0 ? 0 : addLine + offset) == compiler.lineCurrent;
     if (test) // only once!
       forceEndIf = false;
     return test;
@@ -201,9 +199,7 @@ class ScriptFlowContext {
   
   @Override
   public String toString() {
-    return "ident " + ident
-        + " line " + lineStart 
-        + " command " + commandStart;  
+    return "ident " + ident + " line " + lineStart + " command " + commandStart;  
   }
   
   String path() {

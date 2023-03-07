@@ -36,10 +36,8 @@ import org.jmol.viewer.ShapeManager;
 import org.jmol.viewer.Viewer;
 
 public class ScriptParallelProcessor extends ScriptFunction implements JmolParallelProcessor {
-
   /**
    * parallel operations
-   * 
    */
   
   public ScriptParallelProcessor() {
@@ -66,8 +64,7 @@ public class ScriptParallelProcessor extends ScriptFunction implements JmolParal
     error = null;
     counter = 0;
     if (Logger.debugging)
-      Logger.debug("running " + processes.size() + " processes on "
-          + Viewer.nProcessors + " processesors inParallel=" + inParallel);
+      Logger.debug("running " + processes.size() + " processes on " + Viewer.nProcessors + " processesors inParallel=" + inParallel);
 
     counter = processes.size();
     for (int i = processes.size(); --i >= 0;) {
@@ -110,15 +107,18 @@ public class ScriptParallelProcessor extends ScriptFunction implements JmolParal
     Shape[] newShapes = shapeManager.shapes;
     if (newShapes == null)
       return;
-    if (vwr.shm.shapes == null)
+    if (vwr.shm.shapes == null) {
       vwr.shm.shapes = newShapes;
-    else
-      for (int i = 0; i < newShapes.length; ++i)
+	} else {
+      for (int i = 0; i < newShapes.length; ++i) {
         if (newShapes[i] != null && newShapes[i] instanceof MeshCollection) {
-          if (vwr.shm.shapes[i] == null)
+          if (vwr.shm.shapes[i] == null) {
             vwr.shm.loadShape(i);
+		  }
           ((MeshCollection) vwr.shm.shapes[i]).merge((MeshCollection) newShapes[i]);
         }
+	  }
+	}
   }
 
   void clearShapeManager(Error er) {
@@ -149,7 +149,6 @@ public class ScriptParallelProcessor extends ScriptFunction implements JmolParal
     vwr.evalParallel(context, shapeManager);
   }
 
-
   private Executor getMyExecutor() {
     // a Java 1.5 function
     if (vwr.executor != null || Viewer.nProcessors < 2)
@@ -165,6 +164,4 @@ public class ScriptParallelProcessor extends ScriptFunction implements JmolParal
       Logger.error("parallel processing is not available");
     return (Executor) vwr.executor;
   }
-
-  
 }

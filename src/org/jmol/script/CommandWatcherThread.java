@@ -30,13 +30,9 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.Viewer;
 
 public class CommandWatcherThread extends JmolThread {
-  /**
-   * 
-   */
   private ScriptManager scriptManager;
 
   public CommandWatcherThread() {}
-  
   
   @Override
   public int setManager(Object manager, Viewer vwr, Object params) {
@@ -78,7 +74,5 @@ public class CommandWatcherThread extends JmolThread {
   
   @Override
   protected void run1(int mode) throws InterruptedException {
-    // N/A
   }
-
 }

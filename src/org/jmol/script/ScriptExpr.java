@@ -44,7 +44,6 @@ import javajs.util.T3d;
  * 
  */
 abstract class ScriptExpr extends ScriptParam {
-
   public boolean debugHigh;
 
   protected Map<String, ScriptFunction> privateFuncs;
@@ -74,27 +73,19 @@ abstract class ScriptExpr extends ScriptParam {
   }
 
   @SuppressWarnings("unchecked")
-  protected Lst<SV> parameterExpressionList(int pt, int ptAtom,
-                                           boolean isArrayItem)
-      throws ScriptException {
-    
+  protected Lst<SV> parameterExpressionList(int pt, int ptAtom, boolean isArrayItem) throws ScriptException {
     // isArrayItem will be true for centerParameter with $id[n]
     // in which case pt will be negative 
     
-    return (Lst<SV>) parameterExpression(pt, -1, null, true, true, ptAtom,
-        isArrayItem, null, null, false);
+    return (Lst<SV>) parameterExpression(pt, -1, null, true, true, ptAtom, isArrayItem, null, null, false);
   }
 
-  protected String parameterExpressionString(int pt, int ptMax)
-      throws ScriptException {
-    return (String) parameterExpression(pt, ptMax, "", true, false, -1, false,
-        null, null, false);
+  protected String parameterExpressionString(int pt, int ptMax) throws ScriptException {
+    return (String) parameterExpression(pt, ptMax, "", true, false, -1, false, null, null, false);
   }
 
-  protected boolean parameterExpressionBoolean(int pt, int ptMax)
-      throws ScriptException {
-    return ((Boolean) parameterExpression(pt, ptMax, null, true, false, -1,
-        false, null, null, false)).booleanValue();
+  protected boolean parameterExpressionBoolean(int pt, int ptMax) throws ScriptException {
+    return ((Boolean) parameterExpression(pt, ptMax, null, true, false, -1, false, null, null, false)).booleanValue();
   }
 
   protected SV parameterExpressionToken(int pt) throws ScriptException {
@@ -105,10 +96,8 @@ abstract class ScriptExpr extends ScriptParam {
   protected boolean parameterExpressionSelect(Map<String, SV> h, T[] where) throws ScriptException {
     st = where;
     slen = st.length;
-    return ((Boolean) parameterExpression(2, Integer.MIN_VALUE, null, true, false, -1,
-        false, h, null, false)).booleanValue();
+    return ((Boolean) parameterExpression(2, Integer.MIN_VALUE, null, true, false, -1, false, h, null, false)).booleanValue();
   }
-
 
   /**
    * This is the primary driver of the RPN (reverse Polish notation) expression
@@ -185,14 +174,12 @@ abstract class ScriptExpr extends ScriptParam {
       int tok = getToken(i).tok;
       if (isImplicitAtomProperty && tokAt(i + 1) != T.per) {
         // local variable definition
-        SV token = (localVars != null && localVars.containsKey(theToken.value) ? null
-            : getBitsetPropertySelector(i, T.bitset));
+        SV token = (localVars != null && localVars.containsKey(theToken.value) ? null : getBitsetPropertySelector(i, T.bitset));
         if (token != null) {
           rpn.addX(localVars.get(localVar));
           if (!rpn.addOpAllowMath(token, (tokAt(i + 1) == T.leftparen), T.nada))
             invArg();
-          if ((token.intValue == T.function || token.intValue == T.parallel)
-              && tokAt(iToken + 1) != T.leftparen) {
+          if ((token.intValue == T.function || token.intValue == T.parallel) && tokAt(iToken + 1) != T.leftparen) {
             rpn.addOp(T.tokenLeftParen);
             rpn.addOp(T.tokenRightParen);
           }
@@ -237,8 +224,7 @@ abstract class ScriptExpr extends ScriptParam {
           invArg();
         if (localVars == null)
           localVars = new Hashtable<String, SV>();
-        res = parameterExpression(++i, -1, null, ignoreComma, false, -1, false,
-            localVars, localVar, false);
+        res = parameterExpression(++i, -1, null, ignoreComma, false, -1, false, localVars, localVar, false);
         boolean TF = ((Boolean) res).booleanValue();
         int iT = iToken;
         if (getToken(iT++).tok != T.semicolon)
@@ -247,13 +233,11 @@ abstract class ScriptExpr extends ScriptParam {
         int iF = iToken;
         if (tokAt(iF++) != T.semicolon)
           invArg();
-        parameterExpression(-iF, -1, null, ignoreComma, false, 1, false,
-            localVars, localVar, false);
+        parameterExpression(-iF, -1, null, ignoreComma, false, 1, false, localVars, localVar, false);
         int iEnd = iToken;
         if (tokAt(iEnd) != T.rightparen)
           invArg();
-        v = parameterExpression(TF ? iT : iF, TF ? iF : iEnd, "XXX",
-            ignoreComma, false, 1, false, localVars, localVar, false);
+        v = parameterExpression(TF ? iT : iF, TF ? iF : iEnd, "XXX", ignoreComma, false, 1, false, localVars, localVar, false);
         i = iToken = iEnd;
         break;
       case T.forcmd:
@@ -268,8 +252,7 @@ abstract class ScriptExpr extends ScriptParam {
         // for(dummy;...
         // select(dummy;...
         if (isFunctionOfX) {
-          if (getToken(++i).tok != T.leftparen
-              || !T.tokAttr(getToken(++i).tok, T.identifier))
+          if (getToken(++i).tok != T.leftparen || !T.tokAttr(getToken(++i).tok, T.identifier))
             invArg();
           dummy = paramAsStr(i);
           if (getToken(++i).tok != T.semicolon)
@@ -324,9 +307,7 @@ abstract class ScriptExpr extends ScriptParam {
             jlast = j;
             bsX.set(j);
             t.index = j;
-            res = parameterExpression(i, pt2, (isFor ? "XXX" : null),
-                ignoreComma, isFor, j, false, localVars, isFunctionOfX ? null
-                    : dummy, false);
+            res = parameterExpression(i, pt2, (isFor ? "XXX" : null), ignoreComma, isFor, j, false, localVars, isFunctionOfX ? null : dummy, false);
             if (isFor) {
               if (res == null || ((Lst<?>) res).size() == 0)
                 invArg();
@@ -409,8 +390,7 @@ abstract class ScriptExpr extends ScriptParam {
           }
           v = getAssocArray(i);
         } else {
-          v = getPointOrPlane(i, MODE_P34 
-              | MODE_P_ALLOW_FRACTIONAL | MODE_P_CONVERT_TO_CARTESIAN);
+          v = getPointOrPlane(i, MODE_P34 | MODE_P_ALLOW_FRACTIONAL | MODE_P_CONVERT_TO_CARTESIAN);
         }
         i = iToken;
         break;
@@ -491,16 +471,14 @@ abstract class ScriptExpr extends ScriptParam {
           case T.sum:
           case T.sum2:
           case T.average:
-            allowMathFunc = (isUserFunction || var.intValue == T.distance
-                || tok2 == T.minmaxmask || tok2 == T.selectedfloat || tok2 == T.pivot);
+            allowMathFunc = (isUserFunction || var.intValue == T.distance || tok2 == T.minmaxmask || tok2 == T.selectedfloat || tok2 == T.pivot);
             var.intValue |= tok2 & T.minmaxmask;
             getToken(iToken + 2);
           }
         }
         int tokNext = tokAt(iToken + 1);
         allowMathFunc &= (tokNext == T.leftparen || isUserFunction);
-        if (!rpn.addOpAllowMath(var, allowMathFunc, isUserFunction ? tokNext
-            : T.nada))
+        if (!rpn.addOpAllowMath(var, allowMathFunc, isUserFunction ? tokNext : T.nada))
           invArg();
         i = iToken;
         if (var.intValue == T.function && tokNext != T.leftparen) {
@@ -537,8 +515,7 @@ abstract class ScriptExpr extends ScriptParam {
           i = iToken;
           break;
         }
-        if (T.tokAttr(theTok, T.mathop) || T.tokAttr(theTok, T.mathfunc)
-            && tokAt(iToken + 1) == T.leftparen) {
+        if (T.tokAttr(theTok, T.mathop) || T.tokAttr(theTok, T.mathfunc) && tokAt(iToken + 1) == T.leftparen) {
           if (!rpn.addOp(theToken)) {
             if (ptAtom >= 0) {
               // this is expected -- the right parenthesis
@@ -589,12 +566,9 @@ abstract class ScriptExpr extends ScriptParam {
           if (!haveParens)
             if (chk) {
               v = name;
-            } else if (localVars == null
-                || (v = PT.getMapValueNoCase(localVars, name)) == null
-                && allContext) {
+            } else if (localVars == null || (v = PT.getMapValueNoCase(localVars, name)) == null && allContext) {
               if (name.startsWith("_")) {
-                v = (name.equals("_") ? vwr.getModelSetAuxiliaryInfo() : name
-                    .equals("_m") ? vwr.getCurrentModelAuxInfo() : null);
+                v = (name.equals("_") ? vwr.getModelSetAuxiliaryInfo() : name.equals("_m") ? vwr.getCurrentModelAuxInfo() : null);
               }
               if (v == null)
                 v = getContextVariableAsVariable(name, false);
@@ -602,7 +576,6 @@ abstract class ScriptExpr extends ScriptParam {
                 invArg();
             }
           if (v == null) {
-
             if (T.tokAttr(theTok, T.identifier) && isFunction(name)) {
               if (!rpn.addOp(SV.newV(T.function, theToken.value)))
                 invArg();
@@ -700,10 +673,7 @@ abstract class ScriptExpr extends ScriptParam {
    * @return atom bitset
    * @throws ScriptException
    */
-  public BS atomExpression(T[] code, int pcStart, int pcStop,
-                           boolean allowRefresh, boolean allowUnderflow,
-                           Object[] ret, boolean andNotDeleted)
-      throws ScriptException {
+  public BS atomExpression(T[] code, int pcStart, int pcStop, boolean allowRefresh, boolean allowUnderflow, Object[] ret, boolean andNotDeleted) throws ScriptException {
     // note that this is general -- NOT just statement[]
     // errors reported would improperly access statement/line context
     // there should be no errors anyway, because this is for
@@ -715,8 +685,7 @@ abstract class ScriptExpr extends ScriptParam {
       tempStatement = st;
       st = code;
     }
-    ScriptMathProcessor rpn = new ScriptMathProcessor(this, false, false,
-        false, ret == null, allowUnderflow, null);
+    ScriptMathProcessor rpn = new ScriptMathProcessor(this, false, false, false, ret == null, allowUnderflow, null);
     Object val;
     boolean refreshed = false;
     iToken = 1000;
@@ -936,15 +905,13 @@ abstract class ScriptExpr extends ScriptParam {
         break;
       case T.spec_resid:
       case T.spec_chain:
-        rpn.addXBs(getAtomBits(instruction.tok,
-            Integer.valueOf(instruction.intValue)));
+        rpn.addXBs(getAtomBits(instruction.tok, Integer.valueOf(instruction.intValue)));
         break;
       case T.spec_seqcode:
         if (isInMath)
           rpn.addXNum(instruction);
         else
-          rpn.addXBs(getAtomBits(T.spec_seqcode,
-              Integer.valueOf(getSeqCode(instruction))));
+          rpn.addXBs(getAtomBits(T.spec_seqcode, Integer.valueOf(getSeqCode(instruction))));
         break;
       case T.spec_seqcode_range:
         if (isInMath) {
@@ -953,10 +920,8 @@ abstract class ScriptExpr extends ScriptParam {
           rpn.addXNum(code[++pc]);
           break;
         }
-        int chainID = (pc + 3 < code.length && code[pc + 2].tok == T.opAND
-            && code[pc + 3].tok == T.spec_chain ? code[pc + 3].intValue : -1);
-        rpn.addXBs(getAtomBits(T.spec_seqcode_range, new int[] {
-            getSeqCode(instruction), getSeqCode(code[++pc]), chainID }));
+        int chainID = (pc + 3 < code.length && code[pc + 2].tok == T.opAND && code[pc + 3].tok == T.spec_chain ? code[pc + 3].intValue : -1);
+        rpn.addXBs(getAtomBits(T.spec_seqcode_range, new int[] { getSeqCode(instruction), getSeqCode(code[++pc]), chainID }));
         if (chainID != -1)
           pc += 2;
         break;
@@ -1048,8 +1013,7 @@ abstract class ScriptExpr extends ScriptParam {
       error(ERROR_endOfStatementUnexpected);
     }
     Object exp = expressionResult.value;
-    if (exp instanceof String
-        && (ret == null || ((String) exp).startsWith("({"))) {
+    if (exp instanceof String && (ret == null || ((String) exp).startsWith("({"))) {
       // allow for select @{x} where x is a string that can evaluate to a bitset
       exp = (chk ? new BS() : getAtomBitSet(exp));
     }
@@ -1059,8 +1023,7 @@ abstract class ScriptExpr extends ScriptParam {
     }
     bs = (exp instanceof BS ? (BS) exp : new BS());
     isBondSet = (exp instanceof BondSet);
-    if (!isBondSet
-        && (bs = vwr.slm.excludeAtoms(bs, ignoreSubset)).length() > vwr.ms.ac)
+    if (!isBondSet && (bs = vwr.slm.excludeAtoms(bs, ignoreSubset)).length() > vwr.ms.ac)
       bs.clearAll();
     if (tempStatement != null) {
       st = tempStatement;
@@ -1069,8 +1032,7 @@ abstract class ScriptExpr extends ScriptParam {
     return bs;
   }
 
-  private BS getComparison(T t, int tokWhat, int tokOp, String strOp,
-                           double[] data) throws ScriptException {
+  private BS getComparison(T t, int tokWhat, int tokOp, String strOp, double[] data) throws ScriptException {
     int tokValue = t.tok;
     if (tokValue == T.varray) {
       BS bs = new BS();
@@ -1092,11 +1054,9 @@ abstract class ScriptExpr extends ScriptParam {
 
     boolean isModel = (tokWhat == T.model);
     boolean isIntProperty = T.tokAttr(tokWhat, T.intproperty);
-    boolean isFloatProperty = (T.tokAttr(tokWhat, T.floatproperty)
-        || (tokWhat & T.PROPERTYFLAGS) == T.atomproperty); // point
+    boolean isFloatProperty = (T.tokAttr(tokWhat, T.floatproperty) || (tokWhat & T.PROPERTYFLAGS) == T.atomproperty); // point
     boolean isIntOrFloat = isIntProperty && isFloatProperty;
-    boolean isStringProperty = !isIntProperty
-        && T.tokAttr(tokWhat, T.strproperty);
+    boolean isStringProperty = !isIntProperty && T.tokAttr(tokWhat, T.strproperty);
     // element comparisons must be numerical
     if (tokWhat == T.element)
       isIntProperty = !(isStringProperty = false);
@@ -1105,8 +1065,7 @@ abstract class ScriptExpr extends ScriptParam {
     if (T.tokAttr(tokValue, T.identifier)) {
       if ("_modelNumber".equalsIgnoreCase((String) val)) {
         int modelIndex = vwr.am.cmi;
-        val = Integer.valueOf(comparisonInt = (modelIndex < 0 ? 0 : vwr
-            .getModelFileNumber(modelIndex)));
+        val = Integer.valueOf(comparisonInt = (modelIndex < 0 ? 0 : vwr.getModelFileNumber(modelIndex)));
       } else {
         SV v = (SV) getParameter((String) val, T.variable, false);
         if (v != null) {
@@ -1142,16 +1101,14 @@ abstract class ScriptExpr extends ScriptParam {
         tokValue = T.integer;
         isIntProperty = true;
       } else if (!isStringProperty) {
-        if (tokWhat == T.structure || tokWhat == T.substructure
-            || tokWhat == T.element)
+        if (tokWhat == T.structure || tokWhat == T.substructure || tokWhat == T.element)
           isStringProperty = !(isIntProperty = (comparisonInt != Integer.MAX_VALUE));
         else
           val = SV.nValue(t);
         if (val instanceof Integer)
           comparisonFloat = comparisonInt = ((Integer) val).intValue();
         else if (val instanceof Double && isModel)
-          comparisonInt = ModelSet
-              .modelFileNumberFromFloat(((Number) val).doubleValue());
+          comparisonInt = ModelSet.modelFileNumberFromFloat(((Number) val).doubleValue());
       }
     }
     if (isStringProperty && !(val instanceof String)) {
@@ -1166,8 +1123,7 @@ abstract class ScriptExpr extends ScriptParam {
       } else if (isFloatProperty) {
         comparisonFloat = comparisonInt;
       }        
-    } else if (val instanceof Double
-        || val instanceof Double) {
+    } else if (val instanceof Double || val instanceof Double) {
       if (isModel) {
         tokWhat = -T.model;
       } else {
@@ -1196,10 +1152,14 @@ abstract class ScriptExpr extends ScriptParam {
       else if (!Double.isNaN(comparisonFloat))
         comparisonFloat = -comparisonFloat;
     }
-    return (isIntProperty ? compareInt(tokWhat, tokOp, comparisonInt)
-        : isStringProperty ? compareString(tokWhat, tokOp, (String) val)
-            : compareFloatData(tokWhat, data, tokOp, comparisonFloat));
 
+	if (isIntProperty ) {
+      return compareInt(tokWhat, tokOp, comparisonInt);
+	} else if (isStringProperty ) {
+      return compareString(tokWhat, tokOp, (String) val);
+	} else {
+      return compareFloatData(tokWhat, data, tokOp, comparisonFloat);
+	}
   }
   protected boolean noCopy(int i, int dir) {
     // when there is a ++ or -- before or after
@@ -1269,8 +1229,7 @@ abstract class ScriptExpr extends ScriptParam {
    * @param comparisonFloat
    * @return BitSet
    */
-  protected BS compareFloatData(int tokWhat, double[] data, int tokOperator,
-                                double comparisonFloat) {
+  protected BS compareFloatData(int tokWhat, double[] data, int tokOperator, double comparisonFloat) {
     BS bs = new BS();
     int ac = vwr.ms.ac;
     ModelSet modelSet = vwr.ms;
@@ -1324,20 +1283,17 @@ abstract class ScriptExpr extends ScriptParam {
     return false;
   }
 
-  private BS compareString(int tokWhat, int tokOperator, String comparisonString)
-      throws ScriptException {
+  private BS compareString(int tokWhat, int tokOperator, String comparisonString) throws ScriptException {
     BS bs = new BS();
     Atom[] atoms = vwr.ms.at;
     int ac = vwr.ms.ac;
-    boolean isCaseSensitive = (tokOperator == T.opLIKE || tokWhat == T.chain && vwr
-        .getBoolean(T.chaincasesensitive));
+    boolean isCaseSensitive = (tokOperator == T.opLIKE || tokWhat == T.chain && vwr.getBoolean(T.chaincasesensitive));
     if (!isCaseSensitive)
       comparisonString = comparisonString.toLowerCase();
     for (int i = ac; --i >= 0;) {
       if (atoms[i] == null)
         continue;
-      String propertyString = atoms[i]
-          .atomPropertyString(vwr, tokWhat);
+      String propertyString = atoms[i].atomPropertyString(vwr, tokWhat);
       if (!isCaseSensitive)
         propertyString = propertyString.toLowerCase();
       if (compareStringValues(tokOperator, propertyString, comparisonString))
@@ -1346,9 +1302,7 @@ abstract class ScriptExpr extends ScriptParam {
     return bs;
   }
 
-  private boolean compareStringValues(int tokOperator, String propertyValue,
-                                      String comparisonValue)
-      throws ScriptException {
+  private boolean compareStringValues(int tokOperator, String propertyValue, String comparisonValue) throws ScriptException {
     switch (tokOperator) {
     case T.opEQ:
     case T.opNE:
@@ -1456,8 +1410,7 @@ abstract class ScriptExpr extends ScriptParam {
           int symop = bitsetBaseValue / 1000 - 1;
           if (symop < 0) {
             match = true;
-          } else if (nOps == 0 || symop >= 0
-              && !(match = propertyBitSet.get(symop))) {
+          } else if (nOps == 0 || symop >= 0 && !(match = propertyBitSet.get(symop))) {
             continue;
           }
           bitsetComparator = T.none;
@@ -1479,7 +1432,6 @@ abstract class ScriptExpr extends ScriptParam {
           BS bs1 = BSUtil.copy(propertyBitSet);
           bs1.clearBits(nOps, bs1.length());
           propertyBitSet = bs1;
-
         }
         switch (bitsetComparator) {
         case T.opLT:
@@ -1580,8 +1532,7 @@ abstract class ScriptExpr extends ScriptParam {
 
     boolean haveIndex = (index != Integer.MAX_VALUE);
 
-    boolean isAtoms = haveIndex
-        || !(tokenValue instanceof BondSet) && !(bs instanceof BondSet);
+    boolean isAtoms = haveIndex || !(tokenValue instanceof BondSet) && !(bs instanceof BondSet);
     // check minmax flags:
 
     int minmaxtype = tok & T.minmaxmask;
@@ -1605,8 +1556,7 @@ abstract class ScriptExpr extends ScriptParam {
     boolean isString = false;
     switch (tok) {
     case T.__:
-      return ((Map<String, Object>) vwr.getModelSetAuxiliaryInfoForAtoms(bs))
-          .get("models");
+      return ((Map<String, Object>) vwr.getModelSetAuxiliaryInfoForAtoms(bs)).get("models");
     case T.xyz:
     case T.vibxyz:
     case T.fracxyz:
@@ -1634,8 +1584,7 @@ abstract class ScriptExpr extends ScriptParam {
     // preliminarty checks we only want to do once:
 
     P3d pt = (isPt || !isAtoms ? new P3d() : null);
-    if (isExplicitlyAll || isString && !haveIndex && minmaxtype != T.allfloat
-        && minmaxtype != T.min)
+    if (isExplicitlyAll || isString && !haveIndex && minmaxtype != T.allfloat && minmaxtype != T.min)
       minmaxtype = T.all;
     Lst<Object> vout = (minmaxtype == T.all ? new Lst<Object>() : null);
     BS bsNew = null;
@@ -1651,10 +1600,7 @@ abstract class ScriptExpr extends ScriptParam {
     case T.bonds:
       if (chk)
         return bs;
-      bsNew = (tok == T.atoms ? (isAtoms ? bs : vwr.ms.getAtoms(T.bonds, bs))
-          : (isAtoms
-              ? (BS) BondSet.newBS(vwr.getBondsForSelectedAtoms(bs), null)
-              : bs));
+      bsNew = (tok == T.atoms ? (isAtoms ? bs : vwr.ms.getAtoms(T.bonds, bs)) : (isAtoms ? (BS) BondSet.newBS(vwr.getBondsForSelectedAtoms(bs), null) : bs));
       int i;
       switch (minmaxtype) {
       case T.min:
@@ -1678,8 +1624,7 @@ abstract class ScriptExpr extends ScriptParam {
       switch (minmaxtype) {
       case 0:
       case T.all:
-        return getCmdExt().getBitsetIdent(bs, null, tokenValue, useAtomMap,
-            index, isExplicitlyAll);
+        return getCmdExt().getBitsetIdent(bs, null, tokenValue, useAtomMap, index, isExplicitlyAll);
       }
       return "";
     case T.function:
@@ -1704,11 +1649,9 @@ abstract class ScriptExpr extends ScriptParam {
       ptT = new P3d();
       break;
     case T.property:
-      data = (double[]) vwr.getDataObj((String) opValue, null,
-          JmolDataManager.DATA_TYPE_AD);
+      data = (double[]) vwr.getDataObj((String) opValue, null, JmolDataManager.DATA_TYPE_AD);
       if (data == null)
-        ffdata = (double[][]) vwr.getDataObj((String) opValue, null,
-            JmolDataManager.DATA_TYPE_ADD);
+        ffdata = (double[][]) vwr.getDataObj((String) opValue, null, JmolDataManager.DATA_TYPE_ADD);
       if (ffdata != null) {
         minmaxtype = T.all;
         vout = new Lst<Object>();
@@ -1757,8 +1700,7 @@ abstract class ScriptExpr extends ScriptParam {
       }
       if (chk)
         i1 = 0;
-      for (int i = i0; i >= 0
-          && i < i1; i = (haveBitSet ? bs.nextSetBit(i + 1) : i + 1)) {
+      for (int i = i0; i >= 0 && i < i1; i = (haveBitSet ? bs.nextSetBit(i + 1) : i + 1)) {
         n++;
         Atom atom;
         if (pts == null) {
@@ -1774,8 +1716,7 @@ abstract class ScriptExpr extends ScriptParam {
           switch (tok) {
           case T.function:
             bsAtom.set(i);
-            fv = SV.dValue(((ScriptEval) this)
-                .getUserFunctionResult(userFunction, params, tokenAtom));
+            fv = SV.dValue(((ScriptEval) this).getUserFunctionResult(userFunction, params, tokenAtom));
             bsAtom.clear(i);
             break;
           case T.property:
@@ -1785,9 +1726,7 @@ abstract class ScriptExpr extends ScriptParam {
             if (planeRef != null)
               fv = MeasureD.distanceToPlane(planeRef, atom);
             else
-              fv = (pts != null ? SV.ptValue(pts.get(i)).distance(ptRef)
-                  : atom != ptRef || minmaxtype != T.min ? atom.distance(ptRef)
-                      : Double.NaN);
+              fv = (pts != null ? SV.ptValue(pts.get(i)).distance(ptRef) : atom != ptRef || minmaxtype != T.min ? atom.distance(ptRef) : Double.NaN);
             break;
           default:
             fv = atom.atomPropertyFloat(vwr, tok, ptTemp);
@@ -1907,8 +1846,7 @@ abstract class ScriptExpr extends ScriptParam {
       boolean isAll = (bs == null);
       int i0 = (isAll ? 0 : bs.nextSetBit(0));
       int i1 = vwr.ms.bondCount;
-      for (int i = i0; i >= 0
-          && i < i1; i = (isAll ? i + 1 : bs.nextSetBit(i + 1))) {
+      for (int i = i0; i >= 0 && i < i1; i = (isAll ? i + 1 : bs.nextSetBit(i + 1))) {
         n++;
         Bond bond = modelSet.bo[i];
         switch (tok) {
@@ -2010,8 +1948,7 @@ abstract class ScriptExpr extends ScriptParam {
       return sout; // potential j2s issue here
     }
     if (isPt)
-      return (n == 0 ? Integer.valueOf(-1)
-          : P3d.new3(pt.x / n, pt.y / n, pt.z / n));
+      return (n == 0 ? Integer.valueOf(-1) : P3d.new3(pt.x / n, pt.y / n, pt.z / n));
     if (isHash)
       return new Hashtable<String, Object>();
     if (n == 0 || n == 1 && minmaxtype == T.stddev) {
@@ -2116,12 +2053,10 @@ abstract class ScriptExpr extends ScriptParam {
   }
 
   static protected int getSeqCode(T instruction) {
-    return (instruction.intValue == Integer.MAX_VALUE ? ((Integer) instruction.value)
-        .intValue() : Group.getSeqcodeFor(instruction.intValue, ' '));
+    return (instruction.intValue == Integer.MAX_VALUE ? ((Integer) instruction.value).intValue() : Group.getSeqcodeFor(instruction.intValue, ' '));
   }
 
   /**
-   * 
    * @param pt
    *        starting point in command token sequence
    * @param ptMax
@@ -2136,17 +2071,13 @@ abstract class ScriptExpr extends ScriptParam {
    * @throws ScriptException
    */
   @SuppressWarnings("unchecked")
-  protected SV setVariable(int pt, int ptMax, String key, boolean isSet)
-      throws ScriptException {
+  protected SV setVariable(int pt, int ptMax, String key, boolean isSet) throws ScriptException {
     BS bs = null;
     String propertyName = "";
     boolean settingData = key.startsWith("property_");
     boolean isThrown = key.equals("thrown_value");
-    boolean isExpression = (tokAt(1) == T.expressionBegin
-        || tokAt(1) == T.leftparen);
-    SV t = (settingData ? null
-        : key.length() == 0 ? new SV()
-            : getContextVariableAsVariable(key, false));
+    boolean isExpression = (tokAt(1) == T.expressionBegin || tokAt(1) == T.leftparen);
+    SV t = (settingData ? null : key.length() == 0 ? new SV() : getContextVariableAsVariable(key, false));
     // determine whether this is some sort of 
     // special assignment of a known variable
 
@@ -2185,8 +2116,7 @@ abstract class ScriptExpr extends ScriptParam {
       }
     }
     int nv = 0;
-    Lst<SV> v = (Lst<SV>) parameterExpression(pt, ptMax, key, true, true, -1,
-        false, null, null, isSet && pt == 1);
+    Lst<SV> v = (Lst<SV>) parameterExpression(pt, ptMax, key, true, true, -1, false, null, null, isSet && pt == 1);
     nv = v.size();
     if (nv == 0)
       invArg();
@@ -2263,8 +2193,7 @@ abstract class ScriptExpr extends ScriptParam {
             Object obj;
             if (tv.tok == T.varray) {
               int nmin = (tv.getList().size() == nbs ? nbs : nAtoms);
-              obj = (SV.getArrayDepth(tv) > 1 ? SV.ddlistValue(tv, nmin)
-                  : SV.dlistValue(tv, nmin));
+              obj = (SV.getArrayDepth(tv) > 1 ? SV.ddlistValue(tv, nmin) : SV.dlistValue(tv, nmin));
             } else {
               obj = tv.asString();
             }
@@ -2304,8 +2233,7 @@ abstract class ScriptExpr extends ScriptParam {
             || tv.value instanceof Boolean)));
 
     if (needVariable && key != null) {
-      if (key.startsWith("_")
-          || (t = vwr.g.getAndSetNewVariable(key, true)) == null)
+      if (key.startsWith("_") || (t = vwr.g.getAndSetNewVariable(key, true)) == null)
         errorStr(ERROR_invalidArgument, key);
     }
     if (t != null)
@@ -2317,8 +2245,7 @@ abstract class ScriptExpr extends ScriptParam {
       if (tv.tok == T.varray)
         vv = tv.asString();
       // very inefficient!
-      vwr.setData(key, new Object[] { key, "" + vv, BSUtil.copy(vwr.bsA()),
-          Integer.valueOf(0) }, vwr.ms.ac, 0, 0, Integer.MIN_VALUE, 0);
+      vwr.setData(key, new Object[] { key, "" + vv, BSUtil.copy(vwr.bsA()), Integer.valueOf(0) }, vwr.ms.ac, 0, 0, Integer.MIN_VALUE, 0);
       return null;
     }
 
@@ -2336,8 +2263,7 @@ abstract class ScriptExpr extends ScriptParam {
     return tv;
   }
 
-  private void setBitsetProperty(BS bs, int tok, int iValue, double fValue,
-                                 T tokenValue) throws ScriptException {
+  private void setBitsetProperty(BS bs, int tok, int iValue, double fValue, T tokenValue) throws ScriptException {
     if (chk || bs.isEmpty())
       return;
     String[] list = null;
@@ -2431,8 +2357,7 @@ abstract class ScriptExpr extends ScriptParam {
       if (!isStrProperty) {
         fvalues = new double[nValues];
         for (int i = nValues; --i >= 0;)
-          fvalues[i] = (tok == T.element ? Elements.elementNumberFromSymbol(
-              list[i], false) : PT.parseDouble(list[i]));
+          fvalues[i] = (tok == T.element ? Elements.elementNumberFromSymbol( list[i], false) : PT.parseDouble(list[i]));
       }
       if (tokenValue.tok != T.varray && nValues == 1) {
         if (isStrProperty)
@@ -2557,7 +2482,6 @@ abstract class ScriptExpr extends ScriptParam {
         tok = tokAt(0);
         forceString |= (T.tokAttr(tok, T.implicitStringCommand) || tok == T.script); // for the file names
         if (v == null) {
-          // 
           fixed[j] = T.tokenAll;
         } else if (v instanceof SV) {
           // select @{...}
@@ -2570,8 +2494,7 @@ abstract class ScriptExpr extends ScriptParam {
           fixed[j] = T.tv(T.decimal, Edge.getFloatEncodedInt("" + v), v);
         } else if (v instanceof String) {
           if (!forceString && !isExpression) {
-            if ((tok != T.set || j > 1 && st[1].tok != T.echo && !"labelfor".equalsIgnoreCase(st[1].value.toString()))
-                && T.tokAttr(tok, T.mathExpressionCommand)) {
+            if ((tok != T.set || j > 1 && st[1].tok != T.echo && !"labelfor".equalsIgnoreCase(st[1].value.toString())) && T.tokAttr(tok, T.mathExpressionCommand)) {
               v = getParameter((String) v, T.variable, true);
             }
             if (v instanceof String) {
@@ -2587,9 +2510,7 @@ abstract class ScriptExpr extends ScriptParam {
               // select @x  where x is "arg", for example
               // but not chain=@x  -- in that case we need a literal value
 
-              fixed[j] = (s.indexOf("|") >= 0
-                  || T.tokAttr(fixed[j - 1].tok, T.comparator) ? T.o(T.string,
-                  s) : T.o(T.bitset, getAtomBitSet(s)));
+              fixed[j] = (s.indexOf("|") >= 0 || T.tokAttr(fixed[j - 1].tok, T.comparator) ? T.o(T.string, s) : T.o(T.bitset, getAtomBitSet(s)));
             } else {
 
               // bit of a hack here....
@@ -2625,8 +2546,7 @@ abstract class ScriptExpr extends ScriptParam {
           fixed[j] = SV.newV(T.point4f, v);
         } else if (v instanceof M34d) {
           fixed[j] = SV.newV(v instanceof M4d ? T.matrix4f : T.matrix3f, v);
-        } else if (v instanceof Map<?, ?> || v instanceof ScriptContext
-            && (v = ((ScriptContext) v).getFullMap()) != null) {
+        } else if (v instanceof Map<?, ?> || v instanceof ScriptContext && (v = ((ScriptContext) v).getFullMap()) != null) {
           // x = @y -- do a deep copy -- Jmol 14.3.16
           fixed[j] = SV.newV(T.hash, (isExpression ? v : SV.deepCopy(v, true, true)));
         } else if (v instanceof Lst<?>) {
@@ -2665,8 +2585,9 @@ abstract class ScriptExpr extends ScriptParam {
       j++;
     }
     st = fixed;
-    for (i = j; i < st.length; i++)
+    for (i = j; i < st.length; i++) {
       st[i] = null;
+	}
     slen = j;
 
     return true;
@@ -2678,10 +2599,12 @@ abstract class ScriptExpr extends ScriptParam {
 
   protected void addFunction(ScriptFunction f) {
     if (f == null || f.isPrivate) {
-      if (privateFuncs == null)
+      if (privateFuncs == null) {
         privateFuncs = new Hashtable<String, ScriptFunction>();
-      if (f != null)
+	  }
+      if (f != null) {
         privateFuncs.put(f.name, f);
+	  }
     } else {
       vwr.addFunction(f);
     }
@@ -2691,6 +2614,4 @@ abstract class ScriptExpr extends ScriptParam {
     ScriptFunction f = (privateFuncs == null ? null : privateFuncs.get(sf));
     return (f == null ? (ScriptFunction) vwr.getFunction(sf) : f);
   }
-
-
 }

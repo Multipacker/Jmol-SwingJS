@@ -82,11 +82,8 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 
 public class ScriptEval extends ScriptExpr {
-
-  
   /*
    * To make this a bit more manageable, I separated ScriptEvaluator into four parts:
-   * 
    * 
    * ScriptEval                -- entry point and script command code
    * 
@@ -101,20 +98,10 @@ public class ScriptEval extends ScriptExpr {
    *   scriptext.MathExt       -- optionally loaded, less-used functions
    *   scriptext.SmilesExt     -- optionally loaded methods for cmds and math
    *   
-   * 
-   * 
-   * This main class is subdivided into the following sections:
-   * 
-   *  global fields
-   * 
-   * 
-   * 
-   * 
    *  Bob Hanson, 2/27/2014 
    */
   
   /*
-   *
    * The ScriptEvaluator class, the Viewer, the xxxxManagers, the Graphics3D
    * rendering engine, the ModelSet and Shape classes, and the Adapter file
    * reader classes form the core of the Jmol molecular visualization framework.
@@ -217,12 +204,9 @@ public class ScriptEval extends ScriptExpr {
    * Bob Hanson, 6/2009 hansonr@stolaf.edu
    */
 
-  
-  
   /////////////////// global fields ///////////////////
   
-  private final static String saveList = 
-      "bonds? context? coordinates? orientation? rotation? selection? state? structure?";
+  private final static String saveList = "bonds? context? coordinates? orientation? rotation? selection? state? structure?";
   
   private static int iProcess;
 
@@ -291,7 +275,7 @@ public class ScriptEval extends ScriptExpr {
 
   public int scriptLevel;
   public static final String CONTEXT_HOLD_QUEUE = "getEvalContextAndHoldQueue";
-  public static final String CONTEXT_DELAY = "delay";
+  public static final String CONTEXT_DELAY      = "delay";
 
   private static final long DELAY_INTERRUPT_MS = 1000000; // testing! 
 
@@ -365,8 +349,7 @@ public class ScriptEval extends ScriptExpr {
   @Override
   public ScriptEval setViewer(Viewer vwr) {
     this.vwr = vwr;
-    this.compiler = (compiler == null ? (ScriptCompiler) vwr.compiler
-        : compiler);
+    this.compiler = (compiler == null ? (ScriptCompiler) vwr.compiler : compiler);
     isJS = vwr.isSingleThreaded;
     return this;
   }
@@ -428,8 +411,7 @@ public class ScriptEval extends ScriptExpr {
   }
 
   public boolean useThreads() {
-    return (!chk && !vwr.headless && !vwr.autoExit
-        && vwr.haveDisplay && outputBuffer == null && allowJSThreads);
+    return (!chk && !vwr.headless && !vwr.autoExit && vwr.haveDisplay && outputBuffer == null && allowJSThreads);
   }
 
   private int executeCommands(boolean isTry, boolean reportCompletion) {
@@ -466,17 +448,12 @@ public class ScriptEval extends ScriptExpr {
       setErrorMessage(e.toString());
       errorMessageUntranslated = e.getErrorMessageUntranslated();
       report(errorMessage, true);
-      vwr
-          .notifyError(
-              (errorMessage != null
-                  && errorMessage.indexOf("java.lang.OutOfMemoryError") >= 0 ? "Error"
-                  : "ScriptException"), errorMessage, errorMessageUntranslated);
+      vwr.notifyError((errorMessage != null && errorMessage.indexOf("java.lang.OutOfMemoryError") >= 0 ? "Error" : "ScriptException"), errorMessage, errorMessageUntranslated);
       haveError = true;
     }
     if (haveError || !isJS || !allowJSThreads) {
       vwr.setTainted(true);
-      vwr.popHoldRepaint("executeCommands" + " "
-          + (scriptLevel > 0 ? JC.REPAINT_IGNORE : ""));
+      vwr.popHoldRepaint("executeCommands" + " " + (scriptLevel > 0 ? JC.REPAINT_IGNORE : ""));
     }
     timeEndExecution = System.currentTimeMillis();
     if (errorMessage == null && executionStopped)
@@ -487,11 +464,9 @@ public class ScriptEval extends ScriptExpr {
     String msg = getErrorMessageUntranslated();
     vwr.setErrorMessage(errorMessage, msg);
     if (!tQuiet && reportCompletion)
-      vwr.setScriptStatus("Jmol script terminated", errorMessage,
-          1 + (int) (timeEndExecution - timeBeginExecution), msg);
+      vwr.setScriptStatus("Jmol script terminated", errorMessage, 1 + (int) (timeEndExecution - timeBeginExecution), msg);
     return (haveError ? EXEC_ERR : EXEC_OK);
   }
-
 
   /**
    * From dispatchCommands and JmolThread resumeEval.
@@ -509,7 +484,6 @@ public class ScriptEval extends ScriptExpr {
    * 
    * @param sco
    */
-
   @Override
   public void resumeEval(Object sco) {
 
@@ -618,16 +592,14 @@ public class ScriptEval extends ScriptExpr {
    * @throws ScriptException
    */
   @Override
-  public void runScriptBuffer(String script, SB outputBuffer, boolean isFuncReturn)
-      throws ScriptException {
+  public void runScriptBuffer(String script, SB outputBuffer, boolean isFuncReturn) throws ScriptException {
     pushContext(null, "runScriptBuffer");
     contextPath += " >> script() ";
     this.outputBuffer = outputBuffer;
     setAllowJSThreads(false);
     boolean fret = this.isFuncReturn;
     this.isFuncReturn |= isFuncReturn;    
-    if (compileScript(null, script + JC.SCRIPT_EDITOR_IGNORE
-        + JC.REPAINT_IGNORE, false))
+    if (compileScript(null, script + JC.SCRIPT_EDITOR_IGNORE + JC.REPAINT_IGNORE, false))
       dispatchCommands(false, false, false);
     popContext(false, false);
     this.isFuncReturn = fret;
@@ -640,7 +612,6 @@ public class ScriptEval extends ScriptExpr {
    * @return a ScriptContext that indicates errors and provides a tokenized
    *         version of the script that has passed all syntax checking, both in
    *         the compiler and the evaluator
-   * 
    */
   @Override
   public ScriptContext checkScriptSilent(String script) {
@@ -661,14 +632,11 @@ public class ScriptEval extends ScriptExpr {
     return sc;
   }
 
-  static SB getContextTrace(Viewer vwr, ScriptContext sc, SB sb,
-                            boolean isTop) {
+  static SB getContextTrace(Viewer vwr, ScriptContext sc, SB sb, boolean isTop) {
     if (sb == null)
       sb = new SB();
     int pc = Math.min(sc.pc, sc.lineNumbers[sc.lineNumbers.length - 1]);
-    sb.append(getErrorLineMessage(sc.functionName, sc.scriptFileName,
-        sc.lineNumbers[pc], pc, ScriptEval.statementAsString(vwr,
-            sc.statement, (isTop ? sc.iToken : 9999), false)));
+    sb.append(getErrorLineMessage(sc.functionName, sc.scriptFileName, sc.lineNumbers[pc], pc, ScriptEval.statementAsString(vwr, sc.statement, (isTop ? sc.iToken : 9999), false)));
     if (sc.parentContext != null)
       getContextTrace(vwr, sc.parentContext, sb, false);
     return sb;
@@ -681,7 +649,6 @@ public class ScriptEval extends ScriptExpr {
     debugScript = vwr.getBoolean(T.debugscript);
     debugHigh = (debugScript && Logger.debugging);
   }
-
 
   @Override
   public void haltExecution() {
@@ -716,10 +683,9 @@ public class ScriptEval extends ScriptExpr {
   public void resumePausedExecution() {
     executionPaused = false;
     executionStepping = false;
-    if (!tQuiet)
-      vwr.setScriptStatus("Jmol script resumed", errorMessage,
-          1 + (int) (timeEndExecution - timeBeginExecution), "resumed");
-
+    if (!tQuiet) {
+      vwr.setScriptStatus("Jmol script resumed", errorMessage, 1 + (int) (timeEndExecution - timeBeginExecution), "resumed");
+	}
   }
 
   @Override
@@ -749,9 +715,7 @@ public class ScriptEval extends ScriptExpr {
    */
   @Override
   public String getNextStatement() {
-    return (pc < aatoken.length ? getErrorLineMessage(functionName,
-        scriptFileName, getLinenumber(null), pc,
-        statementAsString(vwr, aatoken[pc], -9999, debugHigh)) : "");
+    return (pc < aatoken.length ? getErrorLineMessage(functionName, scriptFileName, getLinenumber(null), pc, statementAsString(vwr, aatoken[pc], -9999, debugHigh)) : "");
   }
 
   /**
@@ -763,28 +727,31 @@ public class ScriptEval extends ScriptExpr {
    * @return a string representation of the command
    */
   private String getCommand(int pc, boolean allThisLine, boolean addSemi) {
-    if (pc >= lineIndices.length)
+    if (pc >= lineIndices.length) {
       return "";
+	}
     if (allThisLine) {
       int pt0 = -1;
       String s = script;
       int pt1 = s.length();
       for (int i = 0; i < lineNumbers.length; i++) {
         if (lineNumbers[i] == lineNumbers[pc]) {
-          if (pt0 < 0)
+          if (pt0 < 0) {
             pt0 = lineIndices[i][0];
+		  }
           pt1 = lineIndices[i][1];
         } else if (lineNumbers[i] == 0 || lineNumbers[i] > lineNumbers[pc]) {
           break;
         }
       }
-      if (s.indexOf('\1') >= 0)
+      if (s.indexOf('\1') >= 0) {
         s = s.substring(0, s.indexOf('\1'));
+	  }
       int len = s.length();
-      if (pt1 == len - 1 && s.endsWith("}"))
+      if (pt1 == len - 1 && s.endsWith("}")) {
         pt1++;
-      return (pt0 >= len || pt1 < pt0 || pt1 < 0 ? "" : s.substring(
-          Math.max(pt0, 0), Math.min(len, pt1)));
+	  }
+      return (pt0 >= len || pt1 < pt0 || pt1 < 0 ? "" : s.substring(Math.max(pt0, 0), Math.min(len, pt1)));
     }
     int ichBegin = lineIndices[pc][0];
     int ichEnd = lineIndices[pc][1];
@@ -792,14 +759,17 @@ public class ScriptEval extends ScriptExpr {
     // .length()
     // : lineIndices[pc + 1]);
     String s = "";
-    if (ichBegin < 0 || ichEnd <= ichBegin || ichEnd > script.length())
+    if (ichBegin < 0 || ichEnd <= ichBegin || ichEnd > script.length()) {
       return "";
+	}
     try {
       s = script.substring(ichBegin, ichEnd);
-      if (s.indexOf("\\\n") >= 0)
+      if (s.indexOf("\\\n") >= 0) {
         s = PT.rep(s, "\\\n", "  ");
-      if (s.indexOf("\\\r") >= 0)
+	  }
+      if (s.indexOf("\\\r") >= 0) {
         s = PT.rep(s, "\\\r", "  ");
+	  }
       // int i;
       // for (i = s.length(); --i >= 0 && !ScriptCompiler.eol(s.charAt(i), 0);
       // ){
@@ -811,8 +781,7 @@ public class ScriptEval extends ScriptExpr {
                                              */)
         s += ";";
     } catch (Exception e) {
-      Logger.error("darn problem in Eval getCommand: ichBegin=" + ichBegin
-          + " ichEnd=" + ichEnd + " len = " + script.length() + "\n" + e);
+      Logger.error("darn problem in Eval getCommand: ichBegin=" + ichBegin + " ichEnd=" + ichEnd + " len = " + script.length() + "\n" + e);
     }
     return s;
   }
@@ -821,21 +790,23 @@ public class ScriptEval extends ScriptExpr {
     int itok = iToken;
     iToken = -9999;
     if (debugHigh) {
-      if (st.length > 0)
+      if (st.length > 0) {
         Logger.debug(st[0].toString());
-      for (int i = 1; i < st.length; ++i)
-        if (st[i] != null)
+	  }
+      for (int i = 1; i < st.length; ++i) {
+        if (st[i] != null) {
           Logger.debug(st[i].toString());
+		}
+	  }
       SB strbufLog = new SB();
-      String s = (ifLevel > 0 ? "                          ".substring(0,
-          ifLevel * 2) : "");
-      strbufLog.append(s).append(
-          statementAsString(vwr, st, iToken, debugHigh));
+      String s = (ifLevel > 0 ? "                          ".substring(0, ifLevel * 2) : "");
+      strbufLog.append(s).append(statementAsString(vwr, st, iToken, debugHigh));
       vwr.scriptStatus(strbufLog.toString());
     } else {
       String cmd = getCommand(pc, false, false);
-      if (cmd != "")
+      if (cmd != "") {
         vwr.scriptStatus(cmd);
+	  }
     }
     iToken = itok;
   }
@@ -872,8 +843,6 @@ public class ScriptEval extends ScriptExpr {
     return o;
   }
 
-  
-  
   public void runBufferedSafely(String script, SB outputBuffer) {
     if (outputBuffer == null)
       outputBuffer = this.outputBuffer;
@@ -888,9 +857,6 @@ public class ScriptEval extends ScriptExpr {
     executing = exec0;
   }
 
-  
-  
-  
   public static SV runUserAction(String functionName, Object[] params, Viewer vwr) {
     ScriptEval ev = (new ScriptEval()).setViewer(vwr);
     JmolScriptFunction func = vwr.getFunction(functionName.toLowerCase());
@@ -915,14 +881,12 @@ public class ScriptEval extends ScriptExpr {
           if (compileOnly)
             return aatoken[0];
           setStatement(aatoken[0], 1);
-          return (asVariable ? parameterExpressionList(2, -1, false).get(0)
-              : parameterExpressionString(2, 0));
+          return (asVariable ? parameterExpressionList(2, -1, false).get(0) : parameterExpressionString(2, 0));
         }
       } else if (expr instanceof T[][] && ((T[][])expr)[0] instanceof T[]) {
         // in JavaScript legacy we must checking for [][] explicitly first
         setStatement(((T[][])expr)[0], 1);
-        return (asVariable ? parameterExpressionList(0, -1, false).get(0)
-            : parameterExpressionString(0, -1));
+        return (asVariable ? parameterExpressionList(0, -1, false).get(0) : parameterExpressionString(0, -1));
       } else if (expr instanceof T[]) {
         BS bs = atomExpression((T[]) expr, 0, 0, true, false, null, false);
         return (asVariable ? SV.newV(T.bitset, bs) : bs);
@@ -935,7 +899,6 @@ public class ScriptEval extends ScriptExpr {
 
   /**
    * Check a map for a WHERE phrase
-   * 
    */
   @Override
   public boolean checkSelect(Map<String, SV> h, T[] where) {
@@ -955,14 +918,11 @@ public class ScriptEval extends ScriptExpr {
    * Excepts one atom expression or one per line as "OR".
    * Excepts "()" as "none".
    * 
-   * 
    * @param atomExpression
    * @return is a bitset indicating the selected atoms
-   * 
    */
   @Override
   public BS getAtomBitSet(Object atomExpression) {
-
     // called by ScriptExpr and ScriptManager
     
     if (atomExpression instanceof BS)
@@ -987,15 +947,12 @@ public class ScriptEval extends ScriptExpr {
     return bs;
   }
 
-
   // ////////////////////// supporting methods for compilation and loading
 
-  public boolean compileScript(String filename, String strScript,
-                               boolean debugCompiler) {
+  public boolean compileScript(String filename, String strScript, boolean debugCompiler) {
     scriptFileName = filename;
     strScript = fixScriptPath(strScript, filename);
-    ScriptContext sc = compiler.compile(filename, strScript, false, false,
-        debugCompiler && Logger.debugging, false);
+    ScriptContext sc = compiler.compile(filename, strScript, false, false, debugCompiler && Logger.debugging, false);
     addFunction(null);
     Map<String, ScriptFunction> pf = privateFuncs;
     restoreScriptContext(sc, false, false, false);
@@ -1010,9 +967,9 @@ public class ScriptEval extends ScriptExpr {
       s = PT.rep(s, JC.SCRIPT_GUI, "");
     }
     pc = setScriptExtensions();
-    if (!chk && vwr.scriptEditorVisible
-        && strScript.indexOf(JC.SCRIPT_EDITOR_IGNORE) < 0)
+    if (!chk && vwr.scriptEditorVisible && strScript.indexOf(JC.SCRIPT_EDITOR_IGNORE) < 0) {
       vwr.scriptStatus("");
+	}
     script = s;
     return !error;
   }
@@ -1032,24 +989,29 @@ public class ScriptEval extends ScriptExpr {
 
   private int setScriptExtensions() {
     String extensions = scriptExtensions;
-    if (extensions == null)
+    if (extensions == null) {
       return 0;
+	}
     int pt = extensions.indexOf(JC.SCRIPT_STEP);
     if (pt >= 0) {
       executionStepping = true;
     }
     pt = extensions.indexOf(JC.SCRIPT_START);
-    if (pt < 0)
+    if (pt < 0) {
       return 0;
+	}
     pt = PT.parseInt(extensions.substring(pt + JC.SCRIPT_START.length()));
-    if (pt == Integer.MIN_VALUE)
+    if (pt == Integer.MIN_VALUE) {
       return 0;
+	}
     for (pc = 0; pc < lineIndices.length; pc++) {
-      if (lineIndices[pc][0] > pt || lineIndices[pc][1] >= pt)
+      if (lineIndices[pc][0] > pt || lineIndices[pc][1] >= pt) {
         break;
+	  }
     }
-    if (pc > 0 && pc < lineIndices.length && lineIndices[pc][0] > pt)
+    if (pc > 0 && pc < lineIndices.length && lineIndices[pc][0] > pt) {
       --pc;
+	}
     return pc;
   }
 
@@ -1061,8 +1023,7 @@ public class ScriptEval extends ScriptExpr {
    * @param scriptPath
    * @return  Jmol script or null
    */
-  private String getScriptFileInternal(String filename, String localPath,
-                                            String remotePath, String scriptPath) {
+  private String getScriptFileInternal(String filename, String localPath, String remotePath, String scriptPath) {
     // from "script" command, with push/pop surrounding or vwr
     if (filename.toLowerCase().indexOf("javascript:") == 0) {
       return vwr.jsEval(filename.substring(11));
@@ -1095,16 +1056,14 @@ public class ScriptEval extends ScriptExpr {
         path = FileManager.getManifestScriptPath(data[1]);
       }
       if (path != null && path.length() > 0) {
-        data[0] = filename = filename.substring(0, filename.lastIndexOf("|"))
-            + path;
+        data[0] = filename = filename.substring(0, filename.lastIndexOf("|")) + path;
         if (!vwr.fm.getFileDataAsString(data, -1, false, true, false)) { // third entry
           setErrorMessage("io error reading " + data[0] + ": " + data[1]);
           return null;
         }
       }
       if (filename.endsWith("|state.spt")) {
-        vwr.g.setO("_pngjFile", filename.substring(0, filename.length() - 10)
-            + "?");
+        vwr.g.setO("_pngjFile", filename.substring(0, filename.length() - 10) + "?");
       }   
     }
     scriptFileName = filename;
@@ -1112,11 +1071,9 @@ public class ScriptEval extends ScriptExpr {
     String script = fixScriptPath(data[1], data[0]);
     if (scriptPath == null) {
       scriptPath = vwr.fm.getFilePath(filename, false, false);
-      scriptPath = scriptPath.substring(0,
-          Math.max(scriptPath.lastIndexOf("|"), scriptPath.lastIndexOf("/")));
+      scriptPath = scriptPath.substring(0, Math.max(scriptPath.lastIndexOf("|"), scriptPath.lastIndexOf("/")));
     }
-    return FileManager.setScriptFileReferences(script, localPath, remotePath,
-        scriptPath) + movieScript;
+    return FileManager.setScriptFileReferences(script, localPath, remotePath, scriptPath) + movieScript;
   }
 
   // ///////////// Jmol function support  // ///////////////
@@ -1130,8 +1087,9 @@ public class ScriptEval extends ScriptExpr {
   public double evalFunctionFloat(Object func, Object params, double[] values) {
     try {
       Lst<SV> p = (Lst<SV>) params;
-      for (int i = 0; i < values.length; i++)
+      for (int i = 0; i < values.length; i++) {
         p.get(i).value = Double.valueOf(values[i]);
+	  }
       ScriptFunction f = (ScriptFunction) func;
       return SV.dValue(runFunctionAndRet(f, f.name, p, null, true, false, false));
     } catch (Exception e) {
@@ -1140,20 +1098,14 @@ public class ScriptEval extends ScriptExpr {
 
   }
 
-  public SV getUserFunctionResult(String name, Lst<SV> params, SV tokenAtom)
-      throws ScriptException {
+  public SV getUserFunctionResult(String name, Lst<SV> params, SV tokenAtom) throws ScriptException {
 
     // called by ScriptExpr(getBitsetProperty) and ScriptExt(evaluateUserFunction)
-    //
-    
+
     return runFunctionAndRet(null, name, params, tokenAtom, true, true, false);
   }
   
-  private SV runFunctionAndRet(JmolScriptFunction function, String name,
-                           Lst<SV> params, SV tokenAtom, boolean getReturn,
-                           boolean setContextPath, boolean allowThreads)
-      throws ScriptException {
-    
+  private SV runFunctionAndRet(JmolScriptFunction function, String name, Lst<SV> params, SV tokenAtom, boolean getReturn, boolean setContextPath, boolean allowThreads) throws ScriptException {
     // called by cmdFlow(TRY command), cmdFunc(user-defined command),
     // evalFunctionFloat (isosurface looking for a value), getFunctionRet
     // (above)
@@ -1171,8 +1123,9 @@ public class ScriptEval extends ScriptExpr {
       contextPath += " >> " + name;
     }
     pushContext(null, "runFunctionAndRet ");
-    if (allowJSThreads)
+    if (allowJSThreads) {
       setAllowJSThreads(allowThreads);
+	}
     boolean isTry = (function.getTok() == T.trycmd);
     thisContext.isTryCatch = isTry;
     thisContext.isFunction = !isTry;
@@ -1281,9 +1234,9 @@ public class ScriptEval extends ScriptExpr {
       // breaking from FOR or WHILE (or PROCESS?)
       pc = -1;
       while (pc != pt && thisContext != null) {
-        while (thisContext != null
-            && !ScriptCompiler.isBreakableContext(thisContext.token.tok))
+        while (thisContext != null && !ScriptCompiler.isBreakableContext(thisContext.token.tok)) {
           popContext(true, false);
+		}
         pc = thisContext.pc;
         popContext(true, false);
       }
@@ -1299,8 +1252,7 @@ public class ScriptEval extends ScriptExpr {
    * @param tokenAtom
    * @throws ScriptException
    */
-  private void restoreFunction(JmolScriptFunction f, Lst<SV> params,
-                               SV tokenAtom) throws ScriptException {
+  private void restoreFunction(JmolScriptFunction f, Lst<SV> params, SV tokenAtom) throws ScriptException {
     ScriptFunction function = (ScriptFunction) f;
     aatoken = function.aatoken;
     lineNumbers = function.lineNumbers;
@@ -1311,10 +1263,10 @@ public class ScriptEval extends ScriptExpr {
       contextVariables = new Hashtable<String, SV>();
       function.setVariables(contextVariables, params);
     }
-    if (tokenAtom != null)
+    if (tokenAtom != null) {
       contextVariables.put("_x", tokenAtom);
+	}
   }
-
   
   ////////////////////////// defined atom sets ////////////////////////
   
@@ -1324,18 +1276,20 @@ public class ScriptEval extends ScriptExpr {
 
   /**
    * support for @xxx or define xxx commands
-   * 
    */
   private void defineSets() {
     if (!vwr.definedAtomSets.containsKey("# static")) {
-      for (int i = 0; i < JC.predefinedStatic.length; i++)
+      for (int i = 0; i < JC.predefinedStatic.length; i++) {
         defineAtomSet(JC.predefinedStatic[i]);
+	  }
       defineAtomSet("# static");
     }
-    if (vwr.definedAtomSets.containsKey("# variable"))
+    if (vwr.definedAtomSets.containsKey("# variable")) {
       return;
-    for (int i = 0; i < JC.predefinedVariable.length; i++)
+	}
+    for (int i = 0; i < JC.predefinedVariable.length; i++) {
       defineAtomSet(JC.predefinedVariable[i]);
+	}
     // Now, define all the elements as predefined sets
 
     // name ==> elemno=n for all standard elements, isotope-blind
@@ -1347,8 +1301,7 @@ public class ScriptEval extends ScriptExpr {
     }
     // name ==> _e=nn for each alternative element
     for (int i = Elements.firstIsotope; --i >= 0;) {
-      String definition = "@" + Elements.altElementNameFromIndex(i) + " _e="
-          + Elements.altElementNumberFromIndex(i);
+      String definition = "@" + Elements.altElementNameFromIndex(i) + " _e=" + Elements.altElementNumberFromIndex(i);
       defineAtomSet(definition);
     }
     // these variables _e, _x can't be more than two characters
@@ -1367,8 +1320,9 @@ public class ScriptEval extends ScriptExpr {
       defineAtomSet(definition + def);
 
       definition = "@" + Elements.altElementNameFromIndex(i);
-      if (definition.length() > 1)
+      if (definition.length() > 1) {
         defineAtomSet(definition + def);
+	  }
 
       // @_12C _e=6
       // @_C12 _e=6
@@ -1391,28 +1345,22 @@ public class ScriptEval extends ScriptExpr {
     ScriptContext sc = compiler.compile("#predefine", script, true, false,
         false, false);
     if (sc.errorType != null) {
-      vwr
-          .scriptStatus("JmolConstants.java ERROR: predefined set compile error:"
-              + script + "\ncompile error:" + sc.errorMessageUntranslated);
+      vwr.scriptStatus("JmolConstants.java ERROR: predefined set compile error:" + script + "\ncompile error:" + sc.errorMessageUntranslated);
       return;
     }
 
     if (sc.getTokenCount() != 1) {
-      vwr
-          .scriptStatus("JmolConstants.java ERROR: predefinition does not have exactly 1 command:"
-              + script);
+      vwr.scriptStatus("JmolConstants.java ERROR: predefinition does not have exactly 1 command:" + script);
       return;
     }
     T[] statement = sc.getToken(0);
     if (statement.length <= 2) {
-      vwr.scriptStatus("JmolConstants.java ERROR: bad predefinition length:"
-          + script);
+      vwr.scriptStatus("JmolConstants.java ERROR: bad predefinition length:" + script);
       return;
     }
     int tok = statement[1].tok;
     if (!T.tokAttr(tok, T.identifier) && !T.tokAttr(tok, T.predefinedset)) {
-      vwr.scriptStatus("JmolConstants.java ERROR: invalid variable name:"
-          + script);
+      vwr.scriptStatus("JmolConstants.java ERROR: invalid variable name:" + script);
       return;
     }
     String name = ((String) statement[1].value).toLowerCase();
@@ -1422,7 +1370,6 @@ public class ScriptEval extends ScriptExpr {
   }
 
   public BS lookupIdentifierValue(String identifier) throws ScriptException {
-    
     // called by ScriptExpr and ScriptExt
     
     // all variables and possible residue names for PDB
@@ -1431,16 +1378,16 @@ public class ScriptEval extends ScriptExpr {
     // priority is given to a defined variable.
 
     BS bs = lookupValue(identifier, false);
-    if (bs != null)
+    if (bs != null) {
       return BSUtil.copy(bs);
+	}
 
     // next we look for names of groups (PDB) or atoms (non-PDB)
     bs = getAtomBits(T.identifier, identifier);
     return (bs == null ? new BS() : bs);
   }
 
-  private BS lookupValue(String setName, boolean plurals)
-      throws ScriptException {
+  private BS lookupValue(String setName, boolean plurals) throws ScriptException {
     if (chk) {
       return new BS();
     }
@@ -1452,33 +1399,40 @@ public class ScriptEval extends ScriptExpr {
       value = vwr.definedAtomSets.get("!" + setName);
       isDynamic = (value != null);
     }
-    if (value instanceof BS)
+    if (value instanceof BS) {
       return (BS) value;
+	}
     if (value instanceof T[]) { // j2s OK -- any Array here
       pushContext(null, "lookupValue");
       BS bs = atomExpression((T[]) value, -2, 0, true, false, null, true);
       popContext(false, false);
-      if (!isDynamic)
+      if (!isDynamic) {
         vwr.definedAtomSets.put(setName, bs);
+	  }
       return bs;
     }
     if (setName.equals("water")) {
       BS bs = vwr.ms.getAtoms(T.solvent, null);
-      if (!isDynamic)
+      if (!isDynamic) {
         vwr.definedAtomSets.put(setName, bs);
+	  }
       return bs;
     }
-    if (plurals)
+    if (plurals) {
       return null;
+	}
     int len = setName.length();
-    if (len < 5) // iron is the shortest
+    if (len < 5) { // iron is the shortest
       return null;
-    if (setName.charAt(len - 1) != 's')
+	}
+    if (setName.charAt(len - 1) != 's') {
       return null;
-    if (setName.endsWith("ies"))
+	}
+    if (setName.endsWith("ies")) {
       setName = setName.substring(0, len - 3) + 'y';
-    else
+	} else {
       setName = setName.substring(0, len - 1);
+	}
     return lookupValue(setName, true);
   }
 
@@ -1488,14 +1442,13 @@ public class ScriptEval extends ScriptExpr {
       Object value = entry.getValue();
       if (value instanceof BS) {
         BSUtil.deleteBits((BS) value, bsDeleted);
-        if (!entry.getKey().startsWith("!"))
-          vwr
-              .g.setUserVariable("@" + entry.getKey(), SV.newV(T.bitset, value));
+        if (!entry.getKey().startsWith("!")) {
+          vwr.g.setUserVariable("@" + entry.getKey(), SV.newV(T.bitset, value));
+		}
       }
     }
   }
-  
-  
+
   // ///////////////// Script context support //////////////////////
 
  @Override
@@ -1517,10 +1470,10 @@ public class ScriptEval extends ScriptExpr {
     pushContext2(null, why);
   }
 
-  private void pushContext(ContextToken token, String why)
-      throws ScriptException {
-    if (scriptLevel == contextDepthMax)
+  private void pushContext(ContextToken token, String why) throws ScriptException {
+    if (scriptLevel == contextDepthMax) {
       error(ERROR_tooManyScriptLevels);
+	}
     pushContext2(token, why);
   }
 
@@ -1532,9 +1485,11 @@ public class ScriptEval extends ScriptExpr {
     } else {
       thisContext.scriptLevel = -1;
       contextVariables = new Hashtable<String, SV>();
-      if (token.contextVariables != null)
-        for (String key : token.contextVariables.keySet())
+      if (token.contextVariables != null) {
+        for (String key : token.contextVariables.keySet()) {
           ScriptCompiler.addContextVariable(contextVariables, key);
+		}
+	  }
     }
     if (debugHigh || isCmdLine_c_or_C_Option)
       Logger.info("-->>----------------------".substring(0,
@@ -1551,8 +1506,9 @@ public class ScriptEval extends ScriptExpr {
   @Override
   public ScriptContext getScriptContext(String why) {
     ScriptContext context = new ScriptContext();
-    if (debugHigh)
+    if (debugHigh) {
       Logger.info("creating context " + context.id + " for " + why + " path=" + contextPath);
+	}
     context.why = why;
     context.scriptLevel = scriptLevel;
     context.parentContext = thisContext;
@@ -1591,16 +1547,18 @@ public class ScriptEval extends ScriptExpr {
   }
 
   void popContext(boolean isFlowCommand, boolean statementOnly) {
-    if (thisContext == null)
+    if (thisContext == null) {
       return;
+	}
     if (thisContext.scriptLevel > 0)
       scriptLevel = thisContext.scriptLevel - 1;
     // we must save (and thus NOT restore) the current statement
     // business when doing push/pop for commands like FOR and WHILE
     ScriptContext scTemp = (isFlowCommand ? getScriptContext("popFlow") : null);
     restoreScriptContext(thisContext, true, isFlowCommand, statementOnly);
-    if (scTemp != null)
+    if (scTemp != null) {
       restoreScriptContext(scTemp, true, false, true);
+	}
     if (debugHigh || isCmdLine_c_or_C_Option)
       Logger.info("--<<------------".substring(0,
           Math.min(15, scriptLevel + 5))
@@ -1614,12 +1572,12 @@ public class ScriptEval extends ScriptExpr {
           + " pc=" + pc + "-->" + pc + " path=" + (thisContext == null ? "" : thisContext.contextPath));
   }
 
-  public void restoreScriptContext(ScriptContext context, boolean isPopContext,
-                                   boolean isFlowCommand, boolean statementOnly) {
-
+  public void restoreScriptContext(ScriptContext context, boolean isPopContext, boolean isFlowCommand, boolean statementOnly) {
     executing = !chk;
-    if (context == null)
+    if (context == null) {
       return;
+	}
+
     if (!isFlowCommand) {
       st = context.statement;
       slen = context.statementLength;
@@ -1643,8 +1601,9 @@ public class ScriptEval extends ScriptExpr {
     if (isPopContext) {
       contextPath = context.contextPath;
       int pt = (contextPath == null ? -1 : contextPath.indexOf(" >> "));
-      if (pt >= 0)
+      if (pt >= 0) {
         contextPath = contextPath.substring(0, pt);      
+	  }
       scriptFileName = context.scriptFileName;
       parallelProcessor = context.parallelProcessor;
       functionName = context.functionName;
@@ -1690,45 +1649,43 @@ public class ScriptEval extends ScriptExpr {
       sx.message = "";
       return;
     }
-    String s = ScriptEval.getContextTrace(vwr,
-        getScriptContext("setException"), null, true).toString();
-    while (thisContext != null && !thisContext.isTryCatch)
+    String s = ScriptEval.getContextTrace(vwr, getScriptContext("setException"), null, true).toString();
+    while (thisContext != null && !thisContext.isTryCatch) {
       popContext(false, false);
+	}
     if (sx.message.indexOf(s) < 0) {
       sx.message += s;
       sx.untranslated += s;
     }
     resumeViewer(isThrown ? "throw context" : "scriptException");
-    if (isThrown || thisContext != null || chk
-        || msg.indexOf(JC.NOTE_SCRIPT_FILE) >= 0)
+    if (isThrown || thisContext != null || chk || msg.indexOf(JC.NOTE_SCRIPT_FILE) >= 0) {
       return;
+	}
     Logger.error("eval ERROR: " + s + "\n" + toString());
     if (vwr.autoExit)
       vwr.exitJmol();
   }
 
   @SuppressWarnings("unchecked")
-  public static String statementAsString(Viewer vwr, T[] statement,
-                                         int iTok, boolean doLogMessages) {
-    if (statement.length == 0)
+  public static String statementAsString(Viewer vwr, T[] statement, int iTok, boolean doLogMessages) {
+    if (statement.length == 0) {
       return "";
+	}
     SB sb = new SB();
     int tok = statement[0].tok;
     switch (tok) {
     case T.nada:
       return (String) statement[0].value;
     case T.end:
-      if (statement.length == 2
-          && (statement[1].tok == T.function || statement[1].tok == T.parallel))
+      if (statement.length == 2 && (statement[1].tok == T.function || statement[1].tok == T.parallel)) {
         return ((ScriptFunction) (statement[1].value)).toString();
+	  }
     }
     boolean useBraces = true;// (!Token.tokAttr(tok,
     // Token.atomExpressionCommand));
     boolean inBrace = false;
     boolean inClauseDefine = false;
-    boolean setEquals = (statement.length > 1 && tok == T.set
-        && statement[0].value.equals("")
-        && (statement[0].intValue == '=' || statement[0].intValue == '#') && statement[1].tok != T.expressionBegin);
+    boolean setEquals = (statement.length > 1 && tok == T.set && statement[0].value.equals("") && (statement[0].intValue == '=' || statement[0].intValue == '#') && statement[1].tok != T.expressionBegin);
     int len = statement.length;
     for (int i = 0; i < len; ++i) {
       T token = statement[i];
@@ -1770,8 +1727,7 @@ public class ScriptEval extends ScriptExpr {
       case T.define:
         if (i > 0 && ((String) token.value).equals("define")) {
           sb.append("@");
-          if (i + 1 < statement.length
-              && statement[i + 1].tok == T.expressionBegin) {
+          if (i + 1 < statement.length && statement[i + 1].tok == T.expressionBegin) {
             if (!useBraces)
               inClauseDefine = true;
             useBraces = true;
@@ -1984,15 +1940,13 @@ public class ScriptEval extends ScriptExpr {
     if (executionStopped)
       return false;
     if (executionStepping && isCommandDisplayable(pc)) {
-      vwr.scriptStatusMsg("Next: " + getNextStatement(),
-          "stepping -- type RESUME to continue");
+      vwr.scriptStatusMsg("Next: " + getNextStatement(), "stepping -- type RESUME to continue");
       executionPaused = true;
     } else if (!executionPaused) {
       return true;
     }
     if (Logger.debugging) {
-      Logger.debug("script execution paused at command " + (pc + 1) + " level "
-          + scriptLevel + ": " + thisCommand);
+      Logger.debug("script execution paused at command " + (pc + 1) + " level " + scriptLevel + ": " + thisCommand);
     }
     refresh(false);
     boolean doShowPC = true;
@@ -2054,9 +2008,7 @@ public class ScriptEval extends ScriptExpr {
   }
 
   /**
-   * 
-   * @param millis
-   *        negative here bypasses max check
+   * @param millis negative here bypasses max check
    * @throws ScriptException
    */
   private void doDelay(int millis) throws ScriptException {
@@ -2068,11 +2020,8 @@ public class ScriptEval extends ScriptExpr {
   }
 
   @Override
-  public boolean evalParallel(ScriptContext context,
-                                  ShapeManager shapeManager) {
-    
+  public boolean evalParallel(ScriptContext context, ShapeManager shapeManager) {
     // now in ScriptExt
-    
     return getCmdExt().evalParallel(context, shapeManager);
   }
 
@@ -2119,8 +2068,7 @@ public class ScriptEval extends ScriptExpr {
    * @return cached file name if it exists
    * @throws ScriptException
    */
-  public String loadFileAsync(String prefix, String filename, int i,
-                              boolean doClear) throws ScriptException {
+  public String loadFileAsync(String prefix, String filename, int i, boolean doClear) throws ScriptException {
     // note that we will never know the actual file name
     // so we construct one and point to it in the scriptContext
     // with a key to this point in the script. 
@@ -2181,16 +2129,13 @@ public class ScriptEval extends ScriptExpr {
     SB sb = new SB();
     int modelCount = vwr.ms.mc;
     if (modelCount > 1 && !isData)
-      sb.append((vwr.am.isMovie ? vwr.am.getFrameCount() + " frames"
-          : modelCount + " models") + "\n");
+      sb.append((vwr.am.isMovie ? vwr.am.getFrameCount() + " frames" : modelCount + " models") + "\n");
     for (int i = 0; i < modelCount; i++) {
-      Map<String, Object> moData = (Map<String, Object>) vwr
-          .ms.getInfo(i, "moData");
-      if (moData == null || !moData.containsKey("mos"))
+      Map<String, Object> moData = (Map<String, Object>) vwr.ms.getInfo(i, "moData");
+      if (moData == null || !moData.containsKey("mos")) {
         continue;
-      sb.appendI(((Lst<Map<String, Object>>) moData.get("mos")).size())
-          .append(" molecular orbitals in model ")
-          .append(vwr.getModelNumberDotted(i)).append("\n");
+	  }
+      sb.appendI(((Lst<Map<String, Object>>) moData.get("mos")).size()).append(" molecular orbitals in model ").append(vwr.getModelNumberDotted(i)).append("\n");
     }
     if (sb.length() > 0)
      showString(sb.toString());
@@ -2208,11 +2153,11 @@ public class ScriptEval extends ScriptExpr {
    * Refresh the display NOW
    * @param doDelay 
    * @throws ScriptException 
-   * 
    */
   public void refresh(boolean doDelay) throws ScriptException {
-    if (chk)
+    if (chk) {
       return;
+	}
     vwr.setTainted(true);
     vwr.requestRepaintAndWait("refresh cmd");
     if (isJS && doDelay)
@@ -2235,9 +2180,7 @@ public class ScriptEval extends ScriptExpr {
   // from ScriptExt 
 
   public String getErrorLineMessage2() {
-    return getErrorLineMessage(functionName, scriptFileName,
-        getLinenumber(null), pc,
-        statementAsString(vwr, st, -9999, debugHigh));
+    return getErrorLineMessage(functionName, scriptFileName, getLinenumber(null), pc, statementAsString(vwr, st, -9999, debugHigh));
   }
   
   public int getLinenumber(ScriptContext c) {
@@ -2250,15 +2193,13 @@ public class ScriptEval extends ScriptExpr {
   ///////////////////////////////////////////////////////////////////////
   
   /**
-   * 
    * @param isSpt
    * @param fromFunc
    * @param isTry 
    * @return false only when still working through resumeEval
    * @throws ScriptException
    */
-  public boolean dispatchCommands(boolean isSpt, boolean fromFunc, boolean isTry)
-      throws ScriptException {
+  public boolean dispatchCommands(boolean isSpt, boolean fromFunc, boolean isTry) throws ScriptException {
     if (sm == null)
       sm = vwr.shm;
     debugScript = debugHigh = false;
@@ -2273,11 +2214,7 @@ public class ScriptEval extends ScriptExpr {
     if (!tQuiet) {
       tQuiet = (vwr.getInt(T.showscript) < 0);
     }
-    boolean allowJSInterrupt = (
-        isJS 
-        && !fromFunc 
-        && useThreads() 
-        && vwr.getInt(T.showscript) >= 0);
+    boolean allowJSInterrupt = (isJS && !fromFunc && useThreads() && vwr.getInt(T.showscript) >= 0);
     commandLoop(allowJSInterrupt);
     if (chk)
       return true;
@@ -2335,20 +2272,15 @@ public class ScriptEval extends ScriptExpr {
       }
 
       if (debugScript && !chk)
-        Logger.info("Command " + pc
-            + (thisContext == null ? "" : " path=" + thisContext.contextPath));
+        Logger.info("Command " + pc + (thisContext == null ? "" : " path=" + thisContext.contextPath));
       theToken = (aatoken[pc].length == 0 ? null : aatoken[pc][0]);
       // when checking scripts, we can't check statments
       // containing @{...}
-      if (!historyDisabled && !chk && scriptLevel <= commandHistoryLevelMax
-          && !tQuiet) {
+      if (!historyDisabled && !chk && scriptLevel <= commandHistoryLevelMax && !tQuiet) {
         String cmdLine = getCommand(pc, true, true);
-        if (theToken != null
-            && cmdLine.length() > 0
-            && !cmdLine.equals(lastCommand)
-            && (theToken.tok == T.function || theToken.tok == T.parallel || !T
-                .tokAttr(theToken.tok, T.flowCommand)))
+        if (theToken != null && cmdLine.length() > 0 && !cmdLine.equals(lastCommand) && (theToken.tok == T.function || theToken.tok == T.parallel || !T.tokAttr(theToken.tok, T.flowCommand))) {
           vwr.addCommand(lastCommand = cmdLine);
+		}
       }
       if (!chk && allowJSInterrupt) {
         String script = vwr.getInsertedCommand();
@@ -2365,21 +2297,19 @@ public class ScriptEval extends ScriptExpr {
       if (debugHigh || debugScript)
         Logger.info(thisCommand);
       String nextCommand = getCommand(pc + 1, false, true);
-      fullCommand = thisCommand
-          + (nextCommand.startsWith("#") ? nextCommand : "");
+      fullCommand = thisCommand + (nextCommand.startsWith("#") ? nextCommand : "");
       getToken(0);
       iToken = 0;
       if ((listCommands || !chk && scriptLevel > 0) && !isJS) {
         int milliSecDelay = vwr.getInt(T.showscript);
         if (listCommands || milliSecDelay > 0) {
-          if (milliSecDelay > 0)
+          if (milliSecDelay > 0) {
             delayScript(-milliSecDelay);
-          vwr.scriptEcho("$[" + scriptLevel + "." + lineNumbers[pc] + "."
-              + (pc + 1) + "] " + thisCommand);
+		  }
+          vwr.scriptEcho("$[" + scriptLevel + "." + lineNumbers[pc] + "." + (pc + 1) + "] " + thisCommand);
         }
       }
-      if (vProcess != null
-          && (theTok != T.end || slen < 2 || st[1].tok != T.process)) {
+      if (vProcess != null && (theTok != T.end || slen < 2 || st[1].tok != T.process)) {
         vProcess.addLast(st);
         continue;
       }
@@ -2435,13 +2365,8 @@ public class ScriptEval extends ScriptExpr {
     }
   }
 
-  //  public void terminateAfterStep() {
-  //    pc = pcEnd;
-  //  }
-
   private void notifyScriptEditor(int pc) {
-    vwr.notifyScriptEditor((lineIndices[pc][0] << 16) | lineIndices[pc][1],
-        null);
+    vwr.notifyScriptEditor((lineIndices[pc][0] << 16) | lineIndices[pc][1], null);
   }
 
   private void processCommand(int tok) throws ScriptException {
@@ -3054,8 +2979,7 @@ public class ScriptEval extends ScriptExpr {
       checkLast(iToken);
       return;
     case T.center:
-      setShapeProperty(JC.SHAPE_AXES, "origin",
-          centerParameter(index + 1, null));
+      setShapeProperty(JC.SHAPE_AXES, "origin", centerParameter(index + 1, null));
       checkLast(iToken);
       return;
     case T.type:
@@ -3073,8 +2997,7 @@ public class ScriptEval extends ScriptExpr {
       case T.off:
       case T.on:
         checkLength(index + 2);
-        setShapeProperty(JC.SHAPE_AXES,
-            "labels" + (tok == T.on ? "On" : "Off"), null);
+        setShapeProperty(JC.SHAPE_AXES, "labels" + (tok == T.on ? "On" : "Off"), null);
         return;
       }
       String sOrigin = null;
@@ -3321,9 +3244,7 @@ public class ScriptEval extends ScriptExpr {
       case T.string:
         i = 2;
         if (isArrayParameter(i)) {
-          strColor = strColor += "="
-              + SV.sValue(SV.getVariableAS(stringParameterSet(i))).replace(
-                  '\n', ' ');
+          strColor = strColor += "=" + SV.sValue(SV.getVariableAS(stringParameterSet(i))).replace('\n', ' ');
           i = iToken + 1;
         }
         boolean isTranslucent = (tokAt(i) == T.translucent);
@@ -3409,8 +3330,7 @@ public class ScriptEval extends ScriptExpr {
         break;
       case T.isosurface:
       case T.contact:
-        setShapeProperty(JC.shapeTokenIndex(tok), "thisID",
-            MeshCollection.PREVIOUS_MESH_ID);
+        setShapeProperty(JC.shapeTokenIndex(tok), "thisID", MeshCollection.PREVIOUS_MESH_ID);
         break;
       }
     }
@@ -3435,28 +3355,32 @@ public class ScriptEval extends ScriptExpr {
     // will evaluate the moment it is defined and then represent
     // that set of atoms forever.
 
-    if (slen < 3 || !(getToken(1).value instanceof String))
+    if (slen < 3 || !(getToken(1).value instanceof String)) {
       invArg();
+	}
     String setName = ((String) getToken(1).value).toLowerCase();
-    if (PT.parseInt(setName) != Integer.MIN_VALUE)
+    if (PT.parseInt(setName) != Integer.MIN_VALUE) {
       invArg();
-    if (chk)
+	}
+    if (chk) {
       return;
+	}
     boolean isSite = setName.startsWith("site_");
     boolean isDynamic = (setName.indexOf("dynamic_") == 0);
     if (isDynamic || isSite) {
       T[] code = new T[slen];
-      for (int i = slen; --i >= 0;)
+      for (int i = slen; --i >= 0;) {
         code[i] = st[i];
-      vwr.definedAtomSets
-          .put("!" + (isSite ? setName : setName.substring(8)), code);
+	  }
+      vwr.definedAtomSets.put("!" + (isSite ? setName : setName.substring(8)), code);
       //if (!isSite)
       //vwr.addStateScript(thisCommand, false, true); removed for 12.1.16
     } else {
       BS bs = atomExpressionAt(2);
       vwr.definedAtomSets.put(setName, bs);
-      if (!chk)
+      if (!chk) {
         vwr.g.setUserVariable("@" + setName, SV.newV(T.bitset, bs));
+	  }
     }
   }
 
@@ -3483,22 +3407,25 @@ public class ScriptEval extends ScriptExpr {
     if (tokAt(1) == T.dollarsign) {
       if (slen == 4 && optParameterAsString(2).equals("saved") && slen == 4) {
         vwr.stm.deleteSaved(optParameterAsString(3));
-        if (doReport())
+        if (doReport()) {
           report(GT.o(GT.$("show saved: {0}"), vwr.stm.listSavedStates()), false);
+		}
         return;
       }
       setObjectProperty();
       return;
     }
-    BS bs = (slen == 1 ? null : atomExpression(st, 1, 0, true, false, null,
-        false));
-    if (chk)
+    BS bs = (slen == 1 ? null : atomExpression(st, 1, 0, true, false, null, false));
+    if (chk) {
       return;
-    if (bs == null)
+	}
+    if (bs == null) {
       bs = vwr.getAllAtoms();
+	}
     int nDeleted = vwr.deleteAtoms(bs, false);
-    if (doReport())
+    if (doReport()) {
       report(GT.i(GT.$("{0} atoms deleted"), nDeleted), false);
+	}
   }
 
   private void cmdDisplay(boolean isDisplay) throws ScriptException {
@@ -3569,15 +3496,14 @@ public class ScriptEval extends ScriptExpr {
         if (tokAt(ipt + 1) == T.radius) {
           ipt++;
           setShapeProperty(iShape, "atom", Integer.valueOf(dotsParam));
-          setShapeProperty(iShape, "radius",
-              Double.valueOf(floatParameter(++ipt)));
+          setShapeProperty(iShape, "radius", Double.valueOf(floatParameter(++ipt)));
           if (tokAt(++ipt) == T.color) {
-            setShapeProperty(iShape, "colorRGB",
-                Integer.valueOf(getArgbParam(++ipt)));
+            setShapeProperty(iShape, "colorRGB", Integer.valueOf(getArgbParam(++ipt)));
             ipt++;
           }
-          if (getToken(ipt).tok != T.bitset)
+          if (getToken(ipt).tok != T.bitset) {
             invArg();
+		  }
           setShapeProperty(iShape, "dots", st[ipt].value);
           return;
         }
@@ -3585,8 +3511,7 @@ public class ScriptEval extends ScriptExpr {
       }
       break;
     }
-    RadiusData rd = (Double.isNaN(value) ? encodeRadiusParameter(ipt, isOnly,
-        true) : new RadiusData(null, value, type, VDW.AUTO));
+    RadiusData rd = (Double.isNaN(value) ? encodeRadiusParameter(ipt, isOnly, true) : new RadiusData(null, value, type, VDW.AUTO));
     if (rd == null)
       return;
     if (Double.isNaN(rd.value))
@@ -3597,8 +3522,7 @@ public class ScriptEval extends ScriptExpr {
     setShapeSize(iShape, rd);
   }
 
-  private void cmdEcho(int index)
-      throws ScriptException {
+  private void cmdEcho(int index) throws ScriptException {
     if (chk)
       return;
     String text = optParameterAsString(index);
@@ -3620,12 +3544,10 @@ public class ScriptEval extends ScriptExpr {
     int file = intParameter(checkLast(1));
     if (chk)
       return;
-    int modelIndex = vwr.ms.getModelNumberIndex(file * 1000000 + 1, false,
-        false);
+    int modelIndex = vwr.ms.getModelNumberIndex(file * 1000000 + 1, false, false);
     int modelIndex2 = -1;
     if (modelIndex >= 0) {
-      modelIndex2 = vwr.ms.getModelNumberIndex((file + 1) * 1000000 + 1, false,
-          false);
+      modelIndex2 = vwr.ms.getModelNumberIndex((file + 1) * 1000000 + 1, false, false);
       if (modelIndex2 < 0)
         modelIndex2 = vwr.ms.mc;
       modelIndex2--;
@@ -3658,7 +3580,6 @@ public class ScriptEval extends ScriptExpr {
     int j = 0;
     String key = null;
     if (isForCheck && forVars != null) {
-      
       // for xx IN [...] or for xx FROM [...]
       
       tok = T.in;
@@ -3674,13 +3595,15 @@ public class ScriptEval extends ScriptExpr {
         int i1 = ((int[]) bsOrList)[0];
         int i2 = ((int[]) bsOrList)[1];
         isOK = (i1 != i2 && (i2 < i1) == isMinusMinus);
-        if (isOK)
+        if (isOK) {
           forVar.intValue = ((int[]) bsOrList)[0] = i1 + (isMinusMinus ? -1 : 1); 
+		}
         j = -1;
       } else if (forVal.tok == T.varray) {
         isOK = (j <= ((Lst<SV>) bsOrList).size());
-        if (isOK)
+        if (isOK) {
           forVar.setv(SV.selectItemVar(forVal));
+		}
         j = -1;
       } else {
         isBondSet = bsOrList instanceof BondSet;
@@ -3850,8 +3773,7 @@ public class ScriptEval extends ScriptExpr {
     return isForCheck;
   }
 
-  private boolean cmdFlow(int tok, boolean isForCheck, Lst<T[]> vProcess)
-      throws ScriptException {
+  private boolean cmdFlow(int tok, boolean isForCheck, Lst<T[]> vProcess) throws ScriptException {
     ContextToken ct;
     int pt = st[0].intValue;
     boolean isDone = (pt < 0 && !chk);
@@ -4022,8 +3944,7 @@ public class ScriptEval extends ScriptExpr {
     case 6:
       scaleAngstromsPerPixel = floatParameter(5);
       if (scaleAngstromsPerPixel >= 5) // actually a zoom value
-        scaleAngstromsPerPixel = vwr.tm.getZoomSetting()
-            / scaleAngstromsPerPixel / vwr.getScalePixelsPerAngstrom(false);
+        scaleAngstromsPerPixel = vwr.tm.getZoomSetting() / scaleAngstromsPerPixel / vwr.getScalePixelsPerAngstrom(false);
       //$FALL-THROUGH$
     case 5:
       if (getToken(4).tok != T.identifier)
@@ -4065,10 +3986,8 @@ public class ScriptEval extends ScriptExpr {
       shapeType = (isScale ? JC.SHAPE_ECHO : getShapeType(getToken(1).tok));
 
     if (shapeType == JC.SHAPE_LABELS) {
-      if (fontsize < 0 || fontsize >= 1 && (fontsize < JC.LABEL_MINIMUM_FONTSIZE
-          || fontsize > JC.LABEL_MAXIMUM_FONTSIZE)) {
-        integerOutOfRange(JC.LABEL_MINIMUM_FONTSIZE - sizeAdjust,
-            JC.LABEL_MAXIMUM_FONTSIZE - sizeAdjust);
+      if (fontsize < 0 || fontsize >= 1 && (fontsize < JC.LABEL_MINIMUM_FONTSIZE || fontsize > JC.LABEL_MAXIMUM_FONTSIZE)) {
+        integerOutOfRange(JC.LABEL_MINIMUM_FONTSIZE - sizeAdjust, JC.LABEL_MAXIMUM_FONTSIZE - sizeAdjust);
         return;
       }
       if (!chk)
@@ -4091,8 +4010,7 @@ public class ScriptEval extends ScriptExpr {
       setShapeProperty(JC.SHAPE_ECHO, "target", "%SCALE");
     setShapeProperty(shapeType, name, value);
     if (scaleAngstromsPerPixel >= 0)
-      setShapeProperty(shapeType, "scalereference",
-          Double.valueOf(scaleAngstromsPerPixel));    
+      setShapeProperty(shapeType, "scalereference", Double.valueOf(scaleAngstromsPerPixel));    
     if (isScale)
       setShapeProperty(JC.SHAPE_ECHO, "thisID", null);
   }
@@ -4122,9 +4040,7 @@ public class ScriptEval extends ScriptExpr {
     }
     if (!isFunction(name))
       error(ERROR_commandExpected);
-    Lst<SV> params = (slen == 1 || slen == 3 && tokAt(1) == T.leftparen
-        && tokAt(2) == T.rightparen ? null : parameterExpressionList(1, -1,
-        false));
+    Lst<SV> params = (slen == 1 || slen == 3 && tokAt(1) == T.leftparen && tokAt(2) == T.rightparen ? null : parameterExpressionList(1, -1, false));
     if (chk)
       return;
     runFunctionAndRet(null, name, params, null, false, true, true);
@@ -4250,11 +4166,9 @@ public class ScriptEval extends ScriptExpr {
     int mad = getMadParameter();
     if (mad == Integer.MAX_VALUE)
       return;
-    setShapeProperty(JC.SHAPE_STICKS, "type",
-        Integer.valueOf(Edge.BOND_HYDROGEN_MASK));
+    setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_HYDROGEN_MASK));
     setShapeSizeBs(JC.SHAPE_STICKS, mad, null);
-    setShapeProperty(JC.SHAPE_STICKS, "type",
-        Integer.valueOf(Edge.BOND_COVALENT_MASK));
+    setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_COVALENT_MASK));
   }
 
   private void cmdHelp() throws ScriptException {
@@ -4262,8 +4176,7 @@ public class ScriptEval extends ScriptExpr {
       return;
     String what = optParameterAsString(1).toLowerCase();
     int pt = 0;
-    if (what.startsWith("mouse") && (pt = what.indexOf(" ")) >= 0
-        && pt == what.lastIndexOf(" ")) {
+    if (what.startsWith("mouse") && (pt = what.indexOf(" ")) >= 0 && pt == what.lastIndexOf(" ")) {
       showString(vwr.getBindingInfo(what.substring(pt + 1)));
       return;
     }
@@ -4356,8 +4269,7 @@ public class ScriptEval extends ScriptExpr {
     BS bsModels;
     int i = (tokAt(0) == T.data ? 0 : 1);
     String filter = null;
-    int modelCount0 = vwr.ms.mc
-        - (vwr.fm.getFileName().equals(JC.ZAP_TITLE) ? 1 : 0);
+    int modelCount0 = vwr.ms.mc - (vwr.fm.getFileName().equals(JC.ZAP_TITLE) ? 1 : 0);
     int ac0 = vwr.ms.ac;
     SB loadScript = new SB().append("load");
     int nFiles = 1;
@@ -4389,8 +4301,7 @@ public class ScriptEval extends ScriptExpr {
         // if it is just LOAD "xxxx.xxx"
         // so as to avoid the ZAP in case these
         // do not contain a full state script
-        if (modelName.endsWith(".spt") || modelName.endsWith(".png")
-            || modelName.endsWith(".pngj")) {
+        if (modelName.endsWith(".spt") || modelName.endsWith(".png") || modelName.endsWith(".pngj")) {
           cmdScript(0, modelName, null);
           return;
         }
@@ -4563,8 +4474,7 @@ public class ScriptEval extends ScriptExpr {
           P3d pt = getPoint3f(i, false, true);
           i = iToken + 1;
           // first last stride
-          htParams.put("firstLastStep",
-              new int[] { (int) pt.x, (int) pt.y, (int) pt.z });
+          htParams.put("firstLastStep", new int[] { (int) pt.x, (int) pt.y, (int) pt.z });
           loadScript.append(" " + Escape.eP(pt));
         } else {
           switch (tokAt(i)) {
@@ -4639,8 +4549,7 @@ public class ScriptEval extends ScriptExpr {
       // end-of-command options:
       // LOAD SMILES "xxxx" --> load "$xxxx"
 
-      if (filename == null && (i == 0 || filenames == null
-          && (filename = paramAsStr(filePt)).length() == 0))
+      if (filename == null && (i == 0 || filenames == null && (filename = paramAsStr(filePt)).length() == 0))
         filename = getFullPathName(true);
       if (filename == null && filenames == null) {
         cmdZap(false);
@@ -4672,8 +4581,7 @@ public class ScriptEval extends ScriptExpr {
 
       // LOAD "" --> prevous file      
 
-      if (filename == null && (filename = paramAsStr(filePt)).length() == 0
-          && (filename = getFullPathName(true)) == null) {
+      if (filename == null && (filename = paramAsStr(filePt)).length() == 0 && (filename = getFullPathName(true)) == null) {
         // no previously loaded file
         cmdZap(false);
         return;
@@ -4753,9 +4661,7 @@ public class ScriptEval extends ScriptExpr {
     // get default filter if necessary
 
     if (appendedData != null) {
-      sOptions.append(" APPEND data \"" + appendedKey + "\"\n" + appendedData
-          + (appendedData.endsWith("\n") ? "" : "\n") + "end \"" + appendedKey
-          + "\"");
+      sOptions.append(" APPEND data \"" + appendedKey + "\"\n" + appendedData + (appendedData.endsWith("\n") ? "" : "\n") + "end \"" + appendedKey + "\"");
     }
     if (filter == null)
       filter = vwr.g.defaultLoadFilter;
@@ -4790,13 +4696,9 @@ public class ScriptEval extends ScriptExpr {
         }
         isVariable = true;
         o = "" + o;
-        loadScript = new SB().append("{\n    var ")
-            .append(filename.substring(1)).append(" = ")
-            .append(PT.esc((String) o)).append(";\n    ").appendSB(loadScript);
+        loadScript = new SB().append("{\n    var ").append(filename.substring(1)).append(" = ").append(PT.esc((String) o)).append(";\n    ").appendSB(loadScript);
         htParams.put("fileData", o);
-      } else if (!isData
-          && !((filename.startsWith("=") || filename.startsWith("*"))
-              && filename.indexOf("/") > 0)) {
+      } else if (!isData && !((filename.startsWith("=") || filename.startsWith("*")) && filename.indexOf("/") > 0)) {
         // only for cases that can get filename changed to actual reference
         String type = "";
         int pt = filename.indexOf("::");
@@ -4804,9 +4706,7 @@ public class ScriptEval extends ScriptExpr {
           type = filename.substring(0, pt + 2);
           filename = filename.substring(pt + 2);
         }
-        filename = type
-            + checkFileExists("LOAD" + (isAppend ? "_APPEND_" : "_"), isAsync,
-                filename, filePt, !isAppend && pc != pcResume);
+        filename = type + checkFileExists("LOAD" + (isAppend ? "_APPEND_" : "_"), isAsync, filename, filePt, !isAppend && pc != pcResume);
 
         if (filename.startsWith("cache://"))
           localName = null;
@@ -4820,17 +4720,19 @@ public class ScriptEval extends ScriptExpr {
     OC out = null;
     String filecat = null;
     if (localName != null) {
-      if (localName.equals("."))
+      if (localName.equals(".")) {
         localName = vwr.fm.getFilePath(filename, false, true);
-      if (localName.length() == 0 || vwr.fm.getFilePath(localName, false, false)
-          .equalsIgnoreCase(vwr.fm.getFilePath(filename, false, false)))
+	  }
+      if (localName.length() == 0 || vwr.fm.getFilePath(localName, false, false).equalsIgnoreCase(vwr.fm.getFilePath(filename, false, false))) {
         invArg();
+	  }
       String[] fullPath = new String[] { localName };
       out = vwr.getOutputChannel(localName, fullPath);
-      if (out == null)
+      if (out == null) {
         Logger.error("Could not create output stream for " + fullPath[0]);
-      else
+	  } else {
         htParams.put("outputChannel", out);
+	  }
     }
 
     // check for single file or string
@@ -4841,19 +4743,14 @@ public class ScriptEval extends ScriptExpr {
 
       loadScript.append(" ");
       if (isVariable || isInline) {
-        loadScript
-            .append(filename.indexOf('\n') >= 0 || isVariable ? PT.esc(filename)
-                : filename);
+        loadScript.append(filename.indexOf('\n') >= 0 || isVariable ? PT.esc(filename) : filename);
       } else if (!isData) {
         if (localName != null)
           localName = vwr.fm.getFilePath(localName, false, false);
         if (!filename.equals("String[]"))
-          loadScript.append("/*file*/")
-              .append((localName != null ? PT.esc(localName) : "$FILENAME$"));
+          loadScript.append("/*file*/").append((localName != null ? PT.esc(localName) : "$FILENAME$"));
       }
-      if (!isConcat && (filename.startsWith("=") || filename.startsWith("*"))
-          && filename.indexOf("/") > 0) {
-
+      if (!isConcat && (filename.startsWith("=") || filename.startsWith("*")) && filename.indexOf("/") > 0) {
         // EBI domains and validations, also rna3 and dssr
 
         // load *1cbs/dom/xx/xx  -->  load *1cbs - *dom/xx/xx/1cbs
@@ -4875,10 +4772,10 @@ public class ScriptEval extends ScriptExpr {
         filename = filename.substring(0, pt);
         if ((pt = filename.indexOf(".")) >= 0)
           filename = filename.substring(0, pt);
-        if (JC.PDB_ANNOTATIONS.indexOf(";" + ext + ";") >= 0
-            || ext.startsWith("dssr--")) {
-          if (filename.startsWith("="))
+        if (JC.PDB_ANNOTATIONS.indexOf(";" + ext + ";") >= 0 || ext.startsWith("dssr--")) {
+          if (filename.startsWith("=")) {
             filename += ".cif";
+		  }
           filenames = (ext.equals("all")
               ? new String[] { filename, "*dom/" + id, "*val/" + id }
               : new String[] { filename, "*" + ext + "/" + id });
@@ -4923,9 +4820,7 @@ public class ScriptEval extends ScriptExpr {
     if (isMutate)
       htParams.put("isMutate", Boolean.TRUE);
     htParams.put("eval", this);
-    errMsg = vwr.loadModelFromFile(null, filename, filenames, null, isAppend,
-        htParams, loadScript, sOptions, tokType,
-        filecat != null ? filecat : isConcat ? "+" : " ");
+    errMsg = vwr.loadModelFromFile(null, filename, filenames, null, isAppend, htParams, loadScript, sOptions, tokType, filecat != null ? filecat : isConcat ? "+" : " ");
     if (timeMsg)
       showString(Logger.getTimerMsg("load", 0));
 
@@ -4975,10 +4870,7 @@ public class ScriptEval extends ScriptExpr {
     }
 
     if (debugHigh)
-      report(
-          "Successfully loaded:"
-              + (filenames == null ? htParams.get("fullPathName") : modelName),
-          false);
+      report("Successfully loaded:" + (filenames == null ? htParams.get("fullPathName") : modelName), false);
 
     finalizeLoad(isAppend, appendNew, isConcat, doOrient, nFiles, ac0,
         modelCount0, isData);
@@ -4988,9 +4880,7 @@ public class ScriptEval extends ScriptExpr {
   public String checkFileExists(String prefix, boolean isAsync, String filename, int i, boolean doClear) throws ScriptException {
     if (chk || filename.startsWith("cache://")) 
        return filename;
-    if ((vwr.testAsync || Viewer.isJS)
-        && (isAsync || filename.startsWith("?"))
-        || vwr.apiPlatform.forceAsyncLoad(filename)) {
+    if ((vwr.testAsync || Viewer.isJS) && (isAsync || filename.startsWith("?")) || vwr.apiPlatform.forceAsyncLoad(filename)) {
       filename = loadFileAsync(prefix, filename, i, doClear);
       // on first pass, a ScriptInterruption will be thrown; 
       // on the second pass, we will have the file name, which will be cache://localLoad_n__m
@@ -4998,14 +4888,13 @@ public class ScriptEval extends ScriptExpr {
 
     String[] fullPathNameOrError = vwr.getFullPathNameOrError(filename);
     filename = fullPathNameOrError[0];
-    if (fullPathNameOrError[1] != null)
-      errorStr(ScriptError.ERROR_fileNotFoundException, filename
-          + ":" + fullPathNameOrError[1]);
+    if (fullPathNameOrError[1] != null) {
+      errorStr(ScriptError.ERROR_fileNotFoundException, filename + ":" + fullPathNameOrError[1]);
+	}
     return filename;
   }
 
-  private void addFilterAttribute(Map<String, Object> htParams, String filter,
-                                  String key) {
+  private void addFilterAttribute(Map<String, Object> htParams, String filter, String key) {
     String val = PT.getQuotedOrUnquotedAttribute(filter, key);
     if (val != null && val.length() > 0)
       htParams.put(key, val);
@@ -5024,8 +4913,7 @@ public class ScriptEval extends ScriptExpr {
     htParams.put("fileData", strModel);
     htParams.put("isData", Boolean.TRUE);
     //note: ScriptCompiler will remove an initial \n if present
-    loadScript.appendC('\n').append(strModel).append(" end ")
-        .append(PT.esc(key));
+    loadScript.appendC('\n').append(strModel).append(" end ").append(PT.esc(key));
     if (ptVar < 0)
       i += 2; // skip END "key"
     return i;
@@ -5044,8 +4932,7 @@ public class ScriptEval extends ScriptExpr {
     cmdScript(0, modelName, null);
   }
 
-  private String getLoadFilesList(int i, SB loadScript, SB sOptions,
-                                Map<String, Object> htParams, Lst<String> fNames) throws ScriptException {
+  private String getLoadFilesList(int i, SB loadScript, SB sOptions, Map<String, Object> htParams, Lst<String> fNames) throws ScriptException {
     // list of file names 
     // or COORD {i j k} "fileName" 
     // or COORD ({bitset}) "fileName"
@@ -5154,9 +5041,7 @@ public class ScriptEval extends ScriptExpr {
     return false;
   }
 
-  private int getLoadModelIndex(int i, SB sOptions,
-                                 Map<String, Object> htParams)
-      throws ScriptException {
+  private int getLoadModelIndex(int i, SB sOptions, Map<String, Object> htParams) throws ScriptException {
     int n;
     switch (tokAt(i)) {
     case T.integer:
@@ -5193,10 +5078,7 @@ public class ScriptEval extends ScriptExpr {
     return iToken + 1;
   }
 
-  private void finalizeLoad(boolean isAppend, boolean appendNew,
-                            boolean isConcat, boolean doOrient, int nFiles,
-                            int ac0, int modelCount0, boolean isData)
-      throws ScriptException {
+  private void finalizeLoad(boolean isAppend, boolean appendNew, boolean isConcat, boolean doOrient, int nFiles, int ac0, int modelCount0, boolean isData) throws ScriptException {
     if (isAppend && (appendNew || nFiles > 1)) {
       vwr.setAnimationRange(-1, -1);
       vwr.setCurrentModelIndex(modelCount0);
@@ -5217,22 +5099,18 @@ public class ScriptEval extends ScriptExpr {
       msg += "\nUsing defaultLoadScript: " + script;
     String embeddedScript;
     Map<String, Object> info = vwr.ms.msInfo;
-    if (info != null && vwr.allowEmbeddedScripts()
-        && (embeddedScript = (String) info.remove("jmolscript")) != null
-        && embeddedScript.length() > 0) {
+    if (info != null && vwr.allowEmbeddedScripts() && (embeddedScript = (String) info.remove("jmolscript")) != null && embeddedScript.length() > 0) {
       msg += "\nAdding embedded #jmolscript: " + embeddedScript;
       script += ";" + embeddedScript;
       setStringProperty("_loadScript", script);
-      script = "allowEmbeddedScripts = false;try{" + script
-          + "} allowEmbeddedScripts = true;";
+      script = "allowEmbeddedScripts = false;try{" + script + "} allowEmbeddedScripts = true;";
       isEmbedded = !isCmdLine_c_or_C_Option;
     } else {
       setStringProperty("_loadScript", "");
     }
     logLoadInfo(msg, isData);
 
-    String siteScript = (info == null ? null
-        : (String) info.remove("sitescript"));
+    String siteScript = (info == null ? null : (String) info.remove("sitescript"));
     if (siteScript != null)
       script = siteScript + ";" + script;
     if (doOrient)
@@ -5293,8 +5171,7 @@ public class ScriptEval extends ScriptExpr {
     if (slen == 1 && offset == 1) {
       modelIndex = vwr.am.cmi;
       int m;
-      if (!chk && modelIndex >= 0
-          && (m = vwr.ms.getJmolDataSourceFrame(modelIndex)) >= 0)
+      if (!chk && modelIndex >= 0 && (m = vwr.ms.getJmolDataSourceFrame(modelIndex)) >= 0)
         vwr.setCurrentModelIndex(m == modelIndex ? Integer.MIN_VALUE : m);
       return;
     }
@@ -5363,13 +5240,11 @@ public class ScriptEval extends ScriptExpr {
     case T.title:
       if (checkLength23() > 0)
         if (!chk)
-          vwr.setFrameTitleObj(slen == 2 ? "@{_modelName}"
-              : (tokAt(2) == T.varray ? SV.strListValue(st[2]) : paramAsStr(2)));
+          vwr.setFrameTitleObj(slen == 2 ? "@{_modelName}" : (tokAt(2) == T.varray ? SV.strListValue(st[2]) : paramAsStr(2)));
       return;
     case T.orientation:
       if (tokAt(2) == T.decimal && tokAt(3) == T.matrix4f) {
-        modelIndex = vwr.ms.getModelNumberIndex(getToken(2).intValue, false,
-            false);
+        modelIndex = vwr.ms.getModelNumberIndex(getToken(2).intValue, false, false);
         M4d mat4 = (M4d) getToken(3).value;
         if (modelIndex >= 0)
           vwr.ms.am[modelIndex].mat4 = mat4;
@@ -5389,8 +5264,7 @@ public class ScriptEval extends ScriptExpr {
     }
     if (getToken(offset).tok == T.minus) {
       ++offset;
-      if (getToken(checkLast(offset)).tok != T.integer
-          || intParameter(offset) != 1)
+      if (getToken(checkLast(offset)).tok != T.integer || intParameter(offset) != 1)
         invArg();
       if (!chk)
         vwr.setAnimation(T.prev);
@@ -5444,8 +5318,7 @@ public class ScriptEval extends ScriptExpr {
         case T.string:
           if (nFrames == 2)
             invArg();
-          int iFrame = (theTok == T.string ? Edge.getFloatEncodedInt((String) theToken.value)
-              : theToken.intValue);
+          int iFrame = (theTok == T.string ? Edge.getFloatEncodedInt((String) theToken.value) : theToken.intValue);
           if (iFrame < 0 && nFrames == 1) {
             isHyphen = true;
             iFrame = -iFrame;
@@ -5456,8 +5329,7 @@ public class ScriptEval extends ScriptExpr {
             iFrame = (int) fFrame * 1000000;
           if (iFrame == Integer.MAX_VALUE) {
             useModelNumber = false;
-            frameList[nFrames++] = (chk || i != 1 ? 0 : vwr
-                .getModelIndexFromId(theToken.value.toString()));
+            frameList[nFrames++] = (chk || i != 1 ? 0 : vwr.getModelIndexFromId(theToken.value.toString()));
             break;
           }
           if (iFrame == -1) {
@@ -5520,8 +5392,7 @@ public class ScriptEval extends ScriptExpr {
       for (int i = 0; i < nFrames; i++)
         if (frameList[i] >= 0)
           frameList[i] %= 1000000;
-    modelIndex = vwr.ms
-        .getModelNumberIndex(frameList[0], useModelNumber, false);
+    modelIndex = vwr.ms.getModelNumberIndex(frameList[0], useModelNumber, false);
     if (frameAlign != null) {
       if (modelIndex >= 0) {
         vwr.ms.translateModel(modelIndex, null);
@@ -5568,13 +5439,11 @@ public class ScriptEval extends ScriptExpr {
       vwr.setCurrentModelIndexClear(modelIndex, false);
     if (isPlay && nFrames == 2 || isRange || isHyphen) {
       if (modelIndex2 < 0)
-        modelIndex2 = vwr.ms.getModelNumberIndex(frameList[1], useModelNumber,
-            false);
+        modelIndex2 = vwr.ms.getModelNumberIndex(frameList[1], useModelNumber, false);
       vwr.setAnimationOn(false);
       vwr.am.setAnimationDirection(1);
       vwr.setAnimationRange(modelIndex, modelIndex2);
-      vwr.setCurrentModelIndexClear(isHyphen && !isRange ? -1
-          : modelIndex >= 0 ? modelIndex : 0, false);
+      vwr.setCurrentModelIndexClear(isHyphen && !isRange ? -1 : modelIndex >= 0 ? modelIndex : 0, false);
     }
     if (isPlay)
       vwr.setAnimation(T.resume);
@@ -5634,9 +5503,7 @@ public class ScriptEval extends ScriptExpr {
         floatSecondsTotal = 0;
       if (floatSecondsTotal > 0)
         refresh(false);
-      vwr.moveTo(this, floatSecondsTotal, null, JC.axisZ, 0, null, 100, 0, 0,
-          0, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN,
-          Double.NaN);
+      vwr.moveTo(this, floatSecondsTotal, null, JC.axisZ, 0, null, 100, 0, 0, 0, null, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
       if (isJS && floatSecondsTotal > 0 && vwr.g.waitForMoveTo)
         throw new ScriptInterruption(this, "moveTo", 1);
       return;
@@ -5829,26 +5696,27 @@ public class ScriptEval extends ScriptExpr {
       if (isFloatParameter(i))
         rotationRadius = floatParameter(i++);
       if (!isCenterParameter(i)) {
-        if ((rotationRadius == 0 || Double.isNaN(rotationRadius))
-            && (zoom == 0 || Double.isNaN(zoom))) {
+        if ((rotationRadius == 0 || Double.isNaN(rotationRadius)) && (zoom == 0 || Double.isNaN(zoom))) {
           // alternative (atom expression) 0 zoomFactor
-          double newZoom = Math.abs(getZoom(0, i, bsCenter, (zoom == 0 ? 0
-              : zoom0)));
+          double newZoom = Math.abs(getZoom(0, i, bsCenter, (zoom == 0 ? 0 : zoom0)));
           i = iToken + 1;
           zoom = newZoom;
         } else {
-          if (!isChange
-              && Math.abs(rotationRadius - vwr.getDouble(T.rotationradius)) >= 0.1)
+          if (!isChange && Math.abs(rotationRadius - vwr.getDouble(T.rotationradius)) >= 0.1) {
             isChange = true;
+		  }
         }
       }
-      if (zoom == 0 || Double.isNaN(zoom))
+      if (zoom == 0 || Double.isNaN(zoom)) {
         zoom = 100;
-      if (Double.isNaN(rotationRadius))
+	  }
+      if (Double.isNaN(rotationRadius)) {
         rotationRadius = 0;
+	  }
 
-      if (!isChange && Math.abs(zoom - zoom0) >= 1)
+      if (!isChange && Math.abs(zoom - zoom0) >= 1) {
         isChange = true;
+	  }
       // (navCenter) xNav yNav navDepth
 
       if (i != slen) {
@@ -5862,8 +5730,7 @@ public class ScriptEval extends ScriptExpr {
           navDepth = floatParameter(i++);
         if (i != slen) {
           cameraDepth = floatParameter(i++);
-          if (!isChange
-              && Math.abs(cameraDepth - vwr.tm.getCameraDepth()) >= 0.01f)
+          if (!isChange && Math.abs(cameraDepth - vwr.tm.getCameraDepth()) >= 0.01f)
             isChange = true;
         }
         if (i + 1 < slen) {
@@ -5891,9 +5758,7 @@ public class ScriptEval extends ScriptExpr {
     if (pymolView != null)
       vwr.tm.moveToPyMOL(this, floatSecondsTotal, pymolView);
     else
-      vwr.moveTo(this, floatSecondsTotal, center, axis, degrees, null, zoom,
-          xTrans, yTrans, rotationRadius, navCenter, xNav, yNav, navDepth,
-          cameraDepth, cameraX, cameraY);
+      vwr.moveTo(this, floatSecondsTotal, center, axis, degrees, null, zoom, xTrans, yTrans, rotationRadius, navCenter, xNav, yNav, navDepth, cameraDepth, cameraX, cameraY);
     if (isJS && floatSecondsTotal > 0 && vwr.g.waitForMoveTo)
       throw new ScriptInterruption(this, "moveTo", 1);
   }
@@ -5945,8 +5810,7 @@ public class ScriptEval extends ScriptExpr {
     String msg = null;
     if (slen == 1) {
       if (!chk)
-        msg = getContextTrace(vwr, getScriptContext("prompt"), null, true)
-            .toString();
+        msg = getContextTrace(vwr, getScriptContext("prompt"), null, true).toString();
     } else {
       msg = parameterExpressionString(1, 0);
     }
@@ -6034,9 +5898,7 @@ public class ScriptEval extends ScriptExpr {
     cmdGoto(false);
   }
 
-  public void cmdRotate(boolean isSpin, boolean isSelected)
-      throws ScriptException {
-
+  public void cmdRotate(boolean isSpin, boolean isSelected) throws ScriptException {
     // rotate is a full replacement for spin
     // spin is DEPRECATED
 
@@ -6162,10 +6024,8 @@ public class ScriptEval extends ScriptExpr {
         if (!chk && tok == T.dollarsign && tokAt(i + 2) != T.leftsquare) {
           // rotation about an axis such as $line1
           isMolecular = true;
-          Object[] data = new Object[] { objectNameParameter(++i),
-              Integer.valueOf(vwr.am.cmi), null };
-          rotAxis = (getShapePropertyData(JC.SHAPE_DRAW, "getSpinAxis", data) ? (V3d) data[2]
-              : null);
+          Object[] data = new Object[] { objectNameParameter(++i), Integer.valueOf(vwr.am.cmi), null };
+          rotAxis = (getShapePropertyData(JC.SHAPE_DRAW, "getSpinAxis", data) ? (V3d) data[2] : null);
         }
         points[nPoints++] = pt1;
         break;
@@ -6229,8 +6089,7 @@ public class ScriptEval extends ScriptExpr {
         continue;
       case T.z:
         haveRotation = true;
-        rotAxis.set(0, 0, (axesOrientationRasmol && !isMolecular ? -direction
-            : direction));
+        rotAxis.set(0, 0, (axesOrientationRasmol && !isMolecular ? -direction : direction));
         continue;
 
         // 11.6 options
@@ -6324,24 +6183,27 @@ public class ScriptEval extends ScriptExpr {
         continue;
       case T.symop:
         int symop = intParameter(++i);
-        if (chk)
+        if (chk) {
           continue;
-        Map<String, Object> info = vwr.getSymTemp().getSpaceGroupInfo(vwr.ms,
-            null, -1, false, null);
+		}
+        Map<String, Object> info = vwr.getSymTemp().getSpaceGroupInfo(vwr.ms, null, -1, false, null);
         Object[] op = (info == null ? null : (Object[]) info.get("operations"));
-        if (symop == 0 || op == null || op.length < Math.abs(symop))
+        if (symop == 0 || op == null || op.length < Math.abs(symop)) {
           invArg();
+		}
         op = (Object[]) op[Math.abs(symop) - 1];
         translation = (V3d) op[5];
         invPoint = (P3d) op[6];
         points[0] = (P3d) op[7];
-        if (op[8] != null)
+        if (op[8] != null) {
           rotAxis = (V3d) op[8];
+		}
         endDegrees = ((Integer) op[9]).intValue();
         if (symop < 0) {
           endDegrees = -endDegrees;
-          if (translation != null)
+          if (translation != null) {
             translation.scale(-1);
+		  }
         }
         if (endDegrees == 0 && points[0] != null) {
           // glide plane
@@ -6448,8 +6310,7 @@ public class ScriptEval extends ScriptExpr {
       // only when there is a translation but not a 4x4 matrix)
       // do we set the rotation to be the center of the selected atoms or model
       if (nPoints == 0 && translation != null && !is4x4)
-        points[0] = vwr.ms.getAtomSetCenter(bsAtoms != null ? bsAtoms
-            : isSelected ? vwr.bsA() : vwr.getAllAtoms());
+        points[0] = vwr.ms.getAtomSetCenter(bsAtoms != null ? bsAtoms : isSelected ? vwr.bsA() : vwr.getAllAtoms());
       if (helicalPath && translation != null) {
         points[1] = P3d.newP(points[0]);
         points[1].add(translation);
@@ -6494,16 +6355,14 @@ public class ScriptEval extends ScriptExpr {
           if (endDegrees == Double.MAX_VALUE)
             return;
         }
-        if (vwr.rotateAxisAngleAtCenter(this, points[0], rotAxis, rate,
-            endDegrees, isSpin, bsAtoms)) {
+        if (vwr.rotateAxisAngleAtCenter(this, points[0], rotAxis, rate, endDegrees, isSpin, bsAtoms)) {
           // bsAtoms can be non-null if we have a quaternion
           // rotate quaternion {2 3 4 4} {atomno<10}
           // a fixed quaternion rotation of a set of atoms
           // currently rotateAxisAngleAtCenter cannot return true
           // if isSpin is true. But that is what we are working on
           // TODO: not exactly clear here if this will work
-          if (isJS && isSpin && bsAtoms == null && vwr.g.waitForMoveTo
-              && endDegrees != Double.MAX_VALUE)
+          if (isJS && isSpin && bsAtoms == null && vwr.g.waitForMoveTo && endDegrees != Double.MAX_VALUE)
             throw new ScriptInterruption(this, "rotate", 1);
         }
         return;
@@ -6532,8 +6391,7 @@ public class ScriptEval extends ScriptExpr {
     if (checkModelKit) {
       if (endDegrees == 0)
         return;
-      if ( bsAtoms == null || nPoints != 2 || isSpin || translation != null || dihedralList != null || ptsB != null 
-          || is4x4)
+      if (bsAtoms == null || nPoints != 2 || isSpin || translation != null || dihedralList != null || ptsB != null || is4x4)
         invArg();
       int na = vwr.getModelkit(false).cmdRotateAtoms(bsAtoms, points, endDegrees);
       if (doReport())
@@ -6542,8 +6400,7 @@ public class ScriptEval extends ScriptExpr {
     }
     if (endDegrees != 0 && translation != null && !haveRotation)
       translation.scale(endDegrees / translation.length());
-    if (isSpin && translation != null
-        && (endDegrees == 0 || degreesPerSecond == 0)) {
+    if (isSpin && translation != null && (endDegrees == 0 || degreesPerSecond == 0)) {
       // need a token rotation
       endDegrees = 0.01f;
       rate = (degreesPerSecond == PT.FLOAT_MIN_SAFE ? 0.01d
@@ -6860,25 +6717,27 @@ public class ScriptEval extends ScriptExpr {
       isCmdLine_C_Option &= loadCheck;
       executionStepping |= doStep;
 
-      if (contextVariables == null)
+      if (contextVariables == null) {
         contextVariables = new Hashtable<String, SV>();
-      contextVariables.put("_arguments",
-          (params == null ? SV.getVariableAI(new int[] {})
-              : SV.getVariableList(params)));
-      contextVariables.put("_argcount",
-          SV.newI(params == null ? 0 : params.size()));
+	  }
+      contextVariables.put("_arguments", (params == null ? SV.getVariableAI(new int[] {}) : SV.getVariableList(params)));
+      contextVariables.put("_argcount", SV.newI(params == null ? 0 : params.size()));
       
-      if (isCheck)
+      if (isCheck) {
         listCommands = true;
+	  }
       boolean timeMsg = vwr.getBoolean(T.showtiming);
-      if (timeMsg)
+      if (timeMsg) {
         Logger.startTimer("script");
+	  }
       privateFuncs = null;
       dispatchCommands(false, false, false);
-      if (isStateScript)
+      if (isStateScript) {
         ScriptManager.setStateScriptVersion(vwr, null);
-      if (timeMsg)
+	  }
+      if (timeMsg) {
         showString(Logger.getTimerMsg("script", 0));
+	  }
       isCmdLine_C_Option = saveLoadCheck;
       popContext(false, false);
     } else {
@@ -6901,7 +6760,6 @@ public class ScriptEval extends ScriptExpr {
   }
 
   /**
-   * 
    * @param i 2 from RESTRICT BONDS, otherwise 1
    * @throws ScriptException
    */
@@ -6918,12 +6776,13 @@ public class ScriptEval extends ScriptExpr {
     switch (tok) {
     case T.bitset:
       // select beginexpr bonds ( {...} ) endex pr
-      if (getToken(2).value instanceof BondSet || tok == T.bonds
-          && getToken(3).tok == T.bitset) {
-        if (slen != iToken + 2)
+      if (getToken(2).value instanceof BondSet || tok == T.bonds && getToken(3).tok == T.bitset) {
+        if (slen != iToken + 2) {
           invArg();
-        if (!chk)
+		}
+        if (!chk) {
           vwr.selectBonds((BS) theToken.value);
+		}
         return;
       }
       break;
@@ -6935,21 +6794,25 @@ public class ScriptEval extends ScriptExpr {
       } else if (isArrayParameter(4)) {
         bs = new BS();
         // 0-based here, to conform with getProperty measurementInfo.index
-        int[] a = (int[]) expandDoubleArray(doubleParameterSet(4, 0,
-            Integer.MAX_VALUE), 0, false);
-        for (int ii = a.length; --ii >= 0;)
-          if (a[ii] >= 0)
+        int[] a = (int[]) expandDoubleArray(doubleParameterSet(4, 0, Integer.MAX_VALUE), 0, false);
+        for (int ii = a.length; --ii >= 0;) {
+          if (a[ii] >= 0) {
             bs.set(a[ii]);
+		  }
+		}
       }
       checkLast(iToken);
-      if (chk)
+      if (chk) {
         return;
-      if (bs == null)
+	  }
+      if (bs == null) {
         invArg();
-      if (tok == T.measure)
+	  }
+      if (tok == T.measure) {
         setShapeProperty(JC.SHAPE_MEASURES, "select", bs);
-      else
+	  } else {
         vwr.selectBonds(bs);
+	  }
       return;
     }
 
@@ -7058,8 +6921,7 @@ public class ScriptEval extends ScriptExpr {
     boolean b;
     P3d pt;
 
-    boolean showing = (!chk && doReport()
-        && !((String) st[0].value).equals("var"));
+    boolean showing = (!chk && doReport() && !((String) st[0].value).equals("var"));
 
     // THESE FIRST ARE DEPRECATED AND HAVE THEIR OWN COMMAND
     // anything in this block MUST RETURN
@@ -7101,8 +6963,7 @@ public class ScriptEval extends ScriptExpr {
       return;
     case T.highlight:
       sm.loadShape(JC.SHAPE_HALOS);
-      setShapeProperty(JC.SHAPE_HALOS, "highlight",
-          (tokAt(2) == T.off ? null : atomExpressionAt(2)));
+      setShapeProperty(JC.SHAPE_HALOS, "highlight", (tokAt(2) == T.off ? null : atomExpressionAt(2)));
       return;
     case T.display:// deprecated
     case T.selectionhalos:
@@ -7163,9 +7024,7 @@ public class ScriptEval extends ScriptExpr {
     case T.debughigh:
       if (chk)
         return;
-      int iLevel = (tokAt(2) == T.off
-          || tokAt(2) == T.integer && intParameter(2) == 0 ? 4
-              : (tok == T.debughigh ? 6 : 5));
+      int iLevel = (tokAt(2) == T.off || tokAt(2) == T.integer && intParameter(2) == 0 ? 4 : (tok == T.debughigh ? 6 : 5));
       Logger.setLogLevel(iLevel);
       setIntProperty("logLevel", iLevel);
       if (iLevel == 4) {
@@ -7219,9 +7078,9 @@ public class ScriptEval extends ScriptExpr {
       case T.decimal:
         vwr.shm.loadShape(JC.SHAPE_MEASURES);
         int mad10 = getSetAxesTypeMad10(2);
-        if (mad10 != Integer.MAX_VALUE)
-          setShapeSizeBs(JC.SHAPE_MEASURES,
-              tok == T.decimal ? mad10 / 10 : mad10, null);
+        if (mad10 != Integer.MAX_VALUE) {
+          setShapeSizeBs(JC.SHAPE_MEASURES, tok == T.decimal ? mad10 / 10 : mad10, null);
+		}
         return;
       }
       setUnits(paramAsStr(2), T.measurementunits);
@@ -7295,8 +7154,7 @@ public class ScriptEval extends ScriptExpr {
         }
         if (chk)
           return;
-        int modelIndex = vwr.ms.getModelNumberIndex(modelNumber, useModelNumber,
-            true);
+        int modelIndex = vwr.ms.getModelNumberIndex(modelNumber, useModelNumber, true);
         vwr.setBackgroundModelIndex(modelIndex);
         return;
       }
@@ -7304,8 +7162,7 @@ public class ScriptEval extends ScriptExpr {
     case T.vanderwaals:
       if (chk)
         return;
-      vwr.setAtomProperty(vwr.getAllAtoms(), T.vanderwaals, -1, Double.NaN, null,
-          null, null);
+      vwr.setAtomProperty(vwr.getAllAtoms(), T.vanderwaals, -1, Double.NaN, null, null, null);
       if (slen > 2 && "probe".equalsIgnoreCase(getSettingStr(2, false))) {
         runScript(Elements.VdwPROBE);
         return;
@@ -7417,7 +7274,6 @@ public class ScriptEval extends ScriptExpr {
         && getContextVariableAsVariable(key, false) != null);
 
     if (!justShow && !isContextVariable) {
-
       // THESE NEXT are deprecated:
 
       switch (tok) {
@@ -7626,8 +7482,7 @@ public class ScriptEval extends ScriptExpr {
       if (id != null) {
         if (propertyName == null && !isScale)
           setShapeProperty(JC.SHAPE_ECHO, "thisID", null);
-        setShapeProperty(JC.SHAPE_ECHO, propertyName == null ? "target"
-            : propertyName, id);
+        setShapeProperty(JC.SHAPE_ECHO, propertyName == null ? "target" : propertyName, id);
       }
     }
 
@@ -7746,8 +7601,7 @@ public class ScriptEval extends ScriptExpr {
             getShapePropertyData(JC.SHAPE_ECHO, "currentTarget", data);
             id = data[0];
           }
-          if (!chk && vwr.ms.getEchoStateActive()
-              && vwr.fm.loadImage(getToken(pt).value, id, !useThreads()))
+          if (!chk && vwr.ms.getEchoStateActive() && vwr.fm.loadImage(getToken(pt).value, id, !useThreads()))
             throw new ScriptInterruption(this, "setEchoImage", 1);
           return;
         }
@@ -7755,8 +7609,7 @@ public class ScriptEval extends ScriptExpr {
         return;
       case T.point:
         propertyName = "point";
-        propertyValue = (isCenterParameter(pt) ? centerParameter(pt, null)
-            : null);
+        propertyValue = (isCenterParameter(pt) ? centerParameter(pt, null) : null);
         pt = iToken + 1;
         break;
       default:
@@ -7787,8 +7640,7 @@ public class ScriptEval extends ScriptExpr {
       if (str.equals("scalereference")) {
         double scaleAngstromsPerPixel = floatParameter(2);
         if (scaleAngstromsPerPixel >= 5) // actually a zoom value
-          scaleAngstromsPerPixel = vwr.tm.getZoomSetting()
-              / scaleAngstromsPerPixel / vwr.getScalePixelsPerAngstrom(false);
+          scaleAngstromsPerPixel = vwr.tm.getZoomSetting() / scaleAngstromsPerPixel / vwr.getScalePixelsPerAngstrom(false);
         propertyValue = Double.valueOf(scaleAngstromsPerPixel);
         break;
       }
@@ -8062,65 +7914,21 @@ public class ScriptEval extends ScriptExpr {
       vwr.tm.slabInternal(plane, isDepth);
   }
 
-  /*
-  private void slice() throws ScriptException{
-    if(!chk && vwr.slicer==null){
-     vwr.createSlicer();
-    }
-    int tok1 = getToken(1).tok;
-    if(tok1==Token.left||tok1==Token.right){
-      switch (getToken(2).tok){
-      case Token.on:
-        if(chk) return;
-        vwr.slicer.drawSlicePlane(tok1, true);
-        return;
-      case Token.off:
-        if(chk) return;
-        vwr.slicer.drawSlicePlane(tok1, false);
-        return;
-      default:
-        invArg();
-      break;
-      }
-    }else{//command to slice object, not show slice planes
-      String name = (String)getToken(1).value;
-      //TODO - should accept "all"  for now "all" will fail silently.
-      // Should check it is a valid  isosurface name
-      //Should be followed by two angles, and two percents (double values)
-      double[] param = new double[4];
-      for (int i=2;i<6;++i){
-        if(getToken(i).tok == Token.decimal){
-          param[i-2]=floatParameter(i);
-        } else{
-          invArg();  
-        }
-      }
-      if(!chk){
-        vwr.slicer.setSlice(param[0], param[1], param[2], param[3]);
-        vwr.slicer.sliceObject(name);
-      }
-      return; 
-    }
-  }
-  
-  */
-
   private void cmdSsbond() throws ScriptException {
     int mad = getMadParameter();
-    if (mad == Integer.MAX_VALUE)
+    if (mad == Integer.MAX_VALUE) {
       return;
-    setShapeProperty(JC.SHAPE_STICKS, "type",
-        Integer.valueOf(Edge.BOND_SULFUR_MASK));
+	}
+    setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_SULFUR_MASK));
     setShapeSizeBs(JC.SHAPE_STICKS, mad, null);
-    setShapeProperty(JC.SHAPE_STICKS, "type",
-        Integer.valueOf(Edge.BOND_COVALENT_MASK));
+    setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_COVALENT_MASK));
   }
 
   private void cmdStructure() throws ScriptException {
-    STR type = STR
-        .getProteinStructureType(paramAsStr(1));
-    if (type == STR.NOT)
+    STR type = STR.getProteinStructureType(paramAsStr(1));
+    if (type == STR.NOT) {
       invArg();
+	}
     BS bs = null;
     switch (tokAt(2)) {
     case T.define:
@@ -8132,21 +7940,25 @@ public class ScriptEval extends ScriptExpr {
     default:
       checkLength(2);
     }
-    if (chk)
+    if (chk) {
       return;
+	}
     clearDefinedVariableAtomSets();
     vwr.setProteinType(type, bs);
   }
 
   private void cmdSubset() throws ScriptException {
     BS bs = null;
-    if (!chk)
+    if (!chk) {
       vwr.slm.setSelectionSubset(null);
+	}
     // hover none --> subset exprbeg "off" exprend
-    if (slen != 1 && (slen != 4 || !getToken(2).value.equals("off")))
+    if (slen != 1 && (slen != 4 || !getToken(2).value.equals("off"))) {
       bs = atomExpressionAt(1);
-    if (!chk)
+	}
+    if (!chk) {
       vwr.slm.setSelectionSubset(bs);
+	}
   }
 
   private void cmdSync() throws ScriptException {
@@ -8166,8 +7978,7 @@ public class ScriptEval extends ScriptExpr {
       case 2:
         // sync (*) text
         applet = paramAsStr(1);
-        if (applet.indexOf("jmolApplet") == 0
-            || PT.isOneOf(applet, ";*;.;^;")) {
+        if (applet.indexOf("jmolApplet") == 0 || PT.isOneOf(applet, ";*;.;^;")) {
           text = "ON";
           if (!chk)
             vwr.syncScript(text, applet, 0);
@@ -8181,8 +7992,7 @@ public class ScriptEval extends ScriptExpr {
         // sync applet text
         // sync applet STEREO
         applet = paramAsStr(1);
-        text = (tokAt(2) == T.stereo ? Viewer.SYNC_GRAPHICS_MESSAGE
-            : paramAsStr(2));
+        text = (tokAt(2) == T.stereo ? Viewer.SYNC_GRAPHICS_MESSAGE : paramAsStr(2));
         break;
       }
     } else {
@@ -8198,11 +8008,11 @@ public class ScriptEval extends ScriptExpr {
   }
 
   private void cmdThrow() throws ScriptException {
-    if (chk)
+    if (chk) {
       return;
+	}
     int pt = (tokAt(1) == T.context ? 2 : 1);
-    SV v = (pt == 1 ? setVariable(1, slen, "thrown_value", false)
-        : vwr.g.setUserVariable("thrown_value", SV.newS(optParameterAsString(2))));
+    SV v = (pt == 1 ? setVariable(1, slen, "thrown_value", false) : vwr.g.setUserVariable("thrown_value", SV.newS(optParameterAsString(2))));
     String info = v.asString();
     if (info.length() == 0 && (info = optParameterAsString(1)).length() == 0)
       info = "context";
@@ -8282,8 +8092,7 @@ public class ScriptEval extends ScriptExpr {
     }
     if (isPoint3f(i)) {
       P3d pt = getPoint3f(i, true, true);
-      bs = (iToken + 1 < slen ? atomExpressionAt(++iToken)
-          : null);
+      bs = (iToken + 1 < slen ? atomExpressionAt(++iToken) : null);
       checkLast(iToken);
       if (!chk)
         vwr.setAtomCoordsRelative(pt, bs);
@@ -8307,8 +8116,7 @@ public class ScriptEval extends ScriptExpr {
     if (amount == 0 && type != '\0')
       return;
     iToken = i0 + (type == '\0' ? 2 : 3);
-    bs = (isSelected ? vwr.bsA()
-        : iToken + 1 < slen ? atomExpressionAt(++iToken) : null);
+    bs = (isSelected ? vwr.bsA() : iToken + 1 < slen ? atomExpressionAt(++iToken) : null);
     checkLast(iToken);
     if (!chk) {
       vwr.translate(xyz, amount, type, bs);
@@ -8328,8 +8136,7 @@ public class ScriptEval extends ScriptExpr {
       mouseAction = null;
     if (name.length() == 0 || tokAt(2) == T.all)
       name = null;
-    if (name == null && mouseAction != null
-        && ActionManager.getActionFromName(mouseAction) >= 0) {
+    if (name == null && mouseAction != null && ActionManager.getActionFromName(mouseAction) >= 0) {
       name = mouseAction;
       mouseAction = null;
     }
@@ -8377,8 +8184,7 @@ public class ScriptEval extends ScriptExpr {
     if (sym == null && vwr.async)
       throw new NullPointerException();
     try {
-      vwr.ms.setModelCage(iModel,
-          originABC == null ? null : sym.getUnitCelld(originABC, false, name));
+      vwr.ms.setModelCage(iModel, originABC == null ? null : sym.getUnitCelld(originABC, false, name));
     } catch (Exception e) {
       //
     }
@@ -8487,17 +8293,16 @@ public class ScriptEval extends ScriptExpr {
 
   private void cmdWireframe() throws ScriptException {
     int mad = Integer.MIN_VALUE;
-    if (tokAt(1) == T.reset)
+    if (tokAt(1) == T.reset) {
       checkLast(1);
-    else
+	} else {
       mad = getMadParameter();
-    if (chk || mad == Integer.MAX_VALUE)
+	}
+    if (chk || mad == Integer.MAX_VALUE) {
       return;
-    setShapeProperty(JC.SHAPE_STICKS, "type",
-        Integer.valueOf(Edge.BOND_COVALENT_MASK));
-    setShapeSizeBs(JC.SHAPE_STICKS,
-        mad == Integer.MIN_VALUE ? 2 * JC.DEFAULT_BOND_MILLIANGSTROM_RADIUS
-            : mad, null);
+	}
+    setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_COVALENT_MASK));
+    setShapeSizeBs(JC.SHAPE_STICKS, mad == Integer.MIN_VALUE ? 2 * JC.DEFAULT_BOND_MILLIANGSTROM_RADIUS : mad, null);
   }
 
   private void cmdZap(boolean isZapCommand) throws ScriptException {
@@ -8547,9 +8352,7 @@ public class ScriptEval extends ScriptExpr {
     //Point3f currentCenter = vwr.getRotationCenter();
     int i = 1;
     // zoomTo time-sec
-    double floatSecondsTotal = (isZoomTo ? (isFloatParameter(i) ? floatParameter(i++)
-        : 1d)
-        : 0d);
+    double floatSecondsTotal = (isZoomTo ? (isFloatParameter(i) ? floatParameter(i++) : 1d) : 0d);
     if (floatSecondsTotal < 0) {
       // zoom -10
       i--;
@@ -8731,22 +8534,17 @@ public class ScriptEval extends ScriptExpr {
         // "cpk" value would be "spacefill"
         String name = paramAsStr(index).toLowerCase();
         boolean isByElement = (name.indexOf(ColorEncoder.BYELEMENT_PREFIX) == 0);
-        boolean isColorIndex = (isByElement || name
-            .indexOf(ColorEncoder.BYRESIDUE_PREFIX) == 0);
-        PAL pal = (isColorIndex || isIsosurface ? PAL.PROPERTY
-            : tok == T.spacefill ? PAL.CPK : PAL.getPalette(name));
+        boolean isColorIndex = (isByElement || name.indexOf(ColorEncoder.BYRESIDUE_PREFIX) == 0);
+        PAL pal = (isColorIndex || isIsosurface ? PAL.PROPERTY : tok == T.spacefill ? PAL.CPK : PAL.getPalette(name));
         // color atoms "cpkScheme"
-        if (pal == PAL.UNKNOWN || (pal == PAL.TYPE || pal == PAL.ENERGY)
-            && shapeType != JC.SHAPE_HSTICKS)
+        if (pal == PAL.UNKNOWN || (pal == PAL.TYPE || pal == PAL.ENERGY) && shapeType != JC.SHAPE_HSTICKS)
           invArg();
         Object data = null;
-        BS bsSelected = (pal != PAL.PROPERTY && pal != PAL.VARIABLE
-            || !vwr.g.rangeSelected ? null : vwr.bsA());
+        BS bsSelected = (pal != PAL.PROPERTY && pal != PAL.VARIABLE || !vwr.g.rangeSelected ? null : vwr.bsA());
         if (pal == PAL.PROPERTY) {
           if (isColorIndex) {
             if (!chk) {
-              data = getCmdExt().getBitsetPropertyFloat(bsSelected, (isByElement ? T.elemno
-                  : T.groupid) | T.allfloat, null, Double.NaN, Double.NaN);
+              data = getCmdExt().getBitsetPropertyFloat(bsSelected, (isByElement ? T.elemno : T.groupid) | T.allfloat, null, Double.NaN, Double.NaN);
             }
           } else {
             boolean isPropertyExplicit = name.equals("property");
@@ -8757,8 +8555,7 @@ public class ScriptEval extends ScriptExpr {
               tok = getToken(index).tok;
               String type = (tok == T.dssr ? getToken(++index).value.toString() : null);
               if (!chk) {
-                data = getCmdExt().getBitsetPropertyFloat(bsSelected, tok
-                    | T.allfloat, type, Double.NaN, Double.NaN);
+                data = getCmdExt().getBitsetPropertyFloat(bsSelected, tok | T.allfloat, type, Double.NaN, Double.NaN);
               }
               index++;
             } else if (!isPropertyExplicit && !isIsosurface) {
@@ -8770,8 +8567,7 @@ public class ScriptEval extends ScriptExpr {
           index++;
           name = paramAsStr(index++);
           data = new double[vwr.ms.ac];
-          Parser.parseStringInfestedDoubleArray(
-              "" + getParameter(name, T.string, true), null, (double[]) data);
+          Parser.parseStringInfestedDoubleArray("" + getParameter(name, T.string, true), null, (double[]) data);
           pal = PAL.PROPERTY;
         }
         // index here points to NEXT item
@@ -8782,9 +8578,7 @@ public class ScriptEval extends ScriptExpr {
             if (scheme.indexOf("/") < 0)
               scheme = scheme.toLowerCase();
             if (isArrayParameter(index)) {
-              scheme += "="
-                  + SV.sValue(SV.getVariableAS(stringParameterSet(index)))
-                      .replace('\n', ' ');
+              scheme += "=" + SV.sValue(SV.getVariableAS(stringParameterSet(index))) .replace('\n', ' ');
               index = iToken + 1;
             }
           } else if (isIsosurface && isColorParam(index)) {
@@ -8792,16 +8586,12 @@ public class ScriptEval extends ScriptExpr {
             index = iToken + 1;
           }
           if (scheme != null && !isIsosurface) {
-            setStringProperty("propertyColorScheme", (isTranslucent
-                && translucentLevel == Double.MAX_VALUE ? "translucent " : "")
-                + scheme);
-            isColorIndex = (scheme.indexOf(ColorEncoder.BYELEMENT_PREFIX) == 0 || scheme
-                .indexOf(ColorEncoder.BYRESIDUE_PREFIX) == 0);
+            setStringProperty("propertyColorScheme", (isTranslucent && translucentLevel == Double.MAX_VALUE ? "translucent " : "") + scheme);
+            isColorIndex = (scheme.indexOf(ColorEncoder.BYELEMENT_PREFIX) == 0 || scheme.indexOf(ColorEncoder.BYRESIDUE_PREFIX) == 0);
           }
           double min = 0;
           double max = Double.MAX_VALUE;
-          if (!isColorIndex
-              && (tokAt(index) == T.absolute || tokAt(index) == T.range)) {
+          if (!isColorIndex && (tokAt(index) == T.absolute || tokAt(index) == T.range)) {
             min = floatParameter(index + 1);
             max = floatParameter(index + 2);
             index += 3;
@@ -8836,8 +8626,7 @@ public class ScriptEval extends ScriptExpr {
             if (max == Double.MAX_VALUE)
               ce.hi = max;
             setShapeProperty(shapeType, "remapColor", ce);
-            showString(((String) getShapeProperty(shapeType, "dataRangeStr"))
-                .replace('\n', ' '));
+            showString(((String) getShapeProperty(shapeType, "dataRangeStr")).replace('\n', ' '));
             if (translucentLevel == Double.MAX_VALUE)
               return;
           } else if (max != Double.MAX_VALUE) {
@@ -8910,11 +8699,8 @@ public class ScriptEval extends ScriptExpr {
         vwr.ms.calcSelectedMoleculesCount();
         break;
       }
-      if (colorvalue1 != null
-          && (isIsosurface || shapeType == JC.SHAPE_CARTOON
-              || shapeType == JC.SHAPE_RIBBONS || shapeType == JC.SHAPE_POLYHEDRA))
-        setShapeProperty(shapeType, "colorPhase", new Object[] { colorvalue1,
-            colorvalue });
+      if (colorvalue1 != null && (isIsosurface || shapeType == JC.SHAPE_CARTOON || shapeType == JC.SHAPE_RIBBONS || shapeType == JC.SHAPE_POLYHEDRA))
+        setShapeProperty(shapeType, "colorPhase", new Object[] { colorvalue1, colorvalue });
       else if (bs == null)
         setShapeProperty(shapeType, prefix + "color", colorvalue);
       else
@@ -8926,8 +8712,7 @@ public class ScriptEval extends ScriptExpr {
     if (isScale)
       setShapeProperty(JC.SHAPE_ECHO, "thisID", null);
     if (typeMask != 0)
-      setShapeProperty(JC.SHAPE_STICKS, "type",
-          Integer.valueOf(Edge.BOND_COVALENT_MASK));
+      setShapeProperty(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_COVALENT_MASK));
     if (doClearBondSet)
       vwr.selectBonds(null);
     if (shapeType == JC.SHAPE_BALLS)
@@ -8955,10 +8740,7 @@ public class ScriptEval extends ScriptExpr {
     }
   }
 
-  public RadiusData encodeRadiusParameter(int index, boolean isOnly,
-                                          boolean allowAbsolute)
-      throws ScriptException {
-
+  public RadiusData encodeRadiusParameter(int index, boolean isOnly, boolean allowAbsolute) throws ScriptException {
     double value = Double.NaN;
     EnumType factorType = EnumType.ABSOLUTE;
     VDW vdwType = null;
@@ -8973,8 +8755,7 @@ public class ScriptEval extends ScriptExpr {
     case T.vanderwaals:
       value = 1;
       factorType = EnumType.FACTOR;
-      vdwType = (tok == T.vanderwaals ? null : VDW.getVdwType2(T
-          .nameOf(tok)));
+      vdwType = (tok == T.vanderwaals ? null : VDW.getVdwType2(T.nameOf(tok)));
       tok = tokAt(++index);
       break;
     }
@@ -9034,8 +8815,7 @@ public class ScriptEval extends ScriptExpr {
         vdwType = VDW.NADA;
         max = 100;
       }
-      value = floatParameterRange(index, (isOnly || !allowAbsolute ? -max : 0),
-          max);
+      value = floatParameterRange(index, (isOnly || !allowAbsolute ? -max : 0), max);
       if (Double.isNaN(value))
         return null;
       if (isOnly)
@@ -9140,13 +8920,11 @@ public class ScriptEval extends ScriptExpr {
       invArg();
     int color2 = getArgbParam(++iToken);
     int nColors = (tokAt(iToken + 1) == T.integer ? intParameter(++iToken) : 0);
-    return ColorEncoder.getColorSchemeList(ColorEncoder.getPaletteAtoB(color1,
-        color2, nColors));
+    return ColorEncoder.getColorSchemeList(ColorEncoder.getPaletteAtoB(color1, color2, nColors));
   }
 
   public String getFullPathName(boolean withType) throws ScriptException {
-    String filename = (!chk || isCmdLine_C_Option ? vwr
-        .fm.getFullPathName(true) : "test.xyz");
+    String filename = (!chk || isCmdLine_C_Option ? vwr.fm.getFullPathName(true) : "test.xyz");
     if (filename == null)
       invArg();
     if (withType) {
@@ -9170,11 +8948,9 @@ public class ScriptEval extends ScriptExpr {
   }
 
   protected P3d getObjectCenter(String axisID, int index, int modelIndex) {
-
     // called by ScriptParam
     
-    Object[] data = new Object[] { axisID, Integer.valueOf(index),
-        Integer.valueOf(modelIndex) };
+    Object[] data = new Object[] { axisID, Integer.valueOf(index), Integer.valueOf(modelIndex) };
     return (getShapePropertyData(JC.SHAPE_DRAW, "getCenter", data)
         || getShapePropertyData(JC.SHAPE_ISOSURFACE, "getCenter", data)
         || getShapePropertyData(JC.SHAPE_PMESH, "getCenter", data)
@@ -9193,11 +8969,10 @@ public class ScriptEval extends ScriptExpr {
     case JC.SHAPE_DRAW:
       setShapeProperty(JC.SHAPE_DRAW, "thisID", id);
       T3d[] points = (T3d[]) getShapeProperty(JC.SHAPE_DRAW, "vertices");
-      if (points == null || points.length < 3 || points[0] == null
-          || points[1] == null || points[2] == null)
+      if (points == null || points.length < 3 || points[0] == null || points[1] == null || points[2] == null) {
         break;
-      return MeasureD.getPlaneThroughPoints(points[0], points[1], points[2],
-          new V3d(), vAB, new P4d());
+	  }
+      return MeasureD.getPlaneThroughPoints(points[0], points[1], points[2], new V3d(), vAB, new P4d());
     case JC.SHAPE_ISOSURFACE:
       setShapeProperty(JC.SHAPE_ISOSURFACE, "thisID", id);
       return (P4d) getShapeProperty(JC.SHAPE_ISOSURFACE, "plane");
@@ -9260,8 +9035,7 @@ public class ScriptEval extends ScriptExpr {
 }
 
   private int getSettingInt(int pt) throws ScriptException {
-    return (pt >= slen ? Integer.MIN_VALUE : parameterExpressionToken(pt)
-        .asInt());
+    return (pt >= slen ? Integer.MIN_VALUE : parameterExpressionToken(pt).asInt());
   }
 
   /**
@@ -9274,18 +9048,15 @@ public class ScriptEval extends ScriptExpr {
    * @return string parameter
    * @throws ScriptException
    */
-  private String getSettingStr(int pt, boolean isJmolSet)
-      throws ScriptException {
-    return (isJmolSet && slen == pt + 1 ? paramAsStr(pt)
-        : parameterExpressionToken(pt).asString());
+  private String getSettingStr(int pt, boolean isJmolSet) throws ScriptException {
+    return (isJmolSet && slen == pt + 1 ? paramAsStr(pt) : parameterExpressionToken(pt).asString());
   }
 
   public Object getShapeProperty(int shapeType, String propertyName) {
     return sm.getShapePropertyIndex(shapeType, propertyName, Integer.MIN_VALUE);
   }
 
-  public boolean getShapePropertyData(int shapeType, String propertyName,
-                                      Object[] data) {
+  public boolean getShapePropertyData(int shapeType, String propertyName, Object[] data) {
     return sm.getShapePropertyData(shapeType, propertyName, data);
   }
 
@@ -9301,8 +9072,7 @@ public class ScriptEval extends ScriptExpr {
     return (theTok == T.integer && f > 0 && f < 9 ? f + 1 : f);
   }
 
-  private double getZoom(int ptCenter, int i, BS bs, double currentZoom)
-      throws ScriptException {
+  private double getZoom(int ptCenter, int i, BS bs, double currentZoom) throws ScriptException {
     // where [zoom factor] is [0|n|+n|-n|*n|/n|IN|OUT]
 
     double zoom = (isFloatParameter(i) ? floatParameter(i++) : Double.NaN);
@@ -9428,8 +9198,7 @@ public class ScriptEval extends ScriptExpr {
    * @return true if successful
    * @throws ScriptException
    */
-  public boolean setMeshDisplayProperty(int shape, int i, int tok)
-      throws ScriptException {
+  public boolean setMeshDisplayProperty(int shape, int i, int tok) throws ScriptException {
     String propertyName = null;
     Object propertyValue = null;
     boolean allowCOLOR = (shape == JC.SHAPE_CONTACT);
@@ -9538,8 +9307,7 @@ public class ScriptEval extends ScriptExpr {
           break;
         case T.hide:
         case T.display:
-          setShapeProperty(iShape, "hidden",
-              tokCommand == T.display ? Boolean.FALSE : Boolean.TRUE);
+          setShapeProperty(iShape, "hidden", tokCommand == T.display ? Boolean.FALSE : Boolean.TRUE);
           break;
         case T.show:
           //if (iShape == JmolConstants.SHAPE_ISOSURFACE && !isWild)
@@ -9611,14 +9379,12 @@ public class ScriptEval extends ScriptExpr {
     return id;
   }
 
-  public void setShapeProperty(int shapeType, String propertyName,
-                               Object propertyValue) {
+  public void setShapeProperty(int shapeType, String propertyName, Object propertyValue) {
     if (!chk)
       sm.setShapePropertyBs(shapeType, propertyName, propertyValue, null);
   }
 
-  public void setShapePropertyBs(int iShape, String propertyName,
-                                 Object propertyValue, BS bs) {
+  public void setShapePropertyBs(int iShape, String propertyName, Object propertyValue, BS bs) {
     if (!chk)
       sm.setShapePropertyBs(iShape, propertyName, propertyValue, bs);
   }
@@ -9634,13 +9400,10 @@ public class ScriptEval extends ScriptExpr {
       sm.setShapeSizeBs(shapeType, size, null, bs);
   }
 
-  public void setShapeTranslucency(int shapeType, String prefix,
-                                   String translucency, double translucentLevel,
-                                   BS bs) {
+  public void setShapeTranslucency(int shapeType, String prefix, String translucency, double translucentLevel, BS bs) {
     if (translucentLevel == Double.MAX_VALUE)
       translucentLevel = vwr.getDouble(T.defaulttranslucent);
-    setShapeProperty(shapeType, "translucentLevel",
-        Double.valueOf(translucentLevel));
+    setShapeProperty(shapeType, "translucentLevel", Double.valueOf(translucentLevel));
     if (prefix == null)
       return;
     if (bs == null)
@@ -9705,8 +9468,7 @@ public class ScriptEval extends ScriptExpr {
           return;
       break;
     case T.decimal:
-      mad = (int) Math.round(floatParameterRange(1, -Shape.RADIUS_MAX,
-          Shape.RADIUS_MAX) * 2000);
+      mad = (int) Math.round(floatParameterRange(1, -Shape.RADIUS_MAX, Shape.RADIUS_MAX) * 2000);
       if (mad == Integer.MAX_VALUE)
         return;
       if (mad < 0) {
@@ -9726,23 +9488,20 @@ public class ScriptEval extends ScriptExpr {
   }
 
   private boolean setUnits(String units, int tok) throws ScriptException {
-    if (tok == T.measurementunits
-        && (units.toLowerCase().endsWith("hz") || PT.isOneOf(units.toLowerCase(),
-            ";angstroms;au;bohr;nanometers;nm;picometers;pm;vanderwaals;vdw;"))) {
-      if (!chk)
+    if (tok == T.measurementunits && (units.toLowerCase().endsWith("hz") || PT.isOneOf(units.toLowerCase(), ";angstroms;au;bohr;nanometers;nm;picometers;pm;vanderwaals;vdw;"))) {
+      if (!chk) {
         vwr.setUnits(units, true);
-    } else if (tok == T.energyunits
-        && PT.isOneOf(units.toLowerCase(), ";kcal;kj;")) {
-      if (!chk)
+	  }
+    } else if (tok == T.energyunits && PT.isOneOf(units.toLowerCase(), ";kcal;kj;")) {
+      if (!chk) {
         vwr.setUnits(units, false);
+	  }
     } else {
       errorStr2(ERROR_unrecognizedParameter, "set " + T.nameOf(tok), units);
     }
     return true;
   }
 
-  
-  
   @Override
   public String toString() {
     SB str = new SB();
@@ -9763,5 +9522,4 @@ public class ScriptEval extends ScriptExpr {
     str.append("END\n");
     return str.toString();
   }
-
 }

@@ -54,13 +54,10 @@ import javajs.util.SB;
 import javajs.util.T3d;
 import javajs.util.V3d;
 
-
 /**
  * ScriptVariable class
- * 
  */
 public class SV extends T implements JSONEncodable {
-
   public final static SV vT = newSV(on, 1, "true");
   public final static SV vF = newSV(off, 0, "false");
   public final static SV vNaN = newSV(decimal, Integer.MAX_VALUE, Double.valueOf(Double.NaN));
@@ -82,13 +79,6 @@ public class SV extends T implements JSONEncodable {
     sv.intValue = i;
     return sv;
   }
-  
-//  public static SV newF(float f) {
-//    SV sv = new SV();
-//    sv.tok = decimal;
-//    sv.value = Double.valueOf(f);
-//    return sv;
-//  }
   
   public static SV newD(double d) {
     if (d != d)
@@ -114,11 +104,9 @@ public class SV extends T implements JSONEncodable {
   }
 
   /**
-   * 
    * Creates a NEW version of the variable.
    * Object values are not copied. (Just found no 
    * use for that.)
-   * 
    * 
    * @param v
    * @return  new ScriptVariable
@@ -503,7 +491,6 @@ public class SV extends T implements JSONEncodable {
 
   public SV setName(String name) {
     this.myName = name;
-    //System.out.println("Variable: " + name + " " + intValue + " " + value);
     return this;
   }
 

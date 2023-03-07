@@ -37,7 +37,6 @@ import javajs.util.P3d;
 import org.jmol.viewer.Viewer;
 import org.jmol.i18n.GT;
 
-
 /**
  * An abstract class subclassed by ScriptCompiler taking care of the second
  * phase of syntax checking. After all the tokens are created, these methods
@@ -45,12 +44,8 @@ import org.jmol.i18n.GT;
  * 
  * Here we are going from an "infix" to a "postfix" set of tokens and then back
  * to infix for final storage.
- * 
  */
-
-
 abstract class ScriptTokenParser {
-  
   protected Viewer vwr;
 
   protected Map<String, Boolean> htUserFunctions;
@@ -78,7 +73,6 @@ abstract class ScriptTokenParser {
   protected boolean isNewSet;
   protected boolean haveMacro;
 
-  
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 //---------------PHASE II -- TOKEN-BASED COMPILING ---------------------------------------
@@ -103,8 +97,7 @@ abstract class ScriptTokenParser {
 
   protected boolean compileExpressions() {
     
-    boolean isScriptExpression = ((tokCommand == T.script || tokCommand == T.macro) 
-        && tokAt(2) == T.leftparen);
+    boolean isScriptExpression = ((tokCommand == T.script || tokCommand == T.macro) && tokAt(2) == T.leftparen);
     isEmbeddedExpression = (isScriptExpression 
         || (tokCommand != T.nada
              && (tokCommand != T.function 
@@ -122,13 +115,11 @@ abstract class ScriptTokenParser {
         || isScriptExpression
         || T.tokAttr(tokCommand, T.mathExpressionCommand));
 
-    boolean checkExpression = isEmbeddedExpression
-        || (T.tokAttr(tokCommand, T.atomExpressionCommand));
+    boolean checkExpression = isEmbeddedExpression || (T.tokAttr(tokCommand, T.atomExpressionCommand));
 
     // $ at beginning disallow expression checking for center, delete, hide, or
     // display commands
-    if (tokAt(1) == T.dollarsign
-        && T.tokAttr(tokCommand, T.atomExpressionCommand))
+    if (tokAt(1) == T.dollarsign && T.tokAttr(tokCommand, T.atomExpressionCommand))
       checkExpression = false;
     if (checkExpression && !compileExpression())
       return false;
@@ -157,10 +148,8 @@ abstract class ScriptTokenParser {
         return commandExpected();
       htUserFunctions.put((String) atokenInfix[0].value, Boolean.TRUE);
     }
-    return(size == 1 || !T.tokAttr(tokCommand, T.noArgs) ? true
-            : error(ERROR_badArgumentCount));
+    return(size == 1 || !T.tokAttr(tokCommand, T.noArgs) ? true : error(ERROR_badArgumentCount));
   }
-
 
   protected boolean compileExpression() {
     int firstToken = (isSetOrDefine && !isSetBrace ? 2 : 1);
@@ -245,11 +234,9 @@ abstract class ScriptTokenParser {
       }
       if (!isMathExpressionCommand)
         addTokenToPostfixToken(tokenBegin = T.o(T.expressionBegin, "implicitExpressionBegin"));
-      if (!clauseOr(isCommaAsOrAllowed || !isMathExpressionCommand
-          && tokPeekIs(T.leftparen)))
+      if (!clauseOr(isCommaAsOrAllowed || !isMathExpressionCommand && tokPeekIs(T.leftparen)))
         return false;
-      if (!isMathExpressionCommand
-          && !(isEmbeddedExpression && lastToken == T.tokenCoordinateEnd)) {
+      if (!isMathExpressionCommand && !(isEmbeddedExpression && lastToken == T.tokenCoordinateEnd)) {
         addTokenToPostfixToken(T.tokenExpressionEnd);
       }
       if (moreTokens()) {
@@ -276,10 +263,7 @@ abstract class ScriptTokenParser {
   }
 
   private boolean isExpressionNext() {
-    return tokPeekIs(T.leftbrace) 
-    && !(tokAt(itokenInfix + 1) == T.string
-         && tokAt(itokenInfix + 2) == T.colon)
-    || !isMathExpressionCommand && tokPeekIs(T.leftparen);
+    return tokPeekIs(T.leftbrace) && !(tokAt(itokenInfix + 1) == T.string && tokAt(itokenInfix + 2) == T.colon) || !isMathExpressionCommand && tokPeekIs(T.leftparen);
   }
 
   protected static boolean tokenAttr(T token, int tok) {
@@ -295,8 +279,7 @@ abstract class ScriptTokenParser {
   }
   
   private int tokPeek() {
-    return (itokenInfix >= atokenInfix.length ? T.nada
-        : atokenInfix[itokenInfix].tok);
+    return (itokenInfix >= atokenInfix.length ? T.nada : atokenInfix[itokenInfix].tok);
   }
 
   private boolean tokPeekIs(int tok) {
@@ -304,8 +287,7 @@ abstract class ScriptTokenParser {
   }
 
   private int intPeek() {
-    return (itokenInfix >= atokenInfix.length ? Integer.MAX_VALUE
-        : atokenInfix[itokenInfix].intValue);
+    return (itokenInfix >= atokenInfix.length ? Integer.MAX_VALUE : atokenInfix[itokenInfix].intValue);
   }
   
   private Object valuePeek() {
@@ -317,8 +299,7 @@ abstract class ScriptTokenParser {
    * @return the next token
    */
   private T tokenNext() {
-    return (itokenInfix >= atokenInfix.length ? null 
-        : atokenInfix[itokenInfix++]);
+    return (itokenInfix >= atokenInfix.length ? null : atokenInfix[itokenInfix++]);
   }
   
   private boolean tokenNextTok(int tok) {
@@ -341,8 +322,7 @@ abstract class ScriptTokenParser {
   }
   
   private boolean getNumericalToken() {
-    return (getToken() != null 
-        && (theToken.tok == T.integer || theToken.tok == T.decimal));
+    return (getToken() != null && (theToken.tok == T.integer || theToken.tok == T.decimal));
   }
   
   private double doubleValue() {
@@ -439,8 +419,7 @@ abstract class ScriptTokenParser {
     //for simplicity, giving XOR (toggle) same precedence as OR
     //OrNot: First OR, but if that makes no change, then NOT (special toggle)
     int tok;
-    while ((tok = tokPeek())== T.opOr || tok == T.opXor
-        || tok==T.opToggle|| allowCommaAsOr && tok == T.comma) {
+    while ((tok = tokPeek())== T.opOr || tok == T.opXor || tok==T.opToggle|| allowCommaAsOr && tok == T.comma) {
       if (tok == T.comma && !haveString)
         addSubstituteTokenIf(T.comma, T.tokenOr);
       else
@@ -840,9 +819,7 @@ abstract class ScriptTokenParser {
           case T.leftbrace:
             returnToken();
             isCoordOrPlane = true;
-            addTokenToPostfixToken(T
-                .getTokenFromName(distance == Double.MAX_VALUE ? "plane"
-                    : "coord"));
+            addTokenToPostfixToken(T.getTokenFromName(distance == Double.MAX_VALUE ? "plane" : "coord"));
           }
         if (!done)
           addNextTokenIf(T.comma);
@@ -1388,10 +1365,8 @@ abstract class ScriptTokenParser {
     }
   }
 
-
   /**
    * process /1   /1.1   / *  or just /
-   * 
    * 
    * @return true if no error
    */
@@ -1402,16 +1377,14 @@ abstract class ScriptTokenParser {
       getToken();
       return true;
     case T.integer:
-      return generateResidueSpecCode(T.o(T.spec_model, Integer
-          .valueOf(getToken().intValue)));
+      return generateResidueSpecCode(T.o(T.spec_model, Integer.valueOf(getToken().intValue)));
     case T.decimal:
       return generateResidueSpecCode(T.tv(T.spec_model, fixModelSpec(getToken()), theValue));
     case T.comma:
     case T.rightbrace:
     case T.nada:
       // these are necessary to allow for {1 1 1/} or {1/,1/,1} in fractional coordinates  
-      return generateResidueSpecCode(T.o(T.spec_model, Integer
-          .valueOf(1)));
+      return generateResidueSpecCode(T.o(T.spec_model, Integer.valueOf(1)));
     }
     return error(ERROR_invalidModelSpecification);
   }
@@ -1451,8 +1424,7 @@ abstract class ScriptTokenParser {
       // this one is a '*' as a prime, not a wildcard
       atomSpec += "'";
     }
-    return generateResidueSpecCode(T.tv(T.spec_atom, vwr.getJBR()
-        .lookupSpecialAtomID(atomSpec.toUpperCase()), atomSpec));
+    return generateResidueSpecCode(T.tv(T.spec_atom, vwr.getJBR().lookupSpecialAtomID(atomSpec.toUpperCase()), atomSpec));
   }
   
 //----------------------------------------------------------------------------------------
@@ -1466,30 +1438,29 @@ abstract class ScriptTokenParser {
   protected String errorLine;
   protected String errorType;
 
-  protected final static int ERROR_badArgumentCount  = 0;
-  protected final static int ERROR_badContext  = 1;
-  protected final static int ERROR_commandExpected = 2;
+  protected final static int ERROR_badArgumentCount        = 0;
+  protected final static int ERROR_badContext              = 1;
+  protected final static int ERROR_commandExpected         = 2;
   protected final static int ERROR_endOfCommandUnexpected  = 4;
   protected final static int ERROR_invalidExpressionToken  = 9;
-  protected final static int ERROR_missingEnd  = 11;
-  protected final static int ERROR_tokenExpected  = 15;
-  protected final static int ERROR_tokenUnexpected  = 16;
-  protected final static int ERROR_unrecognizedParameter  = 18;
-  protected final static int ERROR_unrecognizedToken  = 19;
+  protected final static int ERROR_missingEnd              = 11;
+  protected final static int ERROR_tokenExpected           = 15;
+  protected final static int ERROR_tokenUnexpected         = 16;
+  protected final static int ERROR_unrecognizedParameter   = 18;
+  protected final static int ERROR_unrecognizedToken       = 19;
 
-  private final static int ERROR_coordinateExpected  = 3;
-  private final static int ERROR_endOfExpressionExpected  = 5;
+  private final static int ERROR_coordinateExpected                        = 3;
+  private final static int ERROR_endOfExpressionExpected                   = 5;
   private final static int ERROR_identifierOrResidueSpecificationExpected  = 6;
-  private final static int ERROR_invalidAtomSpecification  = 7;
-  private final static int ERROR_invalidChainSpecification  = 8;
-  private final static int ERROR_invalidModelSpecification  = 10;
-  private final static int ERROR_numberExpected  = 12;
-  private final static int ERROR_numberOrVariableNameExpected  = 13;
-  private final static int ERROR_residueSpecificationExpected  = 14;
-  private final static int ERROR_unrecognizedExpressionToken  = 17;
+  private final static int ERROR_invalidAtomSpecification                  = 7;
+  private final static int ERROR_invalidChainSpecification                 = 8;
+  private final static int ERROR_invalidModelSpecification                 = 10;
+  private final static int ERROR_numberExpected                            = 12;
+  private final static int ERROR_numberOrVariableNameExpected              = 13;
+  private final static int ERROR_residueSpecificationExpected              = 14;
+  private final static int ERROR_unrecognizedExpressionToken               = 17;
   
-  static String errorString(int iError, String value, String more,
-                            boolean translated) {
+  static String errorString(int iError, String value, String more, boolean translated) {
     boolean doTranslate = false;
     if (!translated && (doTranslate = GT.getDoTranslate()) == true)
       GT.setDoTranslate(false);
@@ -1602,5 +1573,4 @@ abstract class ScriptTokenParser {
     errorMessageUntranslated = strUntranslated;
     return false;
   }
-
 }

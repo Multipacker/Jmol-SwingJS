@@ -29,15 +29,11 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.ShapeManager;
 
 public class ScriptProcessRunnable implements Runnable {
-  /**
-   * 
-   */
   private final ScriptParallelProcessor parallelProcessor;
   private final ScriptProcess process;
   private Object processLock;
   private ShapeManager shapeManager;
   /**
-   * 
    * @param process
    * @param lock
    * @param shapeManager 
@@ -55,8 +51,7 @@ public class ScriptProcessRunnable implements Runnable {
     try {
       if (this.parallelProcessor.error == null) {
         if (Logger.debugging)
-          Logger.debug("Running process " + process.processName + " "
-              + process.context.pc + " - " + (process.context.pcEnd - 1));
+          Logger.debug("Running process " + process.processName + " " + process.context.pc + " - " + (process.context.pcEnd - 1));
         this.parallelProcessor.eval(process.context, shapeManager);
         if (Logger.debugging)
           Logger.debug("Process " + process.processName + " complete");

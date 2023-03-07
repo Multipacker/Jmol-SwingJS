@@ -44,9 +44,9 @@ class ContextToken extends T {
 
   String name0 = null;
   void addName(String name) {
-    if (contextVariables == null)
+    if (contextVariables == null) {
       contextVariables = new Hashtable<String, SV>();
+	}
     contextVariables.put(name, SV.newS("").setName(name));
   }
-  
 }

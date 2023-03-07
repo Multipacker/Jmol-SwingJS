@@ -24,15 +24,11 @@ import javajs.util.SB;
 import javajs.util.T3d;
 import javajs.util.V3d;
 
-
 /**
  * The ScriptParam class holds methods used to parse parameters 
  * in Jmol scripts. 
- *  
  */
 abstract public class ScriptParam extends ScriptError {
-
-  
   public Map<String, SV> contextVariables;
   
   public Map<String, ScriptFunction> contextFunctions;
@@ -57,7 +53,6 @@ abstract public class ScriptParam extends ScriptError {
   public boolean coordinatesAreFractional;
   public boolean isBondSet;
 
-
   public T getToken(int i) throws ScriptException {
     if (!checkToken(i))
       error(ERROR_endOfStatementUnexpected);
@@ -73,7 +68,6 @@ abstract public class ScriptParam extends ScriptError {
   protected boolean checkToken(int i) {
     return (iToken = i) < slen;
   }
-
 
   @SuppressWarnings("unchecked")
   public Object getParameter(String key, int tokType, boolean nullAsString) {
@@ -189,7 +183,6 @@ abstract public class ScriptParam extends ScriptError {
   }
 
   /**
-   * 
    * @param i
    * @param ret
    *        return P3 or BS to ret[0]; on input, passing a BS as ret[1]
@@ -217,8 +210,7 @@ abstract public class ScriptParam extends ScriptError {
         }
         ret[0] = bs;
       }
-      return (bs.cardinality() == 1 ? vwr.ms.at[bs.nextSetBit(0)] : vwr.ms
-          .getAtomSetCenter(bs));
+      return (bs.cardinality() == 1 ? vwr.ms.at[bs.nextSetBit(0)] : vwr.ms.getAtomSetCenter(bs));
     case T.leftbrace:
     case T.point3f:
       return getPoint3f(i, true, true);
@@ -230,16 +222,14 @@ abstract public class ScriptParam extends ScriptError {
 
   public boolean isCenterParameter(int i) {
     int tok = tokAt(i);
-    return (tok == T.dollarsign || tok == T.leftbrace
-        || tok == T.expressionBegin || tok == T.point3f || tok == T.bitset);
+    return (tok == T.dollarsign || tok == T.leftbrace || tok == T.expressionBegin || tok == T.point3f || tok == T.bitset);
   }
 
   public P3d centerParameter(int i, Object[] ret) throws ScriptException {
     return centerParameterForModel(i, Integer.MIN_VALUE, ret);
   }
 
-  protected P3d centerParameterForModel(int i, int modelIndex, Object[] ret)
-      throws ScriptException {
+  protected P3d centerParameterForModel(int i, int modelIndex, Object[] ret) throws ScriptException {
     P3d center = null;
     if (checkToken(i)) {
       switch (getToken(i).tok) {
@@ -267,8 +257,7 @@ abstract public class ScriptParam extends ScriptError {
         }
         if (chk)
           return new P3d();
-        if (tokAt(i + 1) == T.per
-            && (tokAt(i + 2) == T.length || tokAt(i + 2) == T.size)) {
+        if (tokAt(i + 1) == T.per && (tokAt(i + 2) == T.length || tokAt(i + 2) == T.size)) {
           index = Integer.MAX_VALUE;
           iToken = i + 2;
         }
@@ -345,8 +334,7 @@ abstract public class ScriptParam extends ScriptError {
             // best plane @1 @3 @5 @6 ...
             BS bs = getAtomsStartingAt(i);
             bestPoints = new P3d[bs.cardinality()];
-            for (int p = 0, j = bs.nextSetBit(0); j >= 0; j = bs
-                .nextSetBit(j + 1)) {
+            for (int p = 0, j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j + 1)) {
               bestPoints[p++] = vwr.ms.at[j];
             }
           } else {
@@ -394,8 +382,7 @@ abstract public class ScriptParam extends ScriptError {
         } else if (have3) {
           plane = new P4d();
           P3d norm = new P3d();
-          double w = MeasureD.getNormalThroughPoints(pt1, pt2, pt3, norm,
-              vTemp);
+          double w = MeasureD.getNormalThroughPoints(pt1, pt2, pt3, norm, vTemp);
           plane.set4(norm.x, norm.y, norm.z, w);
         }
         if (!chk && Logger.debugging)
@@ -435,8 +422,7 @@ abstract public class ScriptParam extends ScriptError {
       if ((pt = SV.ptValue(pts.get(j))) != null) {
         data.addLast(pt);
       } else if ((bs = SV.getBitSet(pts.get(j), true)) != null) {
-        data.addLast(bs.cardinality() == 1 ? P3d.newP(vwr.ms.at[bs.nextSetBit(0)]) 
-            : vwr.ms.getAtomSetCenter(bs));
+        data.addLast(bs.cardinality() == 1 ? P3d.newP(vwr.ms.at[bs.nextSetBit(0)]) : vwr.ms.getAtomSetCenter(bs));
       } else {
         invArg();
       }
@@ -444,8 +430,7 @@ abstract public class ScriptParam extends ScriptError {
     return data;
   }
 
-  public P4d hklParameter(int i, Lst<P3d> pts, boolean allowOffset)
-      throws ScriptException {
+  public P4d hklParameter(int i, Lst<P3d> pts, boolean allowOffset) throws ScriptException {
     if (!chk && vwr.getCurrentUnitCell() == null)
       error(ERROR_noUnitCell);
     T3d pt = getPointOrPlane(i, MODE_P34 | MODE_P_IMPLICIT_FRACTIONAL);
@@ -513,14 +498,14 @@ abstract public class ScriptParam extends ScriptError {
   }
 
   
-  public final static int MODE_P3  = 3;
-  final protected static int MODE_P4  = 4;
-  final public    static int MODE_P34 = 7; // P3 or P4
-  final protected static int MODE_P_INT_ONLY = 8; // for HKL
-  public final static int MODE_P_ALLOW_FRACTIONAL = 16; // to allow {1/2 1/2 1/2}
-  final protected static int MODE_P_CONVERT_TO_CARTESIAN = 32; // to convert fractional to Cartesian
-  final protected static int MODE_P_IMPLICIT_FRACTIONAL = 64; // assume fractional
-  final protected static int MODE_P_NULL_ON_ERROR = 128; // avoid error throwing
+  public    static final int MODE_P3                     = 3;
+  protected static final int MODE_P4                     = 4;
+  public    static final int MODE_P34                    = 7; // P3 or P4
+  protected static final int MODE_P_INT_ONLY             = 8; // for HKL
+  public    static final int MODE_P_ALLOW_FRACTIONAL     = 16; // to allow {1/2 1/2 1/2}
+  protected static final int MODE_P_CONVERT_TO_CARTESIAN = 32; // to convert fractional to Cartesian
+  protected static final int MODE_P_IMPLICIT_FRACTIONAL  = 64; // assume fractional
+  protected static final int MODE_P_NULL_ON_ERROR        = 128; // avoid error throwing
    
   /**
    * Get the point or plane at an index
@@ -641,8 +626,7 @@ abstract public class ScriptParam extends ScriptError {
           // {1500500501 1500500502 1}
           // --> {1500000 1500500 1 1501502}
           // because lower digits are lost in Java
-          return P4d.new4(coord[0], coord[1], coord[2],
-              (code555[0] % 1000) * 1000 + (code555[1] % 1000) + 1000000);
+          return P4d.new4(coord[0], coord[1], coord[2], (code555[0] % 1000) * 1000 + (code555[1] % 1000) + 1000000);
         }
         P3d pt = P3d.new3(coord[0], coord[1], coord[2]);
         if (coordinatesAreFractional && (mode & MODE_P_CONVERT_TO_CARTESIAN) != 0) {
@@ -1554,8 +1538,7 @@ abstract public class ScriptParam extends ScriptError {
    * @param centerA return center of rotation; if null, then standard 4x4 matrix is returned
    * @return stdDev
    */
-  public static double getTransformMatrix4(Lst<P3d> ptsA, Lst<P3d> ptsB, M4d m,
-                                          P3d centerA) {
+  public static double getTransformMatrix4(Lst<P3d> ptsA, Lst<P3d> ptsB, M4d m, P3d centerA) {
     P3d[] cptsA = MeasureD.getCenterAndPoints(ptsA);
     P3d[] cptsB = MeasureD.getCenterAndPoints(ptsB);
     double[] retStddev = new double[2];
@@ -1570,7 +1553,4 @@ abstract public class ScriptParam extends ScriptError {
     m.setMV(r, t);
     return retStddev[1];
   }
-
-
-
 }

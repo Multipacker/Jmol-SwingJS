@@ -33,7 +33,6 @@ import org.jmol.api.JmolParallelProcessor;
 import javajs.util.SB;
 
 public class ScriptContext {
-  
   private static int contextCount = 0;
 
   private T[][] aatoken;
@@ -111,8 +110,7 @@ public class ScriptContext {
   public SV getVariable(String var) {
     ScriptContext context = this;
     while (context != null && !context.isFunction) {
-      if (context.vars != null
-          && context.vars.containsKey(var))
+      if (context.vars != null && context.vars.containsKey(var))
         return context.vars.get(var);
       context = context.parentContext;
     }
@@ -122,16 +120,25 @@ public class ScriptContext {
   public Map<String, SV> getFullMap() {
     Map<String, SV> ht = new Hashtable<String, SV>();
     ScriptContext context = this;
-    if (contextPath != null)
+    if (contextPath != null) {
       ht.put("_path", SV.newS(contextPath));
+	}
+
     while (context != null && !context.isFunction) {
-      if (context.vars != null)
-        for (String key : context.vars.keySet())
-          if (!ht.containsKey(key)) {
-            SV val = context.vars.get(key);
-            if (val.tok != T.integer || val.intValue != Integer.MAX_VALUE)
-              ht.put(key, val);
-          }
+      if (context.vars == null) {
+		  continue;
+	  }
+
+      for (String key : context.vars.keySet()) {
+        if (ht.containsKey(key)) {
+			continue;
+        }
+
+      	SV val = context.vars.get(key);
+      	if (val.tok != T.integer || val.intValue != Integer.MAX_VALUE) {
+      	  ht.put(key, val);
+      	}
+      }
       context = context.parentContext;
     }
     return ht;
@@ -154,10 +161,13 @@ public class ScriptContext {
   }
   
   T[][] restoreTokens() {
-    if (pointers != null)
-      for (int i = pointers.length; --i >= 0;)
-        if (aatoken[i] != null)
+    if (pointers != null) {
+      for (int i = pointers.length; --i >= 0;) {
+        if (aatoken[i] != null) {
           aatoken[i][0].intValue = pointers[i];
+		}
+	  }
+	}
     return aatoken;
   }
 
@@ -168,5 +178,4 @@ public class ScriptContext {
   public T[] getToken(int i) {
     return aatoken[i];
   }
-
 }

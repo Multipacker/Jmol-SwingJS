@@ -9,10 +9,8 @@ import org.jmol.viewer.Viewer;
 
 /**
  * Error handling for ScriptEvaluator, ScriptProcess, and ScriptParams
- * 
  */
 public abstract class ScriptError implements JmolScriptEvaluator {
-
   abstract protected void showStringPrint(String msg, boolean mustDo);
   
   public Viewer vwr;
@@ -32,8 +30,7 @@ public abstract class ScriptError implements JmolScriptEvaluator {
 
   @Override
   public String getErrorMessageUntranslated() {
-    return errorMessageUntranslated == null ? errorMessage
-        : errorMessageUntranslated;
+    return errorMessageUntranslated == null ? errorMessage : errorMessageUntranslated;
   }
 
   public void invArg() throws ScriptException {
@@ -60,35 +57,28 @@ public abstract class ScriptError implements JmolScriptEvaluator {
     errorOrWarn(iError, value, null, null, false);
   }
 
-  public void errorStr2(int iError, String value, String more)
-      throws ScriptException {
+  public void errorStr2(int iError, String value, String more) throws ScriptException {
     errorOrWarn(iError, value, more, null, false);
   }
 
-  void errorMore(int iError, String value, String more, String more2)
-      throws ScriptException {
+  void errorMore(int iError, String value, String more, String more2) throws ScriptException {
     errorOrWarn(iError, value, more, more2, false);
   }
 
-  protected void warning(int iError, String value, String more)
-      throws ScriptException {
+  protected void warning(int iError, String value, String more) throws ScriptException {
     errorOrWarn(iError, value, more, null, true);
   }
 
-  private void errorOrWarn(int iError, String value, String more, String more2,
-                           boolean warningOnly) throws ScriptException {
-    String strError = (ignoreError ? null : errorString(iError, value, more,
-        more2, true));
-    String strUntranslated = (ignoreError || !GT.getDoTranslate() ? null
-        : errorString(iError, value, more, more2, false));
-    if (!warningOnly)
+  private void errorOrWarn(int iError, String value, String more, String more2, boolean warningOnly) throws ScriptException {
+    String strError = (ignoreError ? null : errorString(iError, value, more, more2, true));
+    String strUntranslated = (ignoreError || !GT.getDoTranslate() ? null : errorString(iError, value, more, more2, false));
+    if (!warningOnly) {
       evalError(strError, strUntranslated);
+	}
     showStringPrint(strError, true);
   }
 
-  public void evalError(String message, String strUntranslated)
-      throws ScriptException {
-    
+  public void evalError(String message, String strUntranslated) throws ScriptException {
     // called by ScriptError, ScriptParam, ScriptExt
     
     if (ignoreError)
@@ -106,9 +96,9 @@ public abstract class ScriptError implements JmolScriptEvaluator {
   }
 
   public void setCursorWait(boolean TF) {
-    if (!chk)
-      vwr.setCursor(TF ? GenericPlatform.CURSOR_WAIT
-          : GenericPlatform.CURSOR_DEFAULT);
+    if (!chk) {
+      vwr.setCursor(TF ? GenericPlatform.CURSOR_WAIT : GenericPlatform.CURSOR_DEFAULT);
+	}
   }
 
   final static int ERROR_axisExpected = 0;
@@ -178,8 +168,7 @@ public abstract class ScriptError implements JmolScriptEvaluator {
    * @return constructed error string
    * 
    */
-  static String errorString(int iError, String value, String more,
-                            String more2, boolean translated) {
+  static String errorString(int iError, String value, String more, String more2, boolean translated) {
     boolean doTranslate = false;
     if (!translated && (doTranslate = GT.getDoTranslate()) == true)
       GT.setDoTranslate(false);
@@ -375,24 +364,17 @@ public abstract class ScriptError implements JmolScriptEvaluator {
       if (msg.indexOf("{2}") >= 0)
         msg = PT.rep(msg, "{2}", more);
     }
-    if (doTranslate)
+    if (doTranslate) {
       GT.setDoTranslate(true);
+	}
     return msg;
   }
 
-  public static String getErrorLineMessage(String functionName,
-                                           String filename, int lineCurrent,
-                                           int pcCurrent, String lineInfo) {
+  public static String getErrorLineMessage(String functionName, String filename, int lineCurrent, int pcCurrent, String lineInfo) {
     String err = "\n----";
-    if (filename != null || functionName != null)
-      err += "line "
-          + lineCurrent
-          + " command "
-          + (pcCurrent + 1)
-          + " of "
-          + (functionName == null ? filename
-              : functionName.equals("try") ? "try" : "function " + functionName)
-          + ":";
+    if (filename != null || functionName != null) {
+      err += "line " + lineCurrent + " command " + (pcCurrent + 1) + " of " + (functionName == null ? filename : functionName.equals("try") ? "try" : "function " + functionName) + ":";
+	}
     err += "\n         " + lineInfo;
     return err;
   }
@@ -407,11 +389,9 @@ public abstract class ScriptError implements JmolScriptEvaluator {
       return;
     }
     error = true;
-    if (errorMessage == null) // there could be a compiler error from a script
-      // command
+    if (errorMessage == null) { // there could be a compiler error from a script command
       errorMessage = GT.$("script ERROR: ");
+	}
     errorMessage += err;
   }
-
-
 }
