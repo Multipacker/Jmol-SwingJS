@@ -1280,7 +1280,7 @@ public class PropertyManager implements JmolPropertyManager {
     } else {
       String title = vwr.ms.getFrameTitle(bsModels.nextSetBit(0));      
       title = (title != null ? title.replace('\n',' ') : isModelKit ? "Jmol Model Kit" : FileManager.fixDOSName(vwr.fm.getFullPathName(false)));
-      MOLWriter mw = ((MOLWriter) Interface.getInterface("org.jmol.adapter.writers.MOLWriter", vwr, "write")).setViewer(vwr);
+      MOLWriter mw = ((MOLWriter) new org.jmol.adapter.writers.MOLWriter()).setViewer(vwr);
       if (asSDF) {
         mol = new SB();
         for (int i = bsModels.nextSetBit(0); i >= 0; i = bsModels

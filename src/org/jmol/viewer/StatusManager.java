@@ -938,8 +938,7 @@ public class StatusManager {
         }
       }
       try {
-        ((JmolAudio) Interface.getInterface("org.jmol.util.JmolAudio", vwr,
-            "script")).playAudio(vwr, htParams);
+        ((JmolAudio) new org.jmol.util.JmolAudio()).playAudio(vwr, htParams);
       } catch (Exception e) {
         Logger.info(e.getMessage());
       }

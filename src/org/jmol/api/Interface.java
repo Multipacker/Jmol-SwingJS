@@ -29,7 +29,6 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.Viewer;
 
 public class Interface {
-
   /**
    * @param name
    * @param vwr not used - may be null
@@ -41,8 +40,7 @@ public class Interface {
       Class<?> x = Class.forName(name);
       return (x == null ? null : x.newInstance());
     } catch (Exception e) {
-      Logger.error("Interface.java Error creating instance for " + name
-          + ": \n" + e);
+      Logger.error("Interface.java Error creating instance for " + name + ": \n" + e);
       return null;
     }
   }
@@ -68,5 +66,4 @@ public class Interface {
   public static SymmetryInterface getSymmetry(Viewer vwr, String state) {
     return (SymmetryInterface) getInterface("org.jmol.symmetry.Symmetry", vwr, state);
   }
-
 }

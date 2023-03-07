@@ -53,103 +53,6 @@ import org.jmol.viewer.Viewer;
  **/
 
 abstract public class JmolViewer {
-
-  
-  
-  static {
-    /**
-     *  @j2sNative
-     *  
-     *  self.Jmol || (Jmol = self.J2S); 
-     *  Jmol._isSwingJS = true; Jmol._isAWTjs = true;
-     */
-    
-  }
-  
-  static {
-//    /**
-//     * allows customization of Viewer -- not implemented in JSmol.
-//     * 
-//     * @j2sNative
-//     * 
-//     *            self.Jmol && Jmol.extend && Jmol.extend("vwr",
-//     *            org.jmol.viewer.Viewer.prototype);
-//     * 
-//     */
-//    {
-//    }
-  }
-
-
-  //removed in Jmol 14.3.11 streamlining:
-  //  most are internal to Jmol communication.
-  //  others are accessible via public fields ((Viewer) viewer).foo
-  
-  //abstract public Object getDisplay(); foo=display
-  //abstract public String getModelProperty(int modelIndex, String propertyName);
-  //abstract public Map<String, Object> getModelAuxiliaryInfo(int modelIndex);
-  
-  //abstract public int getAtomCount(); foo=ms.ac
-  //abstract public String getAltLocListInModel(int modelIndex);
-
-  //abstract public String getModelFileName(int modelIndex); foo=ms.getModelFileName(modelIndex)
-  //abstract public int getGroupCount();foo=ms.getGroupCountInModel(-1)
-  //abstract public int getPolymerCount();foo=ms.getBioPolymerCount()
-  //abstract public int getAtomCountInModel(int modelIndex);foo=ms.am[modelIndex].
-  //abstract public int getBondCountInModel(int modelIndex);  // use -1 here for "all"
-  //abstract public int getChainCount(); foo=ms.getChainCountInModelWater(-1, true);
-  //abstract public int getChainCountInModel(int modelIindex); foo=ms.getChainCountInModelWater(modelIndex, false);
-  //abstract public int getGroupCountInModel(int modelIndex); foo=ms.getGroupCountInModel(modelIndex);
-  //abstract public int getPolymerCountInModel(int modelIndex); foo=ms.getPolymerCountInModel(modelIndex);
-  //abstract public int getSelectionCount(); foo=slm.getSelectionCount()
-
-  //abstract public BS getSelectedAtoms(); foo=slm.getSelectedAtoms()
-  //abstract public boolean isApplet(); foo=isApplet
-  //abstract public int modelGetLastVibrationIndex(int i, int tok); not really public
-
-  //abstract public Map<String, String> getHeteroList(int modelIndex);
-  //abstract public boolean getPerspectiveDepth();
-
-  //abstract public int getAtomNumber(int atomIndex); foo=ms.at[atomIndex].getAtomNumber()
-  //abstract public String getAtomName(int atomIndex); foo=ms.at[atomIndex].getAtomName()
-  //abstract public P3 getAtomPoint3f(int atomIndex); foo=ms.at[atomIndex]
-  //abstract public int getAtomModelIndex(int atomIndex); foo=ms.at[atomIndex].mi
-  //abstract public int getModelCount(); foo=ms.mc
-  //abstract public int getDisplayModelIndex(); foo=am.cmi
-  //abstract public boolean haveFrame(); // foo=true
-  //abstract public String getModelSetName(); foo=ms.modelSetName
-  //abstract public float getZoomPercentFloat(); foo=tm.zmPct
-
-  //abstract public Object getModelAuxiliaryInfoValue(int modelIndex, String keyName);
-  //abstract public boolean modelHasVibrationVectors(int modelIndex);
-
-
-
-  // not really public. There are other, more general, ways of getting these
-    
-  //abstract public String getAtomInfo(int atomIndex);
-  //abstract public float getAtomRadius(int atomIndex);
-  //abstract public void setShowAxes(boolean showAxes);
-  //abstract public void setShowBbcage(boolean showBbcage);
-  //abstract public int getAtomArgb(int atomIndex);
-  //abstract public float getBondRadius(int bondIndex);
-  //abstract public P3 getBondPoint3f1(int bondIndex);
-  //abstract public P3 getBondPoint3f2(int bondIndex);
-  //abstract public int getBondArgb1(int bondIndex);
-  //abstract public int getBondArgb2(int bondIndex);
-  //abstract public int getBondOrder(int bondIndex);
-  //abstract public int getBondModelIndex(int bondIndex);
-  //abstract public P3[] getPolymerLeadMidPoints(int modelIndex, int polymerIndex);
-  //abstract public boolean havePartialCharges(); foo=(ms.getPartialCharges() != null)
-  //abstract public int getBondCount(); // NOT THE REAL BOND COUNT -- just an array maximum
-  //abstract public void setSelectionHalos(boolean haloEnabled);
-  //abstract public Object getFileAsBytes(String fullPathName, OC out); foo=fm.getFileAsBytes(pathName, out, true)
-  //abstract public void processMultitouchEvent(int groupID, int eventType, int touchID, int iData, P3 pt, long time);
-
-
-
-
-  
   // several methods were deprecated and removed in 13.1.15. All are accessible via "getXxxx" methods:
 
   //abstract public int getZoomPercent(); //deprecated
@@ -158,14 +61,6 @@ abstract public class JmolViewer {
   abstract public int getInt(int tok);
   abstract public boolean getBoolean(int tok);
 
-  //abstract public int getAnimationFps();  see getInt(T.animationFps)
-  //abstract public boolean getShowHydrogens(); see getBoolean(T.showhydrogens)
-  //abstract public boolean getShowMeasurements(); see getBoolean(T.showmeasurements)
-  //abstract public boolean getAxesOrientationRasmol(); see getBoolean(T.axesorientationrasmol)
-  //abstract public int getPercentVdwAtom(); see getInt(T.percentvdwatom)
-  //abstract public boolean getAutoBond(); see getBoolean(T.autobond))
-  //abstract public boolean showModelSetDownload(); deprecated -- was just "true"
-  
   /**
    * This is the older main access point for creating an application or applet vwr.
    * 
@@ -343,7 +238,6 @@ abstract public class JmolViewer {
 
   abstract public int getMotionEventNumber();
 
-
   /**
    * Opens the file and creates the model set, given the reader.
    * 
@@ -359,7 +253,6 @@ abstract public class JmolViewer {
     return openReader(fullPathName == null ? "String" : fullPathName, null, reader);
   }
   
-
   /**
    * Opens the file and creates the model set, given the reader.
    * 
@@ -378,17 +271,6 @@ abstract public class JmolViewer {
    
   abstract public String openReader(String fullPathName, String fileName, Object reader);
   
-  /*
-   * REMOVED -- this method does not actually open the file
-   * 
-   * @param fullPathName
-   * @param fileName
-   * @param clientFile
-   * @deprecated
-   */
-//  abstract public void openClientFile(String fullPathName, String fileName,
-  //                           Object clientFile);
-
   abstract public void showUrl(String urlString);
 
   abstract public void calcAtomsMinMax(BS bs, BoxInfo boxInfo);
@@ -441,7 +323,6 @@ abstract public class JmolViewer {
   abstract public String getModelNumberDotted(int modelIndex);
 
   abstract public BS getVisibleFramesBitSet();
-  
   
   abstract public void addSelectionListener(JmolSelectionListener listener);
   abstract public void removeSelectionListener(JmolSelectionListener listener);
@@ -607,7 +488,6 @@ abstract public class JmolViewer {
   abstract public void notifyStatusReady(boolean isReady);
 
   /**
-   * 
    * @param id
    *     some_id,
    *     filename#id, or
@@ -627,7 +507,4 @@ abstract public class JmolViewer {
   public void dispose() {
     // TODO
   }
-
-
 }
-

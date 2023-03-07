@@ -714,15 +714,9 @@ public class Symmetry implements SymmetryInterface {
 
   private SymmetryDesc getDesc(ModelSet modelSet) {
     if (modelSet == null) {
-      return (nullDesc == null
-          ? (nullDesc = ((SymmetryDesc) Interface.getInterface(
-              "org.jmol.symmetry.SymmetryDesc", null, "modelkit")))
-          : nullDesc);
+      return (nullDesc == null ? (nullDesc = ((SymmetryDesc) new org.jmol.symmetry.SymmetryDesc())) : nullDesc);
     }
-    return (desc == null
-        ? (desc = ((SymmetryDesc) Interface.getInterface(
-            "org.jmol.symmetry.SymmetryDesc", modelSet.vwr, "eval")))
-        : desc).set(modelSet);
+    return (desc == null ? (desc = ((SymmetryDesc) new org.jmol.symmetry.SymmetryDesc())) : desc).set(modelSet);
   }
 
   @Override
@@ -730,8 +724,7 @@ public class Symmetry implements SymmetryInterface {
                                     int op, P3d translation, P3d pt, P3d pt2,
                                     String id, int type, double scaleFactor,
                                     int nth, int options) {
-    return getDesc(modelSet).getSymopInfo(iatom, xyz, op, translation, pt, pt2,
-        id, type, scaleFactor, nth, options);
+    return getDesc(modelSet).getSymopInfo(iatom, xyz, op, translation, pt, pt2, id, type, scaleFactor, nth, options);
   }
 
   @Override
@@ -798,20 +791,16 @@ public class Symmetry implements SymmetryInterface {
   }
 
   @Override
-  public AtomIndexIterator getIterator(Viewer vwr, Atom atom, BS bsAtoms,
-                                       double radius) {
-    return ((UnitCellIterator) Interface
-        .getInterface("org.jmol.symmetry.UnitCellIterator", vwr, "script"))
-            .set(this, atom, vwr.ms.at, bsAtoms, radius);
+  public AtomIndexIterator getIterator(Viewer vwr, Atom atom, BS bsAtoms, double radius) {
+    return ((UnitCellIterator) new org.jmol.symmetry.UnitCellIterator()).set(this, atom, vwr.ms.at, bsAtoms, radius);
   }
 
   @Override
-  public boolean toFromPrimitive(boolean toPrimitive, char type, T3d[] oabc,
-                                 M3d primitiveToCrystal) {
-    if (unitCell == null)
+  public boolean toFromPrimitive(boolean toPrimitive, char type, T3d[] oabc, M3d primitiveToCrystal) {
+    if (unitCell == null) {
       unitCell = UnitCell.fromOABCd(oabc, false);
-    return unitCell.toFromPrimitive(toPrimitive, type, oabc,
-        primitiveToCrystal);
+	}
+    return unitCell.toFromPrimitive(toPrimitive, type, oabc, primitiveToCrystal);
   }
 
   @Override
@@ -874,11 +863,8 @@ public class Symmetry implements SymmetryInterface {
   public void calculateCIPChiralityForAtoms(Viewer vwr, BS bsAtoms) {
     vwr.setCursor(GenericPlatform.CURSOR_WAIT);
     CIPChirality cip = getCIPChirality(vwr);
-    String dataClass = (vwr.getBoolean(T.testflag1) ? "CIPData"
-        : "CIPDataTracker");
-    CIPData data = ((CIPData) Interface
-        .getInterface("org.jmol.symmetry." + dataClass, vwr, "script")).set(vwr,
-            bsAtoms);
+    String dataClass = (vwr.getBoolean(T.testflag1) ? "CIPData" : "CIPDataTracker");
+    CIPData data = ((CIPData) Interface.getInterface("org.jmol.symmetry." + dataClass, vwr, "script")).set(vwr, bsAtoms);
     data.setRule6Full(vwr.getBoolean(T.ciprule6full));
     cip.getChiralityForAtoms(data);
     vwr.setCursor(GenericPlatform.CURSOR_DEFAULT);
@@ -889,19 +875,14 @@ public class Symmetry implements SymmetryInterface {
       throws Exception {
     vwr.setCursor(GenericPlatform.CURSOR_WAIT);
     CIPChirality cip = getCIPChirality(vwr);
-    CIPDataSmiles data = ((CIPDataSmiles) Interface
-        .getInterface("org.jmol.symmetry.CIPDataSmiles", vwr, "script"))
-            .setAtomsForSmiles(vwr, smiles);
+    CIPDataSmiles data = ((CIPDataSmiles) new org.jmol.symmetry.CIPDataSmiles()).setAtomsForSmiles(vwr, smiles);
     cip.getChiralityForAtoms(data);
     vwr.setCursor(GenericPlatform.CURSOR_DEFAULT);
     return data.getSmilesChiralityArray();
   }
 
   private CIPChirality getCIPChirality(Viewer vwr) {
-    return (cip == null
-        ? (cip = ((CIPChirality) Interface
-            .getInterface("org.jmol.symmetry.CIPChirality", vwr, "script")))
-        : cip);
+    return (cip == null ? (cip = ((CIPChirality) new org.jmol.symmetry.CIPChirality())) : cip);
   }
 
   /**
@@ -929,11 +910,8 @@ public class Symmetry implements SymmetryInterface {
   }
 
   @Override
-  public Object findSpaceGroup(Viewer vwr, BS atoms, String xyzList, double[] unitCell,
-                               boolean asString, boolean isAssign) {
-    return ((SpaceGroupFinder) Interface
-        .getInterface("org.jmol.symmetry.SpaceGroupFinder", vwr, "eval"))
-            .findSpaceGroup(vwr, atoms, xyzList, unitCell, this, asString, isAssign);
+  public Object findSpaceGroup(Viewer vwr, BS atoms, String xyzList, double[] unitCell, boolean asString, boolean isAssign) {
+    return ((SpaceGroupFinder) new org.jmol.symmetry.SpaceGroupFinder()).findSpaceGroup(vwr, atoms, xyzList, unitCell, this, asString, isAssign);
   }
 
   @Override

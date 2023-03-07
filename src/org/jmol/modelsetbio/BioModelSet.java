@@ -38,8 +38,7 @@ public class BioModelSet {
   private Map<String, BS>[] unitIdSets;
 
   BioExt getBioExt() {
-    return (ext == null ? (ext = ((BioExt) Interface.getInterface(
-        "org.jmol.modelsetbio.BioExt", vwr, "script"))).set(vwr, vwr.ms) : ext);
+    return (ext == null ? (ext = ((BioExt) new org.jmol.modelsetbio.BioExt())).set(vwr, vwr.ms) : ext);
   }
 
   public BioModelSet set(Viewer vwr, ModelSet ms) {

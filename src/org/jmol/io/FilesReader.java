@@ -107,8 +107,7 @@ public class FilesReader implements JmolFilesReaderInterface {
       t = fm.getJzu().getAtomSetCollectionOrBufferedReaderFromZip(vwr,
           (BufferedInputStream) t, name, zipDirectory, htParams, 1, true);
     }
-    return (t instanceof BufferedInputStream ? ((GenericBinaryDocument) Interface
-        .getInterface("javajs.util.BinaryDocument", vwr, "file")).setStream(
+    return (t instanceof BufferedInputStream ? ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream(
         (BufferedInputStream) t, true) : t instanceof BufferedReader
         || t instanceof GenericBinaryDocument ? t
         : t == null ? "error opening:" + namesAsGivenIn[i] : (String) t);

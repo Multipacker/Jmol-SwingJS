@@ -80,7 +80,7 @@ public class FileManager implements BytePoster {
    * @return a SpartanUtil
    */
   public SpartanUtil spartanUtil() {
-    return (spartanDoc == null ? spartanDoc = ((SpartanUtil) Interface.getInterface("org.jmol.adapter.readers.spartan.SpartanUtil", vwr, "fm getSpartanUtil()")).set(this) : spartanDoc);  
+    return (spartanDoc == null ? spartanDoc = ((SpartanUtil) new org.jmol.adapter.readers.spartan.SpartanUtil()).set(this) : spartanDoc);  
   }
   
   JmolUtil jzu;

@@ -6370,9 +6370,8 @@ public class ScriptEval extends ScriptExpr {
         m4 = new M4d();
         points[0] = new P3d();
         nPoints = 1;
-        Interface.getInterface("javajs.util.Eigen", vwr, "script");
-        double stddev = (chk ? 0 : ScriptParam.getTransformMatrix4(ptsA, ptsB, m4,
-            points[0]));
+        new javajs.util.Eigen();
+        double stddev = (chk ? 0 : ScriptParam.getTransformMatrix4(ptsA, ptsB, m4, points[0]));
         // if the standard deviation is very small, we leave ptsB
         // because it will be used to set the absolute final positions
         if (stddev > 0.001)

@@ -972,17 +972,14 @@ public class Polyhedra extends AtomShape implements Comparator<Object[]>{
       normals = new V3d[faces.length];
       for (int i = faces.length; --i >= 0;)
         faces[i] = fixExplicitFaceWinding(faces[i], i, points, normals);
-      triangles = ((MeshCapper) Interface.getInterface(
-          "org.jmol.util.MeshCapper", vwr, "script")).set(null)
-          .triangulateFaces(faces, points, faceTriangles);
+      triangles = ((MeshCapper) new org.jmol.util.MeshCapper()).set(null).triangulateFaces(faces, points, faceTriangles);
       triangleCount = triangles.length;
     } else {
 
       nPoints = vertexCount + 1;
       int ni = vertexCount - 2;
       int nj = vertexCount - 1;
-      double planarParam = (Double.isNaN(this.planarParam) ? DEFAULT_PLANAR_PARAM
-          : this.planarParam);
+      double planarParam = (Double.isNaN(this.planarParam) ? DEFAULT_PLANAR_PARAM : this.planarParam);
 
       points[vertexCount] = atomOrPt;
       P3d ptAve = P3d.newP(atomOrPt);

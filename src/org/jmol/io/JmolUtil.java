@@ -292,8 +292,7 @@ public class JmolUtil {
         } else {
           String sData;
           if (Rdr.isCompoundDocumentB(bytes)) {
-            CompoundDocument jd = (CompoundDocument) Interface
-                .getInterface("javajs.util.CompoundDocument", vwr, "file");
+            CompoundDocument jd = (CompoundDocument) new javajs.util.CompoundDocument();
             jd.setDocStream(Rdr.getBIS(bytes));
             sData = jd.getAllDataFiles("Molecule", "Input").toString();
           } else {

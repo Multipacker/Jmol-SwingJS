@@ -87,8 +87,7 @@ public class ScriptManager implements JmolScriptManager {
   }
 
   private ScriptEval newScriptEvaluator() {
-    return ((ScriptEval) Interface.getInterface("org.jmol.script.ScriptEval",
-        vwr, "setOptions")).setViewer(vwr);
+    return ((ScriptEval) new org.jmol.script.ScriptEval()).setViewer(vwr);
   }
 
   @Override
@@ -211,8 +210,7 @@ public class ScriptManager implements JmolScriptManager {
       return null;
     Lst<Object> scriptItem = scriptQueue.get(0);
     int flag = (((Integer) scriptItem.get(4)).intValue());
-    boolean isOK = (watching ? flag < 0
-        : isByCommandWatcher ? flag == 0 : flag == 1);
+    boolean isOK = (watching ? flag < 0 : isByCommandWatcher ? flag == 0 : flag == 1);
     return (isOK ? scriptItem : null);
   }
 
@@ -224,8 +222,7 @@ public class ScriptManager implements JmolScriptManager {
     if (isStart) {
       if (commandWatcherThread != null)
         return;
-      commandWatcherThread = (JmolThread) Interface.getInterface(
-          "org.jmol.script.CommandWatcherThread", vwr, "setOptions");
+      commandWatcherThread = (JmolThread) new org.jmol.script.CommandWatcherThread();
       commandWatcherThread.setManager(this, vwr, null);
       commandWatcherThread.start();
     } else {
@@ -234,8 +231,7 @@ public class ScriptManager implements JmolScriptManager {
       clearCommandWatcherThread();
     }
     if (Logger.debugging) {
-      Logger.debug("command watcher " + (isStart ? "started" : "stopped")
-          + commandWatcherThread);
+      Logger.debug("command watcher " + (isStart ? "started" : "stopped") + commandWatcherThread);
     }
   }
 

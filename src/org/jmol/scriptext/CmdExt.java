@@ -1254,7 +1254,7 @@ public class CmdExt extends ScriptExt {
     isAtoms = (!isQuaternion && strSmiles == null && !isPolyhedral
         || coordTo != null);
     if (isAtoms)
-      Interface.getInterface("javajs.util.Eigen", vwr, "script"); // preload interface
+      new javajs.util.Eigen(); // preload interface
     if (vAtomSets == null && vQuatSets == null) {
       if (isPolyhedral && bsSubset == null) {
         bsSubset = vwr.getAtomBitSet("polyhedra");
@@ -1823,10 +1823,8 @@ public class CmdExt extends ScriptExt {
         tokAction = T.define;
       }
       Text text = null;
-      if (font != null || alignment != null || colix != 0
-          || strFormat != null && (isRefreshID || strFormat.indexOf('\n') >= 0))
-        text = ((Text) Interface.getInterface("org.jmol.modelset.Text", vwr,
-            "script")).newMeasure(vwr, font, colix);
+      if (font != null || alignment != null || colix != 0 || strFormat != null && (isRefreshID || strFormat.indexOf('\n') >= 0))
+        text = ((Text) new org.jmol.modelset.Text()).newMeasure(vwr, font, colix);
       if (text != null) {
         text.pymolOffset = offset;
         text.setAlignmentLCR(alignment);
@@ -3671,7 +3669,7 @@ public class CmdExt extends ScriptExt {
       case T.brillouin:
         int index = (e.theTok == T.wigner ? -1 : (tokAt(i + 1) == T.integer ? intParameter(++i) : 1));
         if (!chk)
-          ((BZone) Interface.getInterface("org.jmol.util.BZone", vwr, "script")).setViewer(vwr).createBZ(index, null, false, id, scale);
+          ((BZone) new org.jmol.util.BZone()).setViewer(vwr).createBZ(index, null, false, id, scale);
         setShapeProperty(JC.SHAPE_POLYHEDRA, "init", Boolean.FALSE);
         return;
       case T.hash:

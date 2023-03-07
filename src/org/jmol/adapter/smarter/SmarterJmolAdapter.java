@@ -148,9 +148,7 @@ public class SmarterJmolAdapter extends JmolAdapter {
       if (readerOrDocument instanceof BufferedInputStream) {
         BufferedInputStream bis = (BufferedInputStream) readerOrDocument;
         if (Resolver.getBinaryType(bis) != null) {
-          readerOrDocument = ((GenericBinaryDocument) Interface
-              .getInterface("javajs.util.BinaryDocument", null, "JmolAdapter"))
-                  .setStream(bis, false);
+          readerOrDocument = ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream(bis, false);
         } else {
           readerOrDocument = Rdr.getBufferedReader(bis, null);
         }

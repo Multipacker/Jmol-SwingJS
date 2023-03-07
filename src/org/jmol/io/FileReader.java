@@ -134,8 +134,7 @@ public class FileReader {
       }
     }
     if (t instanceof BufferedInputStream)
-      readerOrDocument = ((GenericBinaryDocument) Interface
-          .getInterface("javajs.util.BinaryDocument", vwr, "file")).setStream((BufferedInputStream) t, !htParams.containsKey("isLittleEndian"));
+      readerOrDocument = ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream((BufferedInputStream) t, !htParams.containsKey("isLittleEndian"));
     if (readerOrDocument != null) {
       atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionReader(
           fullPathNameIn, fileTypeIn, readerOrDocument, htParams);

@@ -98,9 +98,7 @@ public class TransformManager {
 
   static TransformManager getTransformManager(Viewer vwr, int width,
                                               int height, boolean is4D) {
-    TransformManager me = (is4D ? (TransformManager) Interface.getInterface(
-        "org.jmol.viewer.TransformManager4D", vwr, "tm")
-        : new TransformManager());
+    TransformManager me = (is4D ? (TransformManager) new org.jmol.viewer.TransformManager4D() : new TransformManager());
     me.vwr = vwr;
     me.setScreenParameters(width, height, true, false, true, true);
     return me;

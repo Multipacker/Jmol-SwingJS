@@ -1932,9 +1932,7 @@ public class ScriptCompiler extends ScriptTokenParser {
       if (nTokens == 1) {
         if (thisFunction != null)
           vFunctionStack.add(0, thisFunction);
-        thisFunction = (tokCommand == T.parallel ? (ScriptFunction) Interface
-            .getInterface("org.jmol.script.ScriptParallelProcessor", null, null)
-            : new ScriptFunction(ident, tokCommand));
+        thisFunction = (tokCommand == T.parallel ? (ScriptFunction) new org.jmol.script.ScriptParallelProcessor() : new ScriptFunction(ident, tokCommand));
         thisFunction.set(ident, tokCommand);
         thisFunction.isPrivate = isStateScript || isPrivateScript || isPrivateFunc;
         isPrivateFunc = false;

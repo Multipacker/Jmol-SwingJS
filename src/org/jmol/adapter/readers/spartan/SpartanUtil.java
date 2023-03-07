@@ -351,8 +351,7 @@ public class SpartanUtil {
       bis = (BufferedInputStream) t;
       if (Rdr.isCompoundDocumentS(bis)) {
         // very specialized reader; assuming we have a Spartan document here
-        CompoundDocument doc = (CompoundDocument) Interface
-            .getInterface("javajs.util.CompoundDocument", fm.vwr, "file");
+        CompoundDocument doc = (CompoundDocument) new javajs.util.CompoundDocument();
         doc.setDocStream(bis);
         doc.getAllDataMapped(name, "Molecule", fileData);
       } else if (Rdr.isZipS(bis)) {
@@ -360,8 +359,7 @@ public class SpartanUtil {
             "__MACOSX", fileData);
       } else if (asBinaryString) {
         // used for Spartan binary file reading
-        GenericBinaryDocument bd = (GenericBinaryDocument) Interface
-            .getInterface("javajs.util.BinaryDocument", fm.vwr, "file");
+        GenericBinaryDocument bd = (GenericBinaryDocument) new javajs.util.BinaryDocument();
         bd.setStream(bis, false);
         sb = new SB();
         //note -- these headers must match those in ZipUtil.getAllData and CompoundDocument.getAllData

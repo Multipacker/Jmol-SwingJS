@@ -104,8 +104,7 @@ class Image {
         Component c = ((Component) ((Viewer) vwr).display);
         if (c == null)
           return null;
-        BMPDecoder ie = (BMPDecoder) Interface.getInterface(
-            "javajs.img.BMPDecoder", (Viewer) vwr, "createImage");
+        BMPDecoder ie = (BMPDecoder) new javajs.img.BMPDecoder();
         Object[] o = ie.decodeWindowsBMP(b);
         if (o == null || o[0] == null)
           return null;

@@ -117,9 +117,8 @@ public class SmilesExt {
           ptsB.clear();
           for (int j = 0; j < maps[i].length; j++)
             ptsB.addLast(atoms[maps[i][j]]);
-          Interface.getInterface("javajs.util.Eigen", e.vwr, "script");
-          double stddev = (ptsB.size() == 1 ? 0
-              : ScriptParam.getTransformMatrix4(ptsA, ptsB, m, null));
+          new javajs.util.Eigen();
+          double stddev = (ptsB.size() == 1 ? 0 : ScriptParam.getTransformMatrix4(ptsA, ptsB, m, null));
           Logger.info("getSmilesCorrelation stddev=" + stddev);
           if (vReturn != null) {
             if (stddev < tolerance) {
@@ -340,7 +339,7 @@ public class SmilesExt {
     a = (P3d[]) p2.get("vertices");
     for (int i = 0, n = a.length; i < n; i++)
       ptsB.add(a[i]);
-    Interface.getInterface("javajs.util.Eigen", e.vwr, "script");
+    new javajs.util.Eigen();
     return ScriptParam.getTransformMatrix4(ptsA, ptsB, m, null);
   }
 

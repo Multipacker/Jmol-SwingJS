@@ -26,7 +26,7 @@ public class MeshSurface {
   private MeshSlicer slicer;
   
   public MeshSlicer getMeshSlicer() {
-    return (slicer == null ? slicer = ((MeshSlicer) Interface.getInterface("org.jmol.util.MeshSlicer", vwr, "script")).set(this) : slicer);
+    return (slicer == null ? slicer = ((MeshSlicer) new org.jmol.util.MeshSlicer()).set(this) : slicer);
   }
 
 

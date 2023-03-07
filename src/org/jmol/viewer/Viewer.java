@@ -1022,9 +1022,7 @@ public class Viewer extends JmolViewer
 
   public ModelKit getModelkit(boolean andShow) {
     if (modelkit == null) {
-      (modelkit = (ModelKit) Interface
-          .getInterface("org.jmol.modelkit.ModelKit", this, "script"))
-              .setMenu((ModelKitPopup) apiPlatform.getMenuPopup(null, 'm'));
+      (modelkit = new org.jmol.modelkit.ModelKit()).setMenu((ModelKitPopup) apiPlatform.getMenuPopup(null, 'm'));
     } else if (andShow) {
       modelkit.updateMenu();
     }
@@ -1576,9 +1574,7 @@ public class Viewer extends JmolViewer
             //  ? (JmolAppConsoleInterface) Interface
             //      .getOption("console.AppletConsole", null, null)
             //  : 
-            (JmolAppConsoleInterface) Interface.getInterface(
-                "org.openscience.jmol.app.jmolpanel.console.AppConsole", null,
-                null));
+            (JmolAppConsoleInterface) new org.openscience.jmol.app.jmolpanel.console.AppConsole());
             if (appConsole == null)
               try {
                 System.out.println("Viewer can't start appConsole");
@@ -1650,9 +1646,7 @@ public class Viewer extends JmolViewer
   private OutputManager getOutputManager() {
     if (outputManager != null)
       return outputManager;
-    return (outputManager = (OutputManager) Interface.getInterface(
-        "org.jmol.viewer.OutputManager" + (isJSNoAWT ? "JS" : "Awt"), this,
-        "file")).setViewer(this, privateKey);
+    return (outputManager = (OutputManager) Interface.getInterface("org.jmol.viewer.OutputManager" + (isJSNoAWT ? "JS" : "Awt"), this, "file")).setViewer(this, privateKey);
   }
 
   //  private GenericZipTools jzt;
@@ -1680,10 +1674,8 @@ public class Viewer extends JmolViewer
    * @return byte[] image, or null and an error message
    */
   @Override
-  public byte[] getImageAsBytes(String type, int width, int height, int quality,
-                                String[] errMsg) {
-    return getOutputManager().getImageAsBytes(type, width, height, quality,
-        errMsg);
+  public byte[] getImageAsBytes(String type, int width, int height, int quality, String[] errMsg) {
+    return getOutputManager().getImageAsBytes(type, width, height, quality, errMsg);
   }
 
   @Override
@@ -1698,23 +1690,16 @@ public class Viewer extends JmolViewer
   }
 
   public MeasurementData newMeasurementData(String id, Lst<Object> points) {
-    return ((MeasurementData) Interface
-        .getInterface("org.jmol.modelset.MeasurementData", this, "script"))
-            .init(id, this, points);
+    return (new org.jmol.modelset.MeasurementData()).init(id, this, points);
   }
 
   private JmolDataManager getDataManager() {
-    return (dm == null
-        ? (dm = ((JmolDataManager) Interface
-            .getInterface("org.jmol.viewer.DataManager", this, "script"))
-                .set(this))
-        : dm);
+    return (dm == null ? (dm = ((JmolDataManager) new org.jmol.viewer.DataManager()).set(this)) : dm);
   }
 
   private JmolScriptManager getScriptManager() {
     if (allowScripting && scm == null) {
-      scm = (JmolScriptManager) Interface
-          .getInterface("org.jmol.script.ScriptManager", this, "setOptions");
+      scm = (JmolScriptManager) new org.jmol.script.ScriptManager();
       if (isJS && scm == null)
         throw new NullPointerException();
       if (scm == null) {
@@ -1729,9 +1714,7 @@ public class Viewer extends JmolViewer
   }
 
   private boolean checkOption2(String key1, String key2) {
-    return (vwrOptions.containsKey(key1)
-        && !vwrOptions.get(key1).toString().equals("false")
-        || commandOptions.indexOf(key2) >= 0);
+    return (vwrOptions.containsKey(key1) && !vwrOptions.get(key1).toString().equals("false") || commandOptions.indexOf(key2) >= 0);
   }
 
   public boolean isPreviewOnly;
@@ -3595,18 +3578,11 @@ public class Viewer extends JmolViewer
   private SmilesMatcherInterface smilesMatcher;
 
   public Minimizer getMinimizer(boolean createNew) {
-    return (minimizer == null && createNew
-        ? (minimizer = (Minimizer) Interface
-            .getInterface("org.jmol.minimize.Minimizer", this, "script"))
-                .setProperty("vwr", this)
-        : minimizer);
+    return (minimizer == null && createNew ? (minimizer = (Minimizer) new org.jmol.minimize.Minimizer()).setProperty("vwr", this) : minimizer);
   }
 
   public SmilesMatcherInterface getSmilesMatcher() {
-    return (smilesMatcher == null
-        ? (smilesMatcher = (SmilesMatcherInterface) Interface
-            .getInterface("org.jmol.smiles.SmilesMatcher", this, "script"))
-        : smilesMatcher);
+    return (smilesMatcher == null ? (smilesMatcher = (SmilesMatcherInterface) new org.jmol.smiles.SmilesMatcher()) : smilesMatcher);
   }
 
   public void clearModelDependentObjects() {
@@ -4083,9 +4059,7 @@ public class Viewer extends JmolViewer
         && fname.toUpperCase().indexOf("BCIF") >= 0) {
       BufferedInputStream is = fm.getBufferedInputStream(fname);
       try {
-        return ((javajs.util.MessagePackReader) Interface
-            .getInterface("javajs.util.MessagePackReader", this, "script"))
-                .getMapForStream(is);
+        return ((javajs.util.MessagePackReader) new javajs.util.MessagePackReader()).getMapForStream(is);
       } catch (Exception e) {
         e.printStackTrace();
         return new Hashtable<String, Object>();
@@ -4104,26 +4078,19 @@ public class Viewer extends JmolViewer
   }
 
   @Override
-  public Map<String, Object> readCifData(String fileName,
-                                         Object rdrOrStringData, String type) {
+  public Map<String, Object> readCifData(String fileName, Object rdrOrStringData, String type) {
     if (rdrOrStringData == null)
       rdrOrStringData = getFileAsString(fileName);
-    BufferedReader rdr = (rdrOrStringData instanceof BufferedReader
-        ? (BufferedReader) rdrOrStringData
-        : Rdr.getBR((String) rdrOrStringData));
-    return Rdr.readCifData((GenericCifDataParser) Interface.getInterface(
-        ("Cif2".equals(type) ? "org.jmol.adapter.readers.cif.Cif2DataParser"
-            : "javajs.util.CifDataParser"),
-        this, "script"), rdr);
+    BufferedReader rdr = (rdrOrStringData instanceof BufferedReader ? (BufferedReader) rdrOrStringData : Rdr.getBR((String) rdrOrStringData));
+    return Rdr.readCifData((GenericCifDataParser) Interface.getInterface(("Cif2".equals(type) ? "org.jmol.adapter.readers.cif.Cif2DataParser" : "javajs.util.CifDataParser"), this, "script"), rdr);
   }
 
   JmolStateCreator jsc;
 
   public JmolStateCreator getStateCreator() {
-    if (jsc == null)
-      (jsc = (JmolStateCreator) Interface
-          .getInterface("org.jmol.viewer.StateCreator", this, "script"))
-              .setViewer(this);
+    if (jsc == null) {
+      (jsc = (JmolStateCreator) new org.jmol.viewer.StateCreator()).setViewer(this);
+	}
     return jsc;
   }
 
@@ -4137,9 +4104,7 @@ public class Viewer extends JmolViewer
   }
 
   public String getStateInfo3(String type, int width, int height) {
-    return (g.preserveState
-        ? getStateCreator().getStateScript(type, width, height)
-        : "");
+    return (g.preserveState ? getStateCreator().getStateScript(type, width, height) : "");
   }
 
   public String getStructureState() {
@@ -7939,10 +7904,9 @@ public class Viewer extends JmolViewer
   JmolPropertyManager pm;
 
   private JmolPropertyManager getPropertyManager() {
-    if (pm == null)
-      (pm = (JmolPropertyManager) Interface
-          .getInterface("org.jmol.viewer.PropertyManager", this, "prop"))
-              .setViewer(this);
+    if (pm == null) {
+      (pm = (JmolPropertyManager) new org.jmol.viewer.PropertyManager()).setViewer(this);
+	}
     return pm;
   }
 
@@ -10294,11 +10258,7 @@ public class Viewer extends JmolViewer
   BioResolver jbr;
 
   public BioResolver getJBR() {
-    return (jbr == null
-        ? jbr = ((BioResolver) Interface
-            .getInterface("org.jmol.modelsetbio.BioResolver", this, "file"))
-                .setViewer(this)
-        : jbr);
+    return (jbr == null ? jbr = ((BioResolver) new org.jmol.modelsetbio.BioResolver()).setViewer(this) : jbr);
   }
 
   public void checkMenuUpdate() {
@@ -10309,11 +10269,7 @@ public class Viewer extends JmolViewer
   private JmolChimeMessenger jcm;
 
   public JmolChimeMessenger getChimeMessenger() {
-    return (jcm == null
-        ? jcm = ((JmolChimeMessenger) Interface
-            .getInterface("org.jmol.viewer.ChimeMessenger", this, "script"))
-                .set(this)
-        : jcm);
+    return (jcm == null ? jcm = ((JmolChimeMessenger) new org.jmol.viewer.ChimeMessenger()).set(this) : jcm);
   }
 
   public Map<String, Object> getModelSetAuxiliaryInfoForAtoms(Object atomExpression) {
@@ -10324,10 +10280,7 @@ public class Viewer extends JmolViewer
   private JSJSONParser jsonParser;
 
   private JSJSONParser getJSJSONParser() {
-    return (jsonParser == null
-        ? jsonParser = (JSJSONParser) Interface
-            .getInterface("javajs.util.JSJSONParser", this, "script")
-        : jsonParser);
+    return (jsonParser == null ? jsonParser = (JSJSONParser) new javajs.util.JSJSONParser() : jsonParser);
   }
 
   public Object parseJSON(String str) {
@@ -10401,9 +10354,7 @@ public class Viewer extends JmolViewer
   }
 
   private NBOParser getNBOParser() {
-    return (nboParser == null ? nboParser = ((NBOParser) Interface.getInterface(
-        "org.jmol.adapter.readers.quantum.NBOParser", this, "script")).set(this)
-        : nboParser);
+    return (nboParser == null ? nboParser = ((NBOParser) new org.jmol.adapter.readers.quantum.NBOParser()).set(this) : nboParser);
   }
 
   public String getNBOAtomLabel(Atom atom) {

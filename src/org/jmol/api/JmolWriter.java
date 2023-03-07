@@ -6,8 +6,6 @@ import javajs.util.BS;
 import javajs.util.OC;
 
 public interface JmolWriter {
-
   public void set(Viewer vwr, OC out, Object[] data);
   public String write(BS bs);
-
 }

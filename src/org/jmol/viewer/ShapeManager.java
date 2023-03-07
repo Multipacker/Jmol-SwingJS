@@ -129,8 +129,7 @@ public class ShapeManager {
       return null;
     if (shapes[shapeID] != null)
       return shapes[shapeID];
-    if (shapeID == JC.SHAPE_HSTICKS || shapeID == JC.SHAPE_SSSTICKS
-        || shapeID == JC.SHAPE_STRUTS)
+    if (shapeID == JC.SHAPE_HSTICKS || shapeID == JC.SHAPE_SSSTICKS || shapeID == JC.SHAPE_STRUTS)
       return null;
     String className = JC.getShapeClassName(shapeID, false);
     Shape shape;

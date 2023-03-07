@@ -292,7 +292,7 @@ public class IsosurfaceMesh extends Mesh {
   }
 
   public Object getPmeshData(boolean isBinary) {
-    PMeshWriter mw = (PMeshWriter) Interface.getInterface("org.jmol.shapesurface.PMeshWriter", vwr, "script");
+    PMeshWriter mw = (PMeshWriter) new org.jmol.shapesurface.PMeshWriter();
     return mw.write(this, isBinary);
   }
 

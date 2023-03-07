@@ -231,7 +231,7 @@ public final class ModelLoader {
   }
 
   private Trajectory newTrajectory(ModelSet ms, Lst<P3d[]> steps) {
-    return ((Trajectory) Interface.getInterface("org.jmol.modelset.Trajectory", vwr, "load")).set(vwr, ms, steps);
+    return ((Trajectory) new org.jmol.modelset.Trajectory()).set(vwr, ms, steps);
   }
 
   private final Map<Object, Atom> htAtomMap = new Hashtable<Object, Atom>();

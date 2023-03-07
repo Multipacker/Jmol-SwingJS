@@ -194,8 +194,7 @@ public class Polyhedron {
           // polyhedra {id:"...", center:"...", vertices:"...", faces:"..."}
           // need to derive triangles from faces
           faceTriangles = AU.newInt2(this.faces.length);
-          triangles = ((MeshCapper) Interface.getInterface(
-              "org.jmol.util.MeshCapper", vwr, "script")).set(null).triangulateFaces(this.faces, vertices, faceTriangles);
+          triangles = ((MeshCapper) new org.jmol.util.MeshCapper()).set(null).triangulateFaces(this.faces, vertices, faceTriangles);
         } else {
           // formerly
           triangles = this.faces;

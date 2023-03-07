@@ -663,9 +663,7 @@ public class IsoExt extends ScriptExt {
             }
             points = getAllPoints(e.iToken + 1, 3);
             try {
-              polygons = ((MeshCapper) Interface
-                  .getInterface("org.jmol.util.MeshCapper", vwr, "script"))
-                      .set(null).triangulateFaces(faces, points, null);
+              polygons = ((MeshCapper) new org.jmol.util.MeshCapper()).set(null).triangulateFaces(faces, points, null);
             } catch (Throwable e) {
               invArg();
             }
@@ -709,9 +707,7 @@ public class IsoExt extends ScriptExt {
         default:
           // get triangles from a list of points
           if (polygons == null && !isPoints && !chk)
-            polygons = ((MeshCapper) Interface
-                .getInterface("org.jmol.util.MeshCapper", vwr, "script"))
-                    .set(null).triangulatePolygon(points, -1);
+            polygons = ((MeshCapper) new org.jmol.util.MeshCapper()).set(null).triangulatePolygon(points, -1);
         }
         if (polygons == null && !isPoints) {
           // read array of arrays of triangle vertex pointers
@@ -1346,9 +1342,7 @@ public class IsoExt extends ScriptExt {
       error(ScriptError.ERROR_moModelError);
     if (chk)
       return -1;
-    if (type != null && !((GenNBOReader) Interface.getInterface(
-        "org.jmol.adapter.readers.quantum.GenNBOReader", vwr, "script"))
-            .readNBOCoefficients(moData, type, vwr))
+    if (type != null && !((GenNBOReader) new org.jmol.adapter.readers.quantum.GenNBOReader()).readNBOCoefficients(moData, type, vwr))
       error(ScriptError.ERROR_moModelError);
 
     Lst<String> auxFiles = (Lst<String>) moData.get("auxFiles");

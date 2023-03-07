@@ -39,7 +39,7 @@ public class CartoonRenderer extends RocketsRenderer {
       return;
     if (isNucleic || isPhosphorusOnly) {
       if (nucleicRenderer == null)
-        nucleicRenderer = (NucleicRenderer) Interface.getInterface("org.jmol.renderbio.NucleicRenderer", vwr, "render");
+        nucleicRenderer = (NucleicRenderer) new org.jmol.renderbio.NucleicRenderer();
       calcScreenControlPoints();
       nucleicRenderer.renderNucleic(this);
       return;

@@ -1751,12 +1751,10 @@ public class ActionManager implements EventManager {
   }
 
   private MeasurementPending getMP() {
-    return ((MeasurementPending) Interface
-        .getInterface("org.jmol.modelset.MeasurementPending", vwr, "mouse")).set(vwr.ms);
+    return ((MeasurementPending) new org.jmol.modelset.MeasurementPending()).set(vwr.ms);
   }
 
-  private int addToMeasurement(int atomIndex, Point3fi nearestPoint,
-                               boolean dblClick) {
+  private int addToMeasurement(int atomIndex, Point3fi nearestPoint, boolean dblClick) {
     if (atomIndex == -1 && nearestPoint == null || mp == null) {
       exitMeasurementMode(null);
       return 0;
@@ -1764,8 +1762,7 @@ public class ActionManager implements EventManager {
     int measurementCount = mp.count;
     if (mp.traceX != Integer.MIN_VALUE && measurementCount == 2)
       mp.setCount(measurementCount = 1);
-    return (measurementCount == 4 && !dblClick ? measurementCount
-        : mp.addPoint(atomIndex, nearestPoint, true));
+    return (measurementCount == 4 && !dblClick ? measurementCount : mp.addPoint(atomIndex, nearestPoint, true));
   }
 
   private void resetMeasurement() {

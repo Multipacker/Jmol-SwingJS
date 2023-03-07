@@ -972,7 +972,7 @@ public class MathExt {
           return false;
         }
         if (ptsA != null && ptsB != null && ptsA.size() == ptsB.size()) {
-          Interface.getInterface("javajs.util.Eigen", vwr, "script");
+          new javajs.util.Eigen();
           stddev = ScriptParam.getTransformMatrix4(ptsA, ptsB, m, null);
         }
       }
