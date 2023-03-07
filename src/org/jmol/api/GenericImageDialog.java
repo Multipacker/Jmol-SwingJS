@@ -1,9 +1,7 @@
 package org.jmol.api;
 
 public interface GenericImageDialog {
+	void closeMe();
 
-  void closeMe();
-
-  void setImage(Object image);
-
+	void setImage(Object image);
 }

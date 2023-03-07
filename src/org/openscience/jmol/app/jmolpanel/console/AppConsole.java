@@ -98,13 +98,6 @@ public class AppConsole extends JmolConsole
   private int fontSize;
   private boolean noPrefs;
 
-
-  @Override
-  public void loadContent(String script) {
-    getScriptEditor().setVisible(true);
-    getScriptEditor().loadContent(script);
-  }
-
   @Override
   public void loadFile(String fileName) {
     ScriptEditor se = (ScriptEditor) getScriptEditor();

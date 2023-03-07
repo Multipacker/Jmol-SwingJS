@@ -4,13 +4,11 @@ import org.jmol.script.ScriptContext;
 import org.jmol.viewer.Viewer;
 
 public interface JmolParallelProcessor {
+	Object getExecutor();
 
-  Object getExecutor();
+	void runAllProcesses(Viewer vwr);
 
-  void runAllProcesses(Viewer vwr);
+	void addProcess(String name, ScriptContext context);
 
-  void addProcess(String name, ScriptContext context);
-
-  void set(String name, int tok);
-
+	void set(String name, int tok);
 }

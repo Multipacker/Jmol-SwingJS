@@ -257,60 +257,6 @@ JmolAppletInterface {
       ((GenericApplet) jmol).loadInlineString("" + strModel, "" + script, isAppend));
   }
 
-  // bizarre Mac OS X / Java bug:
-  // Mac cannot differentiate between signatures String and String[]
-  // so, instead, we deprecate these and go for the above two methods only.
-
-  /**
-   * @deprecated
-   * @param strModel
-   * @return         error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String strModel) {
-    return (jmol == null ? null :
-      ((GenericApplet) jmol).loadInline("" + strModel));
-  }
-
-  /**
-   * @deprecated
-   * @param strModel
-   * @param script
-   * @return         error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String strModel, String script) {
-    return (jmol == null ? null :
-      ((GenericApplet) jmol).loadInline("" + strModel, "" + script));
-  }
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @return         error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String[] strModels) {
-    return (jmol == null ? null :
-      ((GenericApplet) jmol).loadInline(strModels));
-  }
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @param script
-   * @return         error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String[] strModels, String script) {
-    return (jmol == null ? null :
-      ((GenericApplet) jmol).loadInline(strModels, script));
-  }
-
   @Override
   public String loadDOMNode(Object DOMNode) {
     return (jmol == null ? null : ((GenericApplet) jmol).loadDOMNode(DOMNode));

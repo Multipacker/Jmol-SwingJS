@@ -9,13 +9,12 @@ import org.jmol.util.Font;
 import javajs.util.P3d;
 
 public interface GenericPlatform extends FontManager {
-
-  public final static int CURSOR_DEFAULT = 0;
+  public final static int CURSOR_DEFAULT   = 0;
   public final static int CURSOR_CROSSHAIR = 1;
-  public final static int CURSOR_WAIT = 3;
-  public final static int CURSOR_ZOOM = 8;
-  public final static int CURSOR_HAND = 12;
-  public final static int CURSOR_MOVE = 13;
+  public final static int CURSOR_WAIT      = 3;
+  public final static int CURSOR_ZOOM      = 8;
+  public final static int CURSOR_HAND      = 12;
+  public final static int CURSOR_MOVE      = 13;
 
   void setViewer(PlatformViewer vwr, Object display);
   
@@ -54,8 +53,7 @@ public interface GenericPlatform extends FontManager {
 
   void drawImage(Object g, Object img, int x, int y, int width, int height, boolean isDTI);
 
-  int[] drawImageToBuffer(Object gObj, Object imageOffscreen,
-                          Object image, int width, int height, int bgcolor);
+  int[] drawImageToBuffer(Object gObj, Object imageOffscreen, Object image, int width, int height, int bgcolor);
 
   void flushImage(Object imagePixelBuffer);
 
@@ -74,9 +72,7 @@ public interface GenericPlatform extends FontManager {
 //  @Deprecated
 //  void renderScreenImage(Object g, Object currentSize);
 //
-  int[] getTextPixels(String text, Font font3d, Object gObj,
-                      Object image, int mapWidth, int height,
-                      int ascent);
+  int[] getTextPixels(String text, Font font3d, Object gObj, Object image, int mapWidth, int height, int ascent);
 
   ///// Image creation for export (optional for any platform)
 
@@ -123,7 +119,6 @@ public interface GenericPlatform extends FontManager {
   Object getBufferedFileInputStream(String name);
   
   /**
-   * 
    * @param url
    * @param outputBytes
    * @param post
@@ -134,13 +129,11 @@ public interface GenericPlatform extends FontManager {
 
   String getLocalUrl(String fileName);
 
-  GenericImageDialog getImageDialog(String title,
-                                 Map<String, GenericImageDialog> imageMap);
+  GenericImageDialog getImageDialog(String title, Map<String, GenericImageDialog> imageMap);
 
   boolean forceAsyncLoad(String filename);
 
   Object getInChI();
 
   int confirm(String msg, String msgNo);
-
 }

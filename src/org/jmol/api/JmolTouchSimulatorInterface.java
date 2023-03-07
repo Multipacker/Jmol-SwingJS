@@ -1,7 +1,6 @@
 package org.jmol.api;
 
 public interface JmolTouchSimulatorInterface {
-
   public abstract boolean startSimulator(Object display);
 
   public abstract void toggleMode();

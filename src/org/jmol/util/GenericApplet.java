@@ -535,52 +535,6 @@ public abstract class GenericApplet implements JSInterface, JmolAppletInterface,
     return viewer.openDOM(DOMNode);
   }
 
-  /**
-   * @deprecated
-   * @param strModel
-   * @return error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String strModel) {
-    return loadInlineString(strModel, "", false);
-  }
-
-  /**
-   * @deprecated
-   * @param strModel
-   * @param script
-   * @return error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String strModel, String script) {
-    return loadInlineString(strModel, script, false);
-  }
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @return error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String[] strModels) {
-    return loadInlineArray(strModels, "", false);
-  }
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @param script
-   * @return error or null
-   */
-  @Override
-  @Deprecated
-  public String loadInline(String[] strModels, String script) {
-    return loadInlineArray(strModels, script, false);
-  }
-
   /// called by mystatuslisteners
 
   public void output(String s) {

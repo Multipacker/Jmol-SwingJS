@@ -24,7 +24,6 @@
 
 package org.jmol.api;
 
-
 import javajs.util.BS;
 
 import javajs.util.Lst;
@@ -33,7 +32,6 @@ import javajs.util.P3d;
 import javajs.util.V3d;
 
 public interface JmolAdapterAtomIterator {
-  
 	public abstract boolean hasNext();
 
 	abstract public int getAtomSetIndex();
@@ -56,12 +54,12 @@ public interface JmolAdapterAtomIterator {
 
 	abstract public double getRadius();
 
-  abstract public V3d getVib();
+	abstract public V3d getVib();
 
 	abstract public P3d getXYZ();
 
-  abstract public double getBfactor();
-	
+	abstract public double getBfactor();
+
 	abstract public double getOccupancy();
 
 	abstract public boolean getIsHetero();
@@ -71,18 +69,18 @@ public interface JmolAdapterAtomIterator {
 	abstract public int getChainID();
 
 	abstract public char getAltLoc();
-	
+
 	abstract public String getGroup3();
 
 	abstract public int getSequenceNumber();
 
 	abstract public char getInsertionCode();
 
-  abstract public int getSeqID();
+	abstract public int getSeqID();
 
-  double getBondRadius();
+	double getBondRadius();
 
-  public int getElement();
+	public int getElement();
 
-  public int getIsotope();
+	public int getIsotope();
 }

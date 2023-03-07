@@ -25,17 +25,13 @@ package org.jmol.api;
 
 import java.awt.Event;
 
-
 /**
  * This is the API of methods that are available to JavaScript
  * via LiveConnect to the Jmol applet.
  * 
  * DONT FORGET TO ADD THESE FUNCTIONS TO src/JmolApplet.java !!!
- * 
  */
-
 public interface JmolAppletInterface extends JmolSyncInterface {
-
   public void setCallback(String name, Object callbackObject);
 
   public boolean handleEvent(Event event);  
@@ -77,43 +73,4 @@ public interface JmolAppletInterface extends JmolSyncInterface {
   public String loadInlineArray(String[] strModels, String script, boolean isAppend);
   public String loadDOMNode(Object DOMNode);
   public void notifyAudioEnded(Object htParams);
-
-  // Note -- some Macintosh-based browsers cannot distinguish methods
-  // with the same name but with different method signatures
-  // so the following are not reliable and are thus deprecated
-  
-  /**
-   * @deprecated
-   * @param strModel
-   * @return         error or null
-   */
-  @Deprecated
-  public String loadInline(String strModel);
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @return         error or null
-   */ 
-  @Deprecated
-  public String loadInline(String[] strModels);
-
-  /**
-   * @deprecated
-   * @param strModel
-   * @param script
-   * @return         error or null
-   */
-  @Deprecated
-  public String loadInline(String strModel, String script);
-
-  /**
-   * @deprecated
-   * @param strModels
-   * @param script
-   * @return         error or null
-   */
-  @Deprecated
-  public String loadInline(String[] strModels, String script);
-
 }

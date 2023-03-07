@@ -8,7 +8,6 @@ import org.jmol.viewer.ShapeManager;
 import org.jmol.viewer.Viewer;
 
 public interface JmolRepaintManager {
-
   void set(Viewer vwr, ShapeManager shapeManager);
 
   boolean isRepaintPending();
@@ -28,5 +27,4 @@ public interface JmolRepaintManager {
   void render(GData gdata, ModelSet modelSet, boolean isFirstPass, int[] navMinMax);
 
   String renderExport(GData gdata, ModelSet modelSet, Map<String, Object> params);
-
 }

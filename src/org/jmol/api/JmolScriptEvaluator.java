@@ -1,6 +1,5 @@
 package org.jmol.api;
 
-
 import java.util.Map;
 
 import javajs.util.SB;
@@ -14,7 +13,6 @@ import org.jmol.viewer.ShapeManager;
 import org.jmol.viewer.Viewer;
 
 public interface JmolScriptEvaluator {
-
   JmolScriptEvaluator setViewer(Viewer vwr);
 
   ScriptContext getThisContext();
@@ -77,10 +75,7 @@ public interface JmolScriptEvaluator {
 
   double evalFunctionFloat(Object func, Object params, double[] values);
 
-  void evaluateCompiledScript(boolean isSyntaxCheck,
-                              boolean isSyntaxAndFileCheck,
-                              boolean historyDisabled, boolean listCommands,
-                              SB outputBuffer, boolean allowThreads);
+  void evaluateCompiledScript(boolean isSyntaxCheck, boolean isSyntaxAndFileCheck, boolean historyDisabled, boolean listCommands, SB outputBuffer, boolean allowThreads);
 
   String setObjectPropSafe(String id, int tokCommand);
 
@@ -93,5 +88,4 @@ public interface JmolScriptEvaluator {
   void loadFileResourceAsync(String fileName) throws Exception;
 
   int setStatic(int tok, int value);
-
 }

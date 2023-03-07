@@ -1,6 +1,5 @@
 package org.jmol.api;
 
-
 import java.util.Map;
 
 import org.jmol.modelset.Atom;
@@ -17,7 +16,6 @@ import javajs.util.T3d;
 import org.jmol.viewer.Viewer;
 
 public interface JmolRendererInterface extends JmolGraphicsInterface {
-
   // exporting  
 
   public abstract void addRenderer(int tok);

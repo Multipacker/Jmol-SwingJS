@@ -27,18 +27,15 @@ package org.jmol.api;
 import org.jmol.c.CBK;
 
 public interface JmolCallbackListener {
-/*
- * These methods specifically provide notification from 
- * Viewer.StatusManager for callback methods.
- * 
- * See Jmol.java for implementation examples.
- * 
- */
+	/*
+	 * These methods specifically provide notification from 
+	 * Viewer.StatusManager for callback methods.
+	 * 
+	 * See Jmol.java for implementation examples.
+	 */
+	public void setCallbackFunction(String callbackType, String callbackObject);
 
-  public void setCallbackFunction(String callbackType, String callbackObject);
-  
-  public void notifyCallback(CBK message, Object[] data);
+	public void notifyCallback(CBK message, Object[] data);
 
-  public boolean notifyEnabled(CBK type);
-
+	public boolean notifyEnabled(CBK type);
 }

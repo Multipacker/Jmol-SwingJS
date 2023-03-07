@@ -52,11 +52,11 @@ public abstract class JmolAdapterStructureIterator {
 
 	public abstract char getEndInsertionCode();
 
-  public abstract BS getStructuredModels();
+	public abstract BS getStructuredModels();
 
-  public abstract int[] getAtomIndices();
+	public abstract int[] getAtomIndices();
 
-  public abstract int[] getModelIndices();
+	public abstract int[] getModelIndices();
 
-  public abstract BS[] getBSAll();
+	public abstract BS[] getBSAll();
 }

@@ -751,11 +751,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
   }
 
   @Override
-  public void loadContent(String script) {
-    System.out.println("SCRIPT is " + script);
-  }
-
-  @Override
   public void loadFile(String fileName) {
     if (FileManager.isEmbeddable(fileName)) {
       try {

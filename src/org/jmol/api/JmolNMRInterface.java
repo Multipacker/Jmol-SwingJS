@@ -13,7 +13,6 @@ import javajs.util.V3d;
 import org.jmol.viewer.Viewer;
 
 public interface JmolNMRInterface {
-
   public JmolNMRInterface setViewer(Viewer vwr);
 
   /**
@@ -89,5 +88,4 @@ public interface JmolNMRInterface {
   public boolean getState(SB sb);
   
   public double[] getNOEorJHH(Atom[] atoms, int mode);
-
 }

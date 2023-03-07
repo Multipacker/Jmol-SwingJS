@@ -19,7 +19,6 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 
 public interface SymmetryInterface {
-
   int addSpaceGroupOperation(String xyz, int opId);
 
   String addSubSystemOp(String code, Matrix rs, Matrix vs, Matrix sigma);
@@ -33,12 +32,9 @@ public interface SymmetryInterface {
 
   boolean addLatticeVectors(Lst<double[]> lattvecs);
 
-  boolean checkDistance(P3d f1, P3d f2, double distance, 
-                                        double dx, int iRange, int jRange, int kRange, P3d ptOffset);
+  boolean checkDistance(P3d f1, P3d f2, double distance, double dx, int iRange, int jRange, int kRange, P3d ptOffset);
 
-  boolean createSpaceGroup(int desiredSpaceGroupIndex,
-                                           String name,
-                                           Object data, int modDim);
+  boolean createSpaceGroup(int desiredSpaceGroupIndex, String name, Object data, int modDim);
 
   Object findSpaceGroup(Viewer vwr, BS atoms, String xyzList, double[] unitCellParams, boolean asString, boolean isAssign);
 
@@ -74,13 +70,11 @@ public interface SymmetryInterface {
 
   Map<String, Object> getSpaceGroupInfo(ModelSet modelSet, String spaceGroup, int modelIndex, boolean isFull, double[] cellParams);
 
-  Object getSpaceGroupInfoObj(String name, double[] params,
-                              boolean isFull, boolean addNonstandard);
+  Object getSpaceGroupInfoObj(String name, double[] params, boolean isFull, boolean addNonstandard);
 
   String getSpaceGroupName();
 
   /**
-   * 
    * @param type "Hall" or "HM" or "ITA"
    * @return type or null
    */
@@ -142,19 +136,15 @@ public interface SymmetryInterface {
 
   boolean isSupercell();
 
-  void newSpaceGroupPoint(P3d pt, int i, M4d o,
-                                          int transX, int transY, int transZ, P3d retPoint);
+  void newSpaceGroupPoint(P3d pt, int i, M4d o, int transX, int transY, int transZ, P3d retPoint);
 
-  BS notInCentroid(ModelSet modelSet, BS bsAtoms,
-                          int[] minmax);
+  BS notInCentroid(ModelSet modelSet, BS bsAtoms, int[] minmax);
 
   BS removeDuplicates(ModelSet ms, BS bs, boolean highPrec);
 
   V3d[] rotateAxes(int iop, V3d[] axes, P3d ptTemp, M3d mTemp);
 
-  void setFinalOperations(int dim, String name, P3d[] atoms,
-                                          int iAtomFirst,
-                                          int noSymmetryCount, boolean doNormalize, String filterSymop);
+  void setFinalOperations(int dim, String name, P3d[] atoms, int iAtomFirst, int noSymmetryCount, boolean doNormalize, String filterSymop);
 
   /**
    * set symmetry lattice type using Hall rotations
@@ -173,7 +163,6 @@ public interface SymmetryInterface {
   void setSpaceGroupName(String name);
 
   /**
-   * 
    * @param spaceGroup ITA number, ITA full name ("48:1")
    */
   void setSpaceGroupTo(Object spaceGroup);
@@ -192,8 +181,7 @@ public interface SymmetryInterface {
   
   void toFractionalM(M4d m);
 
-  boolean toFromPrimitive(boolean toPrimitive, char type, T3d[] oabc,
-                          M3d primitiveToCrystal);
+  boolean toFromPrimitive(boolean toPrimitive, char type, T3d[] oabc, M3d primitiveToCrystal);
 
   void toUnitCell(T3d pt, T3d offset);
 
@@ -225,11 +213,9 @@ public interface SymmetryInterface {
    * @param options could be T.offset
    * @return a variety of object types
    */
-  Object getSymmetryInfoAtom(ModelSet ms, int iatom, String xyz, int op,
-                                    P3d translation, P3d pt, P3d pt2, String id, int type, double scaleFactor, int nth, int options);
+  Object getSymmetryInfoAtom(ModelSet ms, int iatom, String xyz, int op, P3d translation, P3d pt, P3d pt2, String id, int type, double scaleFactor, int nth, int options);
 
   P3d toSupercell(P3d fpt);
-
 
   T3d getUnitCellMultiplier();
 
@@ -265,6 +251,4 @@ public interface SymmetryInterface {
   boolean isWithinUnitCell(P3d pt, double x, double y, double z);
 
   boolean checkPeriodic(P3d pt);
-
-
 }

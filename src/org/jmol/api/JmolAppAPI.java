@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 public interface JmolAppAPI {
-
   Dimension getHistoryWindowSize(String windowName);
 
   Point getHistoryWindowPosition(String windowName);
@@ -13,5 +12,4 @@ public interface JmolAppAPI {
   void addHistoryWindowInfo(String name, Component window, Point border);
 
   void addHistoryWindowDimInfo(String name, Component window, Dimension inner);
-
 }

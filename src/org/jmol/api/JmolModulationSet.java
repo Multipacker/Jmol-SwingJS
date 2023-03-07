@@ -6,37 +6,33 @@ import javajs.util.T3d;
 import javajs.util.V3d;
 
 public interface JmolModulationSet {
+	/**
+	 * @param type
+	 * @param t456
+	 * @param occ100 true for vibration visualization
+	 * @return point or (for occupancy) value
+	 */
+	Object getModulation(char type, T3d t456, boolean occ100);
 
-  /**
-   * 
-   * @param type
-   * @param t456
-   * @param occ100 true for vibration visualization
-   * @return point or (for occupancy) value
-   */
-  Object getModulation(char type, T3d t456, boolean occ100);
+	String getState();
 
-  String getState();
+	boolean isEnabled();
 
-  boolean isEnabled();
+	void setModTQ(T3d a, boolean isOn, T3d qtOffset, boolean isQ, double scale);
 
-  void setModTQ(T3d a, boolean isOn, T3d qtOffset, boolean isQ, double scale);
+	double getScale();
 
-  double getScale();
+	void addTo(T3d a, double scale);
 
-  void addTo(T3d a, double scale);
+	T3d getModPoint(boolean asEnabled);
 
-  T3d getModPoint(boolean asEnabled);
+	Vibration getVibration(boolean forceNew);
 
-  Vibration getVibration(boolean forceNew);
+	V3d getV3();
 
-  V3d getV3();
+	SymmetryInterface getSubSystemUnitCell();
 
-  SymmetryInterface getSubSystemUnitCell();
+	void scaleVibration(double m);
 
-  void scaleVibration(double m);
-
-  void setMoment();
-
-
+	void setMoment();
 }

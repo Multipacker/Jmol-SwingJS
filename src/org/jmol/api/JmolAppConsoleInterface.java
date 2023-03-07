@@ -3,26 +3,23 @@ package org.jmol.api;
 import org.jmol.viewer.Viewer;
 
 public interface JmolAppConsoleInterface {
+	public void setVisible(boolean b);
 
-  public void setVisible(boolean b);
+	public void sendConsoleEcho(String strEcho);
 
-  public void sendConsoleEcho(String strEcho);
+	public void sendConsoleMessage(String strInfo);
 
-  public void sendConsoleMessage(String strInfo);
+	public JmolScriptEditorInterface getScriptEditor();
 
-  public JmolScriptEditorInterface getScriptEditor();
+	public void start(Viewer vwr);
 
-  public void start(Viewer vwr);
+	public void zap();
 
-  public void zap();
+	public void dispose();
 
-  public void dispose();
+	public String getText();
 
-  public String getText();
+	public Object newJMenu(String key);
 
-  public Object newJMenu(String key);
-
-  public Object newJMenuItem(String key);
-
-
+	public Object newJMenuItem(String key);
 }

@@ -1,7 +1,6 @@
 package org.jmol.api;
 
 public interface GenericFileInterface {
-
   String getFullPath();
 
   String getName();
@@ -11,5 +10,4 @@ public interface GenericFileInterface {
   boolean isDirectory();
 
   GenericFileInterface getParentAsFile();
-
 }

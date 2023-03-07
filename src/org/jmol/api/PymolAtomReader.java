@@ -1,7 +1,6 @@
 package org.jmol.api;
 
 public interface PymolAtomReader {
-
   int getUniqueID(int iAtom);
 
   double getVDW(int iAtom);
@@ -11,6 +10,4 @@ public interface PymolAtomReader {
   int getSequenceNumber(int i);
 
   boolean compareAtoms(int iPrev, int i);
-  
-
 }

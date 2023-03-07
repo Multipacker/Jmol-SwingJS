@@ -1,7 +1,5 @@
 package org.jmol.api;
 
-
-
 import javajs.util.Lst;
 import javajs.util.P3d;
 
@@ -10,13 +8,11 @@ import org.jmol.modelset.Atom;
 import org.jmol.util.Node;
 
 public interface SmilesMatcherInterface {
-
   // Truly public
   
   public int areEqual(String smiles1, String smiles2) throws Exception;
 
-  public abstract int[][] find(String pattern,/* ...in... */String smiles,
-                                int flags) throws Exception;
+  public abstract int[][] find(String pattern,/* ...in... */String smiles, int flags) throws Exception;
 
   public abstract String getLastException();
 
@@ -27,13 +23,10 @@ public interface SmilesMatcherInterface {
   public abstract String reverseChirality(String smiles) throws Exception;
 
   public abstract String polyhedronToSmiles(Node center, int[][] faces, int atomCount, P3d[] points, int flags, String details) throws Exception;
-
   
   // Internal -- Jmol use only -- 
   
-  public abstract BS getSubstructureSet(String pattern, Node[] atoms,
-                                            int ac, BS bsSelected,
-                                            int flags) throws Exception;
+  public abstract BS getSubstructureSet(String pattern, Node[] atoms, int ac, BS bsSelected, int flags) throws Exception;
 
   public abstract BS[] getSubstructureSetArray(String pattern,
                                                    Node[] atoms,
@@ -42,15 +35,11 @@ public interface SmilesMatcherInterface {
                                                    BS bsAromatic,
                                                    int flags) throws Exception;
 
-  public abstract int[][] getCorrelationMaps(String pattern, Node[] atoms,
-                                             int ac, BS bsSelected,
-                                             int flags) throws Exception;
+  public abstract int[][] getCorrelationMaps(String pattern, Node[] atoms, int ac, BS bsSelected, int flags) throws Exception;
 
-  public abstract void getMMFF94AtomTypes(String[] smarts, Node[] atoms, int ac,
-                                           BS bsSelected, Lst<BS> bitSets, Lst<BS>[] vRings) throws Exception;
+  public abstract void getMMFF94AtomTypes(String[] smarts, Node[] atoms, int ac, BS bsSelected, Lst<BS> bitSets, Lst<BS>[] vRings) throws Exception;
 
-  public abstract String getSmiles(Node[] atoms, int ac, BS bsSelected,
-                                      String bioComment, int flags) throws Exception;
+  public abstract String getSmiles(Node[] atoms, int ac, BS bsSelected, String bioComment, int flags) throws Exception;
 
   public abstract String cleanSmiles(String smiles);
 
@@ -60,7 +49,5 @@ public interface SmilesMatcherInterface {
 
   public String getSmilesFromJME(String jmeFile);
 
-  int[] hasStructure(String smarts, String[] smilesSet, int flags)
-      throws Exception;
-
+  int[] hasStructure(String smarts, String[] smilesSet, int flags) throws Exception;
 }

@@ -15,5 +15,4 @@ public interface JmolFilesReaderInterface extends Runnable {
   public void set(FileManager fileManager, Viewer vwr, String[] fullPathNames,
            String[] namesAsGiven, String[] fileTypes, DataReader[] readers,
            Map<String, Object> htParams, boolean isAppend);
-
 }

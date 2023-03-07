@@ -48,10 +48,7 @@ import org.jmol.viewer.Viewer;
  * only for internal cross-package access, not for external use.
  * 
  * Note, this interface was changed to all double
- * 
- *
  **/
-
 abstract public class JmolViewer {
   // several methods were deprecated and removed in 13.1.15. All are accessible via "getXxxx" methods:
 
@@ -101,8 +98,6 @@ abstract public class JmolViewer {
                                           URL codeBase, String commandOptions,
                                           JmolStatusListener statusListener,
                                           GenericPlatform implementedPlatform) {
-    
-    
     
     Map<String, Object> info = new Hashtable<String, Object>();
     if (display != null)

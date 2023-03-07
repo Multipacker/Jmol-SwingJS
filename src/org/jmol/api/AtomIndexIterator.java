@@ -1,14 +1,11 @@
 package org.jmol.api;
 
-
-
 import org.jmol.atomdata.RadiusData;
 import javajs.util.BS;
 import org.jmol.modelset.ModelSet;
 
 import javajs.util.P3d;
 import javajs.util.T3d;
-
 
 /**
  * note: YOU MUST RELEASE THE ITERATOR

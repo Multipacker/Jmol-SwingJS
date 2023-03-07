@@ -8,7 +8,6 @@ import org.jmol.viewer.JmolStateCreator;
 import org.jmol.viewer.Viewer;
 
 public interface JmolDataManager {
-
   // data type flags
   
   public static final int DATA_TYPE_LAST = -2;
@@ -51,5 +50,4 @@ public interface JmolDataManager {
                int dataFieldColumnCount);
 
   Object[] createFileData(String strModel);
-
 }

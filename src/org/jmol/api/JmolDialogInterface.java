@@ -5,7 +5,6 @@ import java.util.Map;
 import org.jmol.viewer.Viewer;
 
 public interface JmolDialogInterface {
-
   public abstract void setupUI(boolean forceNewTranslation);
 
   /**
@@ -27,8 +26,7 @@ public interface JmolDialogInterface {
                                                    String windowName,
                                                    boolean allowAppend);
 
-  public abstract String getSaveFileNameFromDialog(Viewer vwr,
-                                                   String data, String type);
+  public abstract String getSaveFileNameFromDialog(Viewer vwr, String data, String type);
 
   public abstract String getImageFileNameFromDialog(Viewer vwr,
                                                     String fileName,
@@ -38,10 +36,7 @@ public interface JmolDialogInterface {
                                                     int qualityJPG,
                                                     int qualityPNG);
 
-  public abstract void setImageInfo(int qualityJPG, int qualityPNG,
-                                    String imageType);
+  public abstract void setImageInfo(int qualityJPG, int qualityPNG, String imageType);
 
-  public abstract String getFileNameFromDialog(Viewer vwr, String dialogType,
-                                               String inputFileName);
-
+  public abstract String getFileNameFromDialog(Viewer vwr, String dialogType, String inputFileName);
 }

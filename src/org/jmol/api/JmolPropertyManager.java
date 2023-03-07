@@ -1,6 +1,5 @@
 package org.jmol.api;
 
-
 import java.util.Map;
 
 import javajs.util.BS;
@@ -11,7 +10,6 @@ import javajs.util.OC;
 import org.jmol.viewer.Viewer;
 
 public interface JmolPropertyManager {
-
   void setViewer(Viewer vwr);
 
   Object getProperty(String returnType, String infoType, Object paramInfo);
@@ -32,19 +30,15 @@ public interface JmolPropertyManager {
 
   String getChimeInfo(int tok, BS selectionSet);
 
-  String getModelExtract(BS atomBitSet, boolean doTransform, boolean isModelKit,
-                         String type, boolean allTrajectories);
+  String getModelExtract(BS atomBitSet, boolean doTransform, boolean isModelKit, String type, boolean allTrajectories);
 
   String getPdbAtomData(BS bs, OC out, boolean asPQR, boolean doTransform, boolean allTrajectories);
 
-  String getPdbData(int modelIndex, String type, BS bsA, Object[] parameters,
-                    OC oc, boolean addStructure);
+  String getPdbData(int modelIndex, String type, BS bsA, Object[] parameters, OC oc, boolean addStructure);
 
   String getModelCml(BS bs, int nAtomsMax, boolean addBonds, boolean doTransform, boolean allTrajectories);
 
   String getAtomData(String atomExpression, String type, boolean allTrajectories);
 
   String fixJMEFormalCharges(BS bsAtoms, String s);
-
-
 }

@@ -7,9 +7,7 @@ package org.jmol.api;
  * updated. (SwingComponents in javajs are subclasses of AbstractButton.)
  * 
  */
-
 public interface SC {
-
   void add(SC item);
 
   void addActionListener(Object owner);
@@ -61,5 +59,4 @@ public interface SC {
   void setSelected(boolean state);
 
   void setText(String entry);
-
 }

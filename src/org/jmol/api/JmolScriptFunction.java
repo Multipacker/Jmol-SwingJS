@@ -1,7 +1,6 @@
 package org.jmol.api;
 
 public interface JmolScriptFunction {
-
   Object geTokens();
 
   String getSignature();
@@ -9,5 +8,4 @@ public interface JmolScriptFunction {
   String getName();
 
   int getTok();
-
 }

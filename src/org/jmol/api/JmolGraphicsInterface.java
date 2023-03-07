@@ -3,7 +3,6 @@ package org.jmol.api;
 import javajs.util.P3i;
 
 public interface JmolGraphicsInterface {
-
   public abstract boolean isAntialiased();
 
   public abstract boolean isClippedXY(int diameter, int screenX, int screenY);
@@ -17,5 +16,4 @@ public interface JmolGraphicsInterface {
   public abstract void setSlabAndZShade(int slabValue, int depthValue, int zSlab, int zDepth, int zPower);
 
   public abstract void drawLinePixels(P3i sA, P3i sB, int z, int zslab);
-
 }

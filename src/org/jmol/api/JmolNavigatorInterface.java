@@ -1,41 +1,30 @@
 package org.jmol.api;
 
-
-
 import javajs.util.Lst;
 import javajs.util.V3d;
 import org.jmol.viewer.TransformManager;
 import org.jmol.viewer.Viewer;
 
 public interface JmolNavigatorInterface extends Runnable {
+	void set(TransformManager transformManager, Viewer vwr);
 
-  void set(TransformManager transformManager, Viewer vwr);
+	void zoomByFactor(double factor, int x, int y);
 
-//  void navigateTo(double floatSecondsTotal, V3 axis, double degrees,
-//                  P3 center, double depthPercent, double xTrans, double yTrans);
-//
-//  void navigate(double seconds, P3[][] pathGuide, P3[] path,
-//                double[] theta, int indexStart, int indexEnd);
+	void calcNavigationPoint();
 
-  void zoomByFactor(double factor, int x, int y);
+	void setNavigationOffsetRelative();//boolean navigatingSurface);
 
-  void calcNavigationPoint();
+	void navigateKey(int keyCode, int modifiers);
 
-  void setNavigationOffsetRelative();//boolean navigatingSurface);
+	void navigateList(JmolScriptEvaluator eval, Lst<Object[]> list);
 
-  void navigateKey(int keyCode, int modifiers);
+	void navigateAxis(V3d rotAxis, double degrees);
 
-  void navigateList(JmolScriptEvaluator eval, Lst<Object[]> list);
+	void setNavigationDepthPercent(double percent);
 
-  void navigateAxis(V3d rotAxis, double degrees);
+	String getNavigationState();
 
-  void setNavigationDepthPercent(double percent);
+	void navTranslatePercentOrTo(double seconds, double x, double y);
 
-  String getNavigationState();
-
-  void navTranslatePercentOrTo(double seconds, double x, double y);
-
-  void interrupt();
-
-
+	void interrupt();
 }

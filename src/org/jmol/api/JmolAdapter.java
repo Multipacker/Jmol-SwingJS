@@ -155,14 +155,11 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
    * @return The atomSetCollection or String with an error message
    */
 
-  abstract public Object getAtomSetCollectionReaders(JmolFilesReaderInterface fileReader, String[] names, String[] types,
-                                    Map<String, Object> htParams, boolean getReadersOnly);
+  abstract public Object getAtomSetCollectionReaders(JmolFilesReaderInterface fileReader, String[] names, String[] types, Map<String, Object> htParams, boolean getReadersOnly);
 
   abstract public Object getAtomSetCollectionFromSet(Object readers, Object atomSets, Map<String, Object> htParams);
 
-  abstract public Object getAtomSetCollectionFromReader(String fname,
-                                                        Object reader, Map<String, Object> htParams) throws Exception;
-              
+  abstract public Object getAtomSetCollectionFromReader(String fname, Object reader, Map<String, Object> htParams) throws Exception;
 
   /**
    * all in one -- for TestSmarterJmolAdapter
@@ -173,15 +170,12 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
    * @param htParams
    * @return AtomSetCollection or error string
    */
-  public Object getAtomSetCollectionFromReaderType(String name, String type,
-                                                   Object bufferedReader,
-                                                   Map<String, Object> htParams) {
+  public Object getAtomSetCollectionFromReaderType(String name, String type, Object bufferedReader, Map<String, Object> htParams) {
     // vwr is now needed for CIF and GenNBO file reading
-    Object a = getAtomSetCollectionReader(name, type, bufferedReader,
-        ((Viewer) JmolViewer.allocateViewer(null, this)).setLoadParameters(
-            htParams, false));
-    if (a instanceof String)
+    Object a = getAtomSetCollectionReader(name, type, bufferedReader, ((Viewer) JmolViewer.allocateViewer(null, this)).setLoadParameters(htParams, false));
+    if (a instanceof String) {
       return a;
+	}
     return getAtomSetCollection(a);
   }
 
@@ -197,16 +191,12 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
     return getAtomSetCollectionFromReaderType(name, null, bufferedReader, htParams);
   }
 
-  public Object openBufferedReader(String name, String type,
-                                   BufferedReader bufferedReader) {
+  public Object openBufferedReader(String name, String type, BufferedReader bufferedReader) {
     return getAtomSetCollectionFromReaderType(name, type, bufferedReader, null);
   }
 
   abstract public Object getAtomSetCollectionFromDOM(Object DOMNode, Map<String, Object> htParams);
 
-  /**
-   * @param atomSetCollection 
-   */
   abstract public void finish(Object atomSetCollection);
 
   /**
@@ -337,15 +327,8 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
    */
   abstract public JmolAdapterBondIterator getBondIterator(Object atomSetCollection);
 
-  /**
-   * Get a StructureIterator.
-   * @param atomSetCollection The client file
-   * @return A StructureIterator or <code>null</code>
-   */
-
   abstract public JmolAdapterStructureIterator getStructureIterator(Object atomSetCollection);
 
-  
   //////////////////////////////////////////////////////////////////
   // range-checking routines
   /////////////////////////////////////////////////////////////////
@@ -353,10 +336,6 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
   private final static char canonizeAlphaDigit(char ch) {
     return (PT.isLetterOrDigit(ch) ? ch : '\0');
   }
-
-//  public final static char canonizeChainID(char chainID) {
-//    return canonizeAlphaDigit(chainID);
-//  }
 
   public final static char canonizeInsertionCode(char insertionCode) {
     return canonizeAlphaDigit(insertionCode);
@@ -366,5 +345,4 @@ abstract public Object getAtomSetCollection(Object atomSetCollectionReader);
     // pdb altLoc
     return canonizeAlphaDigit(altLoc);
   }
-
 }
