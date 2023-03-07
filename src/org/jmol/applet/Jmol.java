@@ -45,7 +45,7 @@ import swingjs.api.JSUtilI;
 
 /*
  * This applet is produced in both Java and JavaScript using 
- * java2script/SwingJS. org.jmol.appletjs.Jmol is for the legacy JSmol only.
+ * java2script/SwingJS.
  * 
  * all parameters are optional:
  * 
