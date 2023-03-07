@@ -16,12 +16,8 @@ import javajs.util.Rdr;
 
 /**
  * open a set of models residing in different files
- * 
  */
 public class FilesReader implements JmolFilesReaderInterface {
-  /**
-   * 
-   */
   private FileManager fm;
   private Viewer vwr;
   private String[] fullPathNamesIn;
@@ -51,17 +47,14 @@ public class FilesReader implements JmolFilesReaderInterface {
 
   @Override
   public void run() {
-
     if (!isAppend && vwr.displayLoadErrors)
       vwr.zap(false, true, false);
 
     boolean getReadersOnly = !vwr.displayLoadErrors;
-    atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionReaders(
-        this, fullPathNamesIn, fileTypesIn, htParams, getReadersOnly);
+    atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionReaders(this, fullPathNamesIn, fileTypesIn, htParams, getReadersOnly);
     dataReaders = null;
     if (getReadersOnly && !(atomSetCollection instanceof String)) {
-      atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionFromSet(
-          atomSetCollection, null, htParams);
+      atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionFromSet(atomSetCollection, null, htParams);
     }
     if (atomSetCollection instanceof String) {
       Logger.error("file ERROR: " + atomSetCollection);
@@ -77,45 +70,41 @@ public class FilesReader implements JmolFilesReaderInterface {
    * called by SmartJmolAdapter to request another buffered reader or binary
    * document, rather than opening all the readers at once.
    * 
-   * @param i
-   *        the reader index
+   * @param i the reader index
    * @param forceInputStream
    * @return a BufferedReader or null in the case of an error
-   * 
    */
   @Override
   public Object getBufferedReaderOrBinaryDocument(int i, boolean forceInputStream) {
-    if (dataReaders != null)
+    if (dataReaders != null) {
       return (forceInputStream ? null : dataReaders[i].getBufferedReader()); // no binary strings
+	}
+
     String name = fullPathNamesIn[i];
-//    String[] subFileList = null;
-//    htParams.remove("subFileList");
-//    if (name.indexOf("|") >= 0 && !htParams.containsKey("isStateScript")) {
-//      subFileList = PT.split(name, "|");
-//      name = subFileList[0];
-//    }
-    if (name.contains("#_DOCACHE_"))
+    if (name.contains("#_DOCACHE_")) {
       return FileReader.getChangeableReader(vwr, namesAsGivenIn[i], name);
-    Object t = fm.getUnzippedReaderOrStreamFromName(name, null, false,
-        forceInputStream, false, true, htParams);
+	}
+
+    Object t = fm.getUnzippedReaderOrStreamFromName(name, null, false, forceInputStream, false, true, htParams);
     if (t instanceof BufferedInputStream && Rdr.isZipS((BufferedInputStream) t)) {
-//      if (subFileList != null)
-//        htParams.put("subFileList", subFileList);
       String[] zipDirectory = fm.getZipDirectory(name, true, true);
-      t = fm.getBufferedInputStreamOrErrorMessageFromName(name,
-          fullPathNamesIn[i], false, false, null, false, true);
-      t = fm.getJzu().getAtomSetCollectionOrBufferedReaderFromZip(vwr,
-          (BufferedInputStream) t, name, zipDirectory, htParams, 1, true);
+      t = fm.getBufferedInputStreamOrErrorMessageFromName(name, fullPathNamesIn[i], false, false, null, false, true);
+      t = fm.getJzu().getAtomSetCollectionOrBufferedReaderFromZip(vwr, (BufferedInputStream) t, name, zipDirectory, htParams, 1, true);
     }
-    return (t instanceof BufferedInputStream ? ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream(
-        (BufferedInputStream) t, true) : t instanceof BufferedReader
-        || t instanceof GenericBinaryDocument ? t
-        : t == null ? "error opening:" + namesAsGivenIn[i] : (String) t);
+
+	if (t instanceof BufferedInputStream) {
+      return ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream((BufferedInputStream) t, true);
+	} else if (t instanceof BufferedReader || t instanceof GenericBinaryDocument) {
+      return t;
+	} else if (t == null) {
+      return "error opening:" + namesAsGivenIn[i];
+	} else {
+      return (String) t;
+	}
   }
 
   @Override
   public Object getAtomSetCollection() {
     return atomSetCollection;
   }
-
 }

@@ -43,9 +43,6 @@ import javajs.util.PT;
 import javajs.util.Rdr;
 
 public class FileReader {
-  /**
-   * 
-   */
   private final Viewer vwr;
   private String fileNameIn;
   private String fullPathNameIn;
@@ -58,7 +55,6 @@ public class FileReader {
   private Object bytesOrStream;
 
   /**
-   * 
    * @param vwr
    * @param fileName  "t.xyz" may be null
    * @param fullPathName "c:\temp\t.xyz" may be null
@@ -68,9 +64,7 @@ public class FileReader {
    * @param htParams information for file reader
    * @param isAppend append to current models or not
    */
-  public FileReader(Viewer vwr, String fileName,
-      String fullPathName, String nameAsGiven, String type, Object reader,
-      Map<String, Object> htParams, boolean isAppend) {
+  public FileReader(Viewer vwr, String fileName, String fullPathName, String nameAsGiven, String type, Object reader, Map<String, Object> htParams, boolean isAppend) {
     this.vwr = vwr;
     fileNameIn = (fileName == null ? fullPathName : fileName);
     fullPathNameIn = (fullPathName == null ? fileNameIn : fullPathName);
@@ -82,8 +76,7 @@ public class FileReader {
         // for any file type.
         bytesOrStream = reader;
         reader = null;
-      } else if (reader instanceof Reader
-          && !(reader instanceof BufferedReader)) {
+      } else if (reader instanceof Reader && !(reader instanceof BufferedReader)) {
         reader = new BufferedReader((Reader) reader);
       }
     }
@@ -101,11 +94,9 @@ public class FileReader {
       readerOrDocument = getChangeableReader(vwr, nameAsGivenIn, fullPathNameIn);
     if (readerOrDocument == null) {
       // note that since bytes comes from reader, bytes will never be non-null here
-           t = vwr.fm.getUnzippedReaderOrStreamFromName(fullPathNameIn,
-          bytesOrStream, true, false, false, true, htParams);
+           t = vwr.fm.getUnzippedReaderOrStreamFromName(fullPathNameIn, bytesOrStream, true, false, false, true, htParams);
       if (t == null || t instanceof String) {
-        errorMessage = (t == null ? "error opening:" + nameAsGivenIn
-            : (String) t);
+        errorMessage = (t == null ? "error opening:" + nameAsGivenIn : (String) t);
         if (!errorMessage.startsWith("NOTE:"))
           Logger.error("file ERROR: " + fullPathNameIn + "\n" + errorMessage);
         atomSetCollection = errorMessage;
@@ -136,11 +127,9 @@ public class FileReader {
     if (t instanceof BufferedInputStream)
       readerOrDocument = ((GenericBinaryDocument) new javajs.util.BinaryDocument()).setStream((BufferedInputStream) t, !htParams.containsKey("isLittleEndian"));
     if (readerOrDocument != null) {
-      atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionReader(
-          fullPathNameIn, fileTypeIn, readerOrDocument, htParams);
+      atomSetCollection = vwr.getModelAdapter().getAtomSetCollectionReader(fullPathNameIn, fileTypeIn, readerOrDocument, htParams);
       if (!(atomSetCollection instanceof String))
-        atomSetCollection = vwr.getModelAdapter().getAtomSetCollection(
-            atomSetCollection);
+        atomSetCollection = vwr.getModelAdapter().getAtomSetCollection(atomSetCollection);
       try {
         if (readerOrDocument instanceof BufferedReader)
           ((BufferedReader) readerOrDocument).close();
@@ -160,14 +149,11 @@ public class FileReader {
     vwr.fm.setFileInfo(new String[] { fullPathNameIn, fileNameIn, nameAsGivenIn });
   }
   
-  final static BufferedReader getChangeableReader(Viewer vwr, 
-                               String nameAsGivenIn, String fullPathNameIn) {
+  final static BufferedReader getChangeableReader(Viewer vwr, String nameAsGivenIn, String fullPathNameIn) {
     return Rdr.getBR((String) vwr.getLigandModel(nameAsGivenIn, fullPathNameIn, "_file", null));
   }
 
   public Object getAtomSetCollection() {
     return atomSetCollection;
   }
-
-
 }

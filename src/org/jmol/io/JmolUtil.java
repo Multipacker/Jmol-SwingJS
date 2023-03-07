@@ -53,7 +53,6 @@ import org.jmol.viewer.JC;
 import org.jmol.viewer.Viewer;
 
 public class JmolUtil {
-
   public JmolUtil() {
     // for reflection
   }
@@ -63,8 +62,7 @@ public class JmolUtil {
   //  getAtomSetCollectionOrBufferedReaderFromZip
   //  getCachedPngjBytes
   
-  public Object getImage(Viewer vwr, Object fullPathNameOrBytes,
-                         String echoName, boolean forceSync) {
+  public Object getImage(Viewer vwr, Object fullPathNameOrBytes, String echoName, boolean forceSync) {
     Object image = null;
     Object info = null;
     GenericPlatform apiPlatform = vwr.apiPlatform;
@@ -75,25 +73,28 @@ public class JmolUtil {
       // previously we were loading images 
       if (forceSync || fullPathName.indexOf("|") > 0 || isBMP) {
         Object ret = vwr.fm.getFileAsBytes(fullPathName, null);
-        if (!AU.isAB(ret))
+        if (!AU.isAB(ret)) {
           return "" + ret;
+		}
         // converting bytes to an image in JavaScript is a synchronous process
-        if (vwr.isJSNoAWT)
+        if (vwr.isJSNoAWT) {
           info = new Object[] { echoName, fullPathNameOrBytes, ret };
-        else
+		} else {
           image = apiPlatform.createImage(ret);
+		}
       } else if (OC.urlTypeIndex(fullPathName) >= 0) {
         // if JavaScript returns an image, than it must have been cached, and 
         // the call was not asynchronous after all.
-        if (vwr.isJSNoAWT)
+        if (vwr.isJSNoAWT) {
           info = new Object[] { echoName, fullPathNameOrBytes, null };
-        else
+		} else {
           try {
             image = apiPlatform.createImage(new URL((URL) null, fullPathName,
                 null));
           } catch (Exception e) {
             return "bad URL: " + fullPathName;
           }
+		}
       } else {
         createImage = true;
       }
@@ -101,18 +102,15 @@ public class JmolUtil {
       // not sure that this can work. 
       // ensure that apiPlatform.createImage is called
       //
-      info = new Object[] { echoName,
-          Rdr.guessMimeTypeForBytes((byte[]) fullPathNameOrBytes),
-          fullPathNameOrBytes };
+      info = new Object[] { echoName, Rdr.guessMimeTypeForBytes((byte[]) fullPathNameOrBytes), fullPathNameOrBytes };
     } else {
       createImage = true;
     }
-    if (createImage)
-      image = apiPlatform
-          .createImage("\1close".equals(fullPathNameOrBytes) ? "\1close"
-              + echoName : fullPathNameOrBytes);
-    else if (info != null) // JavaScript only
+    if (createImage) {
+      image = apiPlatform.createImage("\1close".equals(fullPathNameOrBytes) ? "\1close" + echoName : fullPathNameOrBytes);
+	} else if (info != null) { // JavaScript only
       image = apiPlatform.createImage(info);
+	}
 
     /**
      * 
@@ -122,14 +120,14 @@ public class JmolUtil {
      * 
      */
     {
-      if (image == null)
+      if (image == null) {
         return null;
+	  }
       try {
-        if (!apiPlatform.waitForDisplay(info, image))
+        if (!apiPlatform.waitForDisplay(info, image)) {
           return null;
-        return (apiPlatform.getImageWidth(image) < 1 ? "invalid or missing image "
-            + fullPathName
-            : image);
+		}
+        return (apiPlatform.getImageWidth(image) < 1 ? "invalid or missing image " + fullPathName : image);
       } catch (Exception e) {
         return e.toString() + " opening " + fullPathName;
       }
@@ -166,35 +164,39 @@ public class JmolUtil {
     boolean doCombine = (subFilePtr == 1);
     htParams.put("zipSet", fileName);
     String[] subFileList = (String[]) htParams.get("subFileList");
-    if (subFileList == null)
+    if (subFileList == null) {
       subFileList = getSpartanSubfiles(zipDirectory);
-    String subFileName = (subFileList == null
-        || subFilePtr >= subFileList.length ? (String) htParams.get("SubFileName") : subFileList[subFilePtr]);
-    if (subFileName != null
-        && (subFileName.startsWith("/") || subFileName.startsWith("\\")))
+	}
+    String subFileName = (subFileList == null || subFilePtr >= subFileList.length ? (String) htParams.get("SubFileName") : subFileList[subFilePtr]);
+    if (subFileName != null && (subFileName.startsWith("/") || subFileName.startsWith("\\"))) {
       subFileName = subFileName.substring(1);
+	}
     int selectedFile = 0;
     if (subFileName == null && htParams.containsKey("modelNumber")) {
       selectedFile = ((Integer) htParams.get("modelNumber")).intValue();
-      if (selectedFile > 0 && doCombine)
+      if (selectedFile > 0 && doCombine) {
         htParams.remove("modelNumber");
+	  }
     }
 
     // zipDirectory[0] is the manifest if present
     String manifest = (String) htParams.get("manifest");
     boolean useFileManifest = (manifest == null);
-    if (useFileManifest)
+    if (useFileManifest) {
       manifest = (zipDirectory.length > 0 ? zipDirectory[0] : "");
+	}
     boolean haveManifest = (manifest.length() > 0);
     if (haveManifest) {
-      if (Logger.debugging)
+      if (Logger.debugging) {
         Logger.debug("manifest for  " + fileName + ":\n" + manifest);
+	  }
     }
     boolean ignoreErrors = (manifest.indexOf("IGNORE_ERRORS") >= 0);
     boolean selectAll = (manifest.indexOf("IGNORE_MANIFEST") >= 0);
     boolean exceptFiles = (manifest.indexOf("EXCEPT_FILES") >= 0);
-    if (selectAll || subFileName != null)
+    if (selectAll || subFileName != null) {
       haveManifest = false;
+	}
     if (useFileManifest && haveManifest) {
       String path = FileManager.getManifestScriptPath(manifest);
       if (path != null) {
@@ -202,92 +204,96 @@ public class JmolUtil {
       }
     }
     Lst<Object> vCollections = new Lst<Object>();
-    Map<String, Object> htCollections = (haveManifest ? new Hashtable<String, Object>()
-        : null);
+    Map<String, Object> htCollections = (haveManifest ? new Hashtable<String, Object>() : null);
     int nFiles = 0;
     // 0 entry is manifest
 
     try {
-      SB spartanData = (isSpartanZip(zipDirectory) ? vwr.fm.spartanUtil()
-          .getData(is, zipDirectory) : null);
+      SB spartanData = (isSpartanZip(zipDirectory) ? vwr.fm.spartanUtil().getData(is, zipDirectory) : null);
       Object ret;
       if (spartanData != null) {
         BufferedReader reader = Rdr.getBR(spartanData.toString());
-        if (asBufferedReader)
+        if (asBufferedReader) {
           return reader;
-        ret = adapter
-            .getAtomSetCollectionFromReader(fileName, reader, htParams);
-        if (ret instanceof String)
+		}
+        ret = adapter.getAtomSetCollectionFromReader(fileName, reader, htParams);
+        if (ret instanceof String) {
           return ret;
+		}
         if (ret instanceof AtomSetCollection) {
           AtomSetCollection atomSetCollection = (AtomSetCollection) ret;
           if (atomSetCollection.errorMessage != null) {
-            if (ignoreErrors)
+            if (ignoreErrors) {
               return null;
+			}
             return atomSetCollection.errorMessage;
           }
           return atomSetCollection;
         }
-        if (ignoreErrors)
+        if (ignoreErrors) {
           return null;
+		}
         return "unknown reader error";
       }
-      if (is instanceof BufferedInputStream && Rdr.isPngZipStream(is))
+      if (is instanceof BufferedInputStream && Rdr.isPngZipStream(is)) {
         is = ZipTools.getPngZipStream((BufferedInputStream) is, true);
+	  }
       ZipInputStream zis = ZipTools.newZipInputStream(is);
       ZipEntry ze;
       if (haveManifest)
         manifest = '|' + manifest.replace('\r', '|').replace('\n', '|') + '|';
-      while ((ze = zis.getNextEntry()) != null
-          && (selectedFile <= 0 || vCollections.size() < selectedFile)) {
-        if (ze.isDirectory())
+      while ((ze = zis.getNextEntry()) != null && (selectedFile <= 0 || vCollections.size() < selectedFile)) {
+        if (ze.isDirectory()) {
           continue;
+		}
         String thisEntry = ze.getName();
-        if (subFileName != null && !thisEntry.equals(subFileName))
+        if (subFileName != null && !thisEntry.equals(subFileName)) {
           continue;
-        if (subFileName != null)
+		}
+        if (subFileName != null) {
           htParams.put("subFileName", subFileName);
-        if (thisEntry.startsWith("JmolManifest") || haveManifest
-            && exceptFiles == manifest.indexOf("|" + thisEntry + "|") >= 0)
+		}
+        if (thisEntry.startsWith("JmolManifest") || haveManifest && exceptFiles == manifest.indexOf("|" + thisEntry + "|") >= 0) {
           continue;
+		}
         byte[] bytes = Rdr.getLimitedStreamBytes(zis, ze.getSize());
-        //        String s = new String(bytes);
-        //System.out.println("ziputil " + s.substring(0, 100));
-        if (Rdr.isGzipB(bytes))
-          bytes = Rdr.getLimitedStreamBytes(ZipTools.getUnGzippedInputStream(bytes),
-              -1);
+        if (Rdr.isGzipB(bytes)) {
+          bytes = Rdr.getLimitedStreamBytes(ZipTools.getUnGzippedInputStream(bytes), -1);
+		}
         if (Rdr.isZipB(bytes) || Rdr.isPngZipB(bytes)) {
           BufferedInputStream bis = Rdr.getBIS(bytes);
           String[] zipDir2 = ZipTools.getZipDirectoryAndClose(bis, "JmolManifest");
           bis = Rdr.getBIS(bytes);
-          Object atomSetCollections = getAtomSetCollectionOrBufferedReaderFromZip(
-              vwr, bis, fileName + "|" + thisEntry, zipDir2, htParams,
-              ++subFilePtr, asBufferedReader);
+          Object atomSetCollections = getAtomSetCollectionOrBufferedReaderFromZip(vwr, bis, fileName + "|" + thisEntry, zipDir2, htParams, ++subFilePtr, asBufferedReader);
           if (atomSetCollections instanceof String) {
-            if (ignoreErrors)
+            if (ignoreErrors) {
               continue;
+			}
             return atomSetCollections;
-          } else if (atomSetCollections instanceof AtomSetCollection
-              || atomSetCollections instanceof Lst<?>) {
-            if (haveManifest && !exceptFiles)
+          } else if (atomSetCollections instanceof AtomSetCollection || atomSetCollections instanceof Lst<?>) {
+            if (haveManifest && !exceptFiles) {
               htCollections.put(thisEntry, atomSetCollections);
-            else
+			} else {
               vCollections.addLast(atomSetCollections);
+			}
           } else if (atomSetCollections instanceof BufferedReader) {
-            if (doCombine)
+            if (doCombine) {
               zis.close();
+			}
             return atomSetCollections; // FileReader has requested a zip file
             // BufferedReader
           } else {
-            if (ignoreErrors)
+            if (ignoreErrors) {
               continue;
+			}
             zis.close();
             return "unknown zip reader error";
           }
         } else if (Rdr.isPickleB(bytes)) {
           BufferedInputStream bis = Rdr.getBIS(bytes);
-          if (doCombine)
+          if (doCombine) {
             zis.close();
+		  }
           return bis;
         } else {
           String sData;
@@ -301,8 +307,9 @@ public class JmolUtil {
           }
           BufferedReader reader = Rdr.getBR(sData);
           if (asBufferedReader) {
-            if (doCombine)
+            if (doCombine) {
               zis.close();
+			}
             return reader;
           }
           String fname = fileName + "|" + ze.getName();
@@ -310,27 +317,31 @@ public class JmolUtil {
           ret = adapter.getAtomSetCollectionFromReader(fname, reader, htParams);
 
           if (!(ret instanceof AtomSetCollection)) {
-            if (ignoreErrors)
+            if (ignoreErrors) {
               continue;
+			}
             zis.close();
             return "" + ret;
           }
-          if (haveManifest && !exceptFiles)
+          if (haveManifest && !exceptFiles) {
             htCollections.put(thisEntry, ret);
-          else
+		  } else {
             vCollections.addLast(ret);
+		  }
           AtomSetCollection a = (AtomSetCollection) ret;
           if (a.errorMessage != null) {
-            if (ignoreErrors)
+            if (ignoreErrors) {
               continue;
+			}
             zis.close();
             return a.errorMessage;
           }
         }
       }
 
-      if (doCombine)
+      if (doCombine) {
         zis.close();
+	  }
 
       // if a manifest exists, it sets the files and file order
 
@@ -338,35 +349,39 @@ public class JmolUtil {
         String[] list = PT.split(manifest, "|");
         for (int i = 0; i < list.length; i++) {
           String file = list[i];
-          if (file.length() == 0 || file.indexOf("#") == 0)
+          if (file.length() == 0 || file.indexOf("#") == 0) {
             continue;
-          if (htCollections.containsKey(file))
+		  }
+          if (htCollections.containsKey(file)) {
             vCollections.addLast(htCollections.get(file));
-          else if (Logger.debugging)
-            Logger.debug("manifested file " + file + " was not found in "
-                + fileName);
+		  } else if (Logger.debugging) {
+            Logger.debug("manifested file " + file + " was not found in " + fileName);
+		  }
         }
       }
-      if (!doCombine)
+      if (!doCombine) {
         return vCollections;
+	  }
 
-      AtomSetCollection result = (vCollections.size() == 1
-          && vCollections.get(0) instanceof AtomSetCollection ? (AtomSetCollection) vCollections
-          .get(0) : new AtomSetCollection("Array", null, null, vCollections));
+      AtomSetCollection result = (vCollections.size() == 1 && vCollections.get(0) instanceof AtomSetCollection ? (AtomSetCollection) vCollections.get(0) : new AtomSetCollection("Array", null, null, vCollections));
       if (result.errorMessage != null) {
-        if (ignoreErrors)
+        if (ignoreErrors) {
           return null;
+		}
         return result.errorMessage;
       }
-      if (nFiles == 1)
+      if (nFiles == 1) {
         selectedFile = 1;
-      if (selectedFile > 0 && selectedFile <= vCollections.size())
+	  }
+      if (selectedFile > 0 && selectedFile <= vCollections.size()) {
         return vCollections.get(selectedFile - 1);
+	  }
       return result;
 
     } catch (Exception e) {
-      if (ignoreErrors)
+      if (ignoreErrors) {
         return null;
+	  }
       Logger.error("" + e);
       return "" + e;
     } catch (Error er) {
@@ -383,83 +398,80 @@ public class JmolUtil {
    * @return byte array
    */
   public byte[] getCachedPngjBytes(FileManager fm, String pathName) {
-    if (pathName.startsWith("file:///"))
+    if (pathName.startsWith("file:///")) {
       pathName = "file:" + pathName.substring(7);
+	}
     Logger.info("JmolUtil checking PNGJ cache for " + pathName);
     String shortName = shortSceneFilename(pathName);
-    if (fm.pngjCache == null
-        && !clearAndCachePngjFile(fm, new String[] { pathName, null }))
+    if (fm.pngjCache == null && !clearAndCachePngjFile(fm, new String[] { pathName, null })) {
       return null;
+	}
     Map<String, Object> cache = fm.pngjCache;
     boolean isMin = (pathName.indexOf(".min.") >= 0);
     if (!isMin) {
       String cName = fm.getCanonicalName(Rdr.getZipRoot(pathName));
-      if (!cache.containsKey(cName)
-          && !clearAndCachePngjFile(fm, new String[] { pathName, null }))
+      if (!cache.containsKey(cName) && !clearAndCachePngjFile(fm, new String[] { pathName, null })) {
         return null;
-      if (pathName.indexOf("|") < 0)
+	  }
+      if (pathName.indexOf("|") < 0) {
         shortName = cName;
+	  }
     }
     if (cache.containsKey(shortName)) {
       Logger.info("FileManager using memory cache " + shortName);
       return (byte[]) fm.pngjCache.get(shortName);
     }
-    //    for (String key : pngjCache.keySet())
-    //System.out.println(" key=" + key);
-    //System.out.println("FileManager memory cache size=" + pngjCache.size()
-    //  + " did not find " + pathName + " as " + shortName);
-    if (!isMin || !clearAndCachePngjFile(fm, new String[] { pathName, null }))
+    if (!isMin || !clearAndCachePngjFile(fm, new String[] { pathName, null })) {
       return null;
+	}
     Logger.info("FileManager using memory cache " + shortName);
     return (byte[]) cache.get(shortName);
   }
 
   private boolean clearAndCachePngjFile(FileManager fm, String[] data) {
     fm.pngjCache = new Hashtable<String, Object>();
-    if (data == null || data[0] == null)
+    if (data == null || data[0] == null) {
       return false;
+	}
     data[0] = Rdr.getZipRoot(data[0]);
     String shortName = shortSceneFilename(data[0]);
     Map<String, Object> cache = fm.pngjCache;
     try {
-      data[1] = ZipTools.cacheZipContents(
-          ZipTools.getPngZipStream((BufferedInputStream) fm
-              .getBufferedInputStreamOrErrorMessageFromName(data[0], null,
-                  false, false, null, false, true), true), shortName, cache,
-          false);
+      data[1] = ZipTools.cacheZipContents(ZipTools.getPngZipStream((BufferedInputStream) fm.getBufferedInputStreamOrErrorMessageFromName(data[0], null, false, false, null, false, true), true), shortName, cache, false);
     } catch (Exception e) {
       return false;
     }
-    if (data[1] == null)
+    if (data[1] == null) {
       return false;
+	}
     byte[] bytes = data[1].getBytes();
     //System.out.println("jmolutil caching " + bytes.length + " bytes as " + fm.getCanonicalName(data[0]));
     cache.put(fm.getCanonicalName(data[0]), bytes); // marker in case the .all. file is changed
     if (shortName.indexOf("_scene_") >= 0) {
       cache.put(shortSceneFilename(data[0]), bytes); // good for all .min. files of this scene set
       bytes = (byte[]) cache.remove(shortName + "|state.spt");
-      if (bytes != null)
+      if (bytes != null) {
         cache.put(shortSceneFilename(data[0] + "|state.spt"), bytes);
+	  }
     }
-    //for (String key : cache.keySet())
-    //System.out.println(key);
     return true;
   }
 
   private String shortSceneFilename(String pathName) {
     int pt = pathName.indexOf("_scene_") + 7;
-    if (pt < 7)
+    if (pt < 7) {
       return pathName;
+	}
     String s = "";
     if (pathName.endsWith("|state.spt")) {
       int pt1 = pathName.indexOf('.', pt);
-      if (pt1 < 0)
+      if (pt1 < 0) {
         return pathName;
+	  }
       s = pathName.substring(pt, pt1);
     }
     int pt2 = pathName.lastIndexOf("|");
-    return pathName.substring(0, pt) + s
-        + (pt2 > 0 ? pathName.substring(pt2) : "");
+    return pathName.substring(0, pt) + s + (pt2 > 0 ? pathName.substring(pt2) : "");
   }
 
   /**
@@ -474,12 +486,10 @@ public class JmolUtil {
    */
   private String[] getSpartanSubfiles(String[] zipDirectory) {
     String name = (zipDirectory.length < 2 ? null : zipDirectory[1]);
-    return (name == null || zipDirectory.length != 2 || !name.endsWith(".spardir/")? 
-        null : new String[] { "", PT.trim(name, "/") });
+    return (name == null || zipDirectory.length != 2 || !name.endsWith(".spardir/") ? null : new String[] { "", PT.trim(name, "/") });
   }
 
   /**
-   * 
    * check for a Spartan directory. This is not entirely satisfying, because we
    * aren't reading the file in the proper sequence. this code is a hack that
    * should be replaced with the sort of code running in FileManager now. 0
@@ -489,11 +499,11 @@ public class JmolUtil {
    * @return true if a zipped-up Spartan directory
    */
   private boolean isSpartanZip(String[] zipDirectory) {
-    for (int i = 1; i < zipDirectory.length; i++)
-      if (zipDirectory[i].endsWith(".spardir/")
-          || zipDirectory[i].indexOf("_spartandir") >= 0)
+    for (int i = 1; i < zipDirectory.length; i++) {
+      if (zipDirectory[i].endsWith(".spardir/") || zipDirectory[i].indexOf("_spartandir") >= 0) {
         return true;
+	  }
+	}
     return false;
   }
-
 }
