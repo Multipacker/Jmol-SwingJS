@@ -16,8 +16,6 @@
 */
 package javajs.util;
 
-
-
 /**
  * A 4 element point that is represented by double precision floating point
  * x,y,z,w coordinates.
@@ -31,7 +29,6 @@ package javajs.util;
  * for the optimization of compiled JavaScript using Java2Script
  */
 public class P4d extends T4d {
-
   public P4d() {
   }
   
@@ -61,5 +58,4 @@ public class P4d extends T4d {
     double dw = w - p1.w;
     return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
   }
-
 }

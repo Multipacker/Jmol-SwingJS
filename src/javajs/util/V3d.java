@@ -16,9 +16,6 @@
 */
 package javajs.util;
 
-
-
-
 /**
  * A 3 element vector that is represented by double precision floating point
  * x,y,z coordinates. If this value represents a normal, then it should be
@@ -33,23 +30,12 @@ package javajs.util;
  * for the optimization of compiled JavaScript using Java2Script
  */
 public class V3d extends T3d {
-
-  
   public static V3d newV(T3d t) {
     return new3(t.x, t.y, t.z);
   }
-//  public static V3d newV(T3d t) {
-//    return new3(t.x, t.y, t.z);
-//  }
-//
   public static V3d newVsub(T3d t1, T3d t2) {
     return new3(t1.x - t2.x, t1.y - t2.y,t1.z - t2.z);
   }
-
-//  public static V3d newVsub(T3d t1, T3d t2) {
-//    return new3(t1.x - t2.x, t1.y - t2.y,t1.z - t2.z);
-//  }
-//  
 
   public static V3d new3(double x, double y, double z) {
     V3d v = new V3d();
@@ -87,14 +73,6 @@ public class V3d extends T3d {
    * @return this in JavaScript, P3 copy in Java
    */
   public V3d asV3() {
-    /**
-     * @j2sNative
-     * return this;
-     */
-    {
       return copyToV3();
-    }
   }
-
-
 }

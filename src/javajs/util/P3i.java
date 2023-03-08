@@ -16,8 +16,6 @@
 */
 package javajs.util;
 
-
-
 /**
  * A 3 element point that is represented by signed integer x,y,z coordinates.
  * 
@@ -32,7 +30,6 @@ package javajs.util;
  *         JavaScript using Java2Script
  */
 public class P3i extends T3i {
-
   public static P3i new3(int x, int y, int z) {
     P3i pt = new P3i();
     pt.x = x;

@@ -31,9 +31,7 @@ package javajs.util;
 /**
  * A very simplistic XML generator
  */
-
 public class XmlUtil {
-
   public XmlUtil() {
     // Jmol's PropertyManager and JvxlCoder classes use reflection 
   }
@@ -54,9 +52,7 @@ public class XmlUtil {
     sb.append("</").append(name).append(">\n");
   }
 
-  public static void appendTagAll(SB sb, String name,
-                               Object[] attributes, Object data,
-                               boolean isCdata, boolean doClose) {
+  public static void appendTagAll(SB sb, String name, Object[] attributes, Object data, boolean isCdata, boolean doClose) {
     String closer = ">";
     if (name.endsWith("/")){
       name = name.substring(0, name.length() - 1);
@@ -96,8 +92,7 @@ public class XmlUtil {
    */
   public static String wrapCdata(Object data) {
     String s = "" + data;
-    return (s.indexOf("&") < 0 && s.indexOf("<") < 0 ? (s.startsWith("\n") ? "" : "\n") + s 
-        : "<![CDATA[" + PT.rep(s, "]]>", "]]]]><![CDATA[>") + "]]>");
+    return (s.indexOf("&") < 0 && s.indexOf("<") < 0 ? (s.startsWith("\n") ? "" : "\n") + s : "<![CDATA[" + PT.rep(s, "]]>", "]]]]><![CDATA[>") + "]]>");
   }
   
   /**
@@ -108,8 +103,7 @@ public class XmlUtil {
    * @param attributes
    * @param data
    */
-  public static void appendTagObj(SB sb, String name,
-                               Object[] attributes, Object data) {
+  public static void appendTagObj(SB sb, String name, Object[] attributes, Object data) {
     appendTagAll(sb, name, attributes, data, false, true);
   }
 
@@ -138,34 +132,17 @@ public class XmlUtil {
    * @param attributes 
    * @param data
    */
-  public static void appendCdata(SB sb, String name, 
-                                 Object[] attributes, String data) {
+  public static void appendCdata(SB sb, String name, Object[] attributes, String data) {
     appendTagAll(sb, name, attributes, data, true, true);
   }
 
-  /**
-   * 
-   * @param sb
-   * @param name
-   * @param value
-   */
   public static void appendAttrib(SB sb, Object name, Object value) {
-    if (value == null)
+    if (value == null) {
       return;
+	}
     
     // note: <&" are disallowed but not checked for here
     
     sb.append(" ").appendO(name).append("=\"").appendO(value).append("\"");
   }
-
-//  /**
-//   * @param s
-//   * @return   unwrapped text
-//   */
-//  public static String unwrapCdata(String s) {
-//    return (s.startsWith("<![CDATA[") && s.endsWith("]]>") ?
-//        PT.rep(s.substring(9, s.length()-3),"]]]]><![CDATA[>", "]]>") : s);
-//  }
-//  
-
 }

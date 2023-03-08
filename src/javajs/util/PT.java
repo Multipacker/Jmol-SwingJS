@@ -36,11 +36,8 @@ import javajs.api.JSONEncodable;
  * a combination of Parsing and Text-related utility classes
  * 
  * @author hansonr
- * 
  */
-
 public class PT {
-
   public static int parseInt(String str) {
     return parseIntNext(str, new int[] {0});
   }
@@ -113,18 +110,7 @@ public class PT {
   }
 
   public static int parseIntRadix(String s, int i) throws NumberFormatException {
-//    /**
-//     * 
-//     * JavaScript uses parseIntRadix
-//     * 
-//     * @j2sNative
-//     * 
-//     *    return Integer.parseIntRadix(s, i);
-//     *    
-//     */
-//    {
       return Integer.parseInt(s, i);
-//    }
   }
 
   public static String[] getTokens(String line) {
@@ -281,7 +267,6 @@ public class PT {
   }
   
   /**
-   * 
    * @param line
    * @param next passes [current pointer]
    * @return quoted string -- does NOT unescape characters
@@ -396,8 +381,7 @@ public class PT {
     return str;
   }
 
-  public static String formatD(double value, int width, int precision,
-                               boolean alignLeft, boolean zeroPad) {
+  public static String formatD(double value, int width, int precision, boolean alignLeft, boolean zeroPad) {
      return formatS(DF.formatDecimal(value, precision), width, 0, alignLeft, zeroPad);
    }
 
@@ -412,13 +396,11 @@ public class PT {
    * @param allowOverflow IGNORED
    * @return formatted string
    */
-  public static String formatD(double value, int width, int precision,
-                              boolean alignLeft, boolean zeroPad, boolean allowOverflow) {
+  public static String formatD(double value, int width, int precision, boolean alignLeft, boolean zeroPad, boolean allowOverflow) {
     return formatS(DF.formatDecimal(value, -1 - precision), width, 0, alignLeft, zeroPad);
   }
 
   /**
-   * 
    * @param value       
    * @param width       number of columns
    * @param precision   precision > 0 ==> precision = number of characters max from left
@@ -427,8 +409,7 @@ public class PT {
    * @param zeroPad     generally for numbers turned strings
    * @return            formatted string
    */
-  public static String formatS(String value, int width, int precision,
-                              boolean alignLeft, boolean zeroPad) {
+  public static String formatS(String value, int width, int precision, boolean alignLeft, boolean zeroPad) {
     if (value == null)
       return "";
     int len = value.length();
@@ -467,8 +448,7 @@ public class PT {
    * @param chTo
    * @return  replaced string
    */
-  public static String replaceWithCharacter(String str, String strFrom,
-                                            char chTo) {
+  public static String replaceWithCharacter(String str, String strFrom, char chTo) {
     if (str == null)
       return null;
     for (int i = strFrom.length(); --i >= 0;)
@@ -486,8 +466,7 @@ public class PT {
    * @param strTo
    * @return  replaced string
    */
-  public static String replaceAllCharacters(String str, String strFrom,
-                                            String strTo) {
+  public static String replaceAllCharacters(String str, String strFrom, String strTo) {
     for (int i = strFrom.length(); --i >= 0;) {
       String chFrom = strFrom.substring(i, i + 1);
       str = rep(str, chFrom, strTo);
@@ -521,16 +500,6 @@ public class PT {
     // because in JavaScript those would be false for unwrapped primitives
     // coming from equivalent of Array.get()
     // Strings will need their own escaped processing
-    /**
-     * @j2sNative
-     * 
-     * if(typeof info == "number" || typeof info == "boolean") {
-     * return true;
-     * }
-     * 
-     * 
-     */
-    {}
      return info instanceof Number || info instanceof Boolean;
   }
 
@@ -545,12 +514,6 @@ public class PT {
 		while (true) {
 			if (info instanceof String) {
 				s = (String) info;
-//        /**
-//         * @j2sNative
-//         * 
-//         * if (typeof s == "undefined") s = "null"
-//         * 
-//         */
 
 				if (s.indexOf("{\"") != 0) {
 					// don't doubly fix JSON strings when retrieving status
@@ -569,16 +532,16 @@ public class PT {
 			if (info instanceof Map) {
 				sb.append("{ ");
 				String sep = "";
-        Set<?> keys = ((Map<?, ?>) info).keySet();
-        Object[] okeys = keys.toArray();
-        Arrays.sort(okeys);
-        for (int i = 0, n = okeys.length; i < n; i++) {
-          String key = okeys[i].toString();
-          if (key == null)
-            key = "null";
-          sb.append(sep).append(packageJSON(key, toJSON(null, ((Map<?, ?>) info).get(okeys[i]))));
-          sep = ",";
-        }
+				Set<?> keys = ((Map<?, ?>) info).keySet();
+				Object[] okeys = keys.toArray();
+				Arrays.sort(okeys);
+				for (int i = 0, n = okeys.length; i < n; i++) {
+				  String key = okeys[i].toString();
+				  if (key == null)
+					key = "null";
+				  sb.append(sep).append(packageJSON(key, toJSON(null, ((Map<?, ?>) info).get(okeys[i]))));
+				  sep = ",";
+				}
 				sb.append(" }");
 				break;
 			}
@@ -586,8 +549,9 @@ public class PT {
 				sb.append("[ ");
 				int n = ((Lst<?>) info).size();
 				for (int i = 0; i < n; i++) {
-					if (i > 0)
+					if (i > 0) {
 						sb.appendC(',');
+					}
 					sb.append(toJSON(null, ((Lst<?>) info).get(i)));
 				}
 				sb.append(" ]");
@@ -597,20 +561,11 @@ public class PT {
 			if (s == null) {
 				sb.append("[");
 				int n = AU.getLength(info);
-				Object o = null;
-        /** @j2sNative 
-         *  o = info[0];
-         *  typeof o != "number" && typeof 0 != "boolean" && (o = null);
-         */
-        {}
-        if (o != null) {
-					sb.appendO(info);
-				} else {
-					for (int i = 0; i < n; i++) {
-						if (i > 0)
-							sb.appendC(',');
-						sb.append(toJSON(null, Array.get(info, i)));
+				for (int i = 0; i < n; i++) {
+					if (i > 0) {
+						sb.appendC(',');
 					}
+					sb.append(toJSON(null, Array.get(info, i)));
 				}
 				sb.append("]");
 				break;
@@ -620,7 +575,6 @@ public class PT {
 		return packageJSON(infoType, (s == null ? sb.toString() : s));
 	}
 
-
   /**
    * Checks to see if an object is an array (including typed arrays), and if it is, returns null;
    * otherwise it returns the string equivalent of that object.
@@ -629,19 +583,11 @@ public class PT {
    * @return String or null
    */
   public static String nonArrayString(Object x) {
-    /**
-     * @j2sNative
-     * 
-     * return (x.constructor == Array || x.BYTES_PER_ELEMENT ? null : x.toString());
-     * 
-     */
-    {
-      try {
-        Array.getLength(x);
-        return null;
-      } catch (Exception e) {
-        return x.toString();
-      }
+    try {
+      Array.getLength(x);
+      return null;
+    } catch (Exception e) {
+      return x.toString();
     }
   }
 
@@ -713,17 +659,7 @@ public class PT {
   }
 
   public static String escD(double f) {
-    String sf = "" + f;
-    // NaN, Infinity
-    /**
-     * @j2sNative
-     * 
-     * if (sf.indexOf(".") < 0 && sf.indexOf("e") < 0 && sf.indexOf("N") < 0 && sf.indexOf("n") < 0)
-     *   sf += ".0";
-     */
-    {
-    }
-    return sf;
+    return "" + f;
   }
 
   public static String join(String[] s, char c, int i0) {
@@ -873,21 +809,18 @@ public class PT {
     return true;
   }
 
-  public static String replaceQuotedStrings(String s, Lst<String> list,
-                                            Lst<String> newList) {
+  public static String replaceQuotedStrings(String s, Lst<String> list, Lst<String> newList) {
     int n = list.size();
     for (int i = 0; i < n; i++) {
       String name = list.get(i);
       String newName = newList.get(i);
       if (!newName.equals(name))
-        s = rep(s, "\"" + name + "\"", "\"" + newName
-            + "\"");
+        s = rep(s, "\"" + name + "\"", "\"" + newName + "\"");
     }
     return s;
   }
 
-  public static String replaceStrings(String s, Lst<String> list,
-                                      Lst<String> newList) {
+  public static String replaceStrings(String s, Lst<String> list, Lst<String> newList) {
     int n = list.size();
     for (int i = 0; i < n; i++) {
       String name = list.get(i);
@@ -1256,8 +1189,7 @@ public class PT {
    * @return array of double values
    * 
    */
-  public static double[] parseDoubleArrayNext(String str, int[] next, double[] f,
-                                            String strStart, String strEnd) {
+  public static double[] parseDoubleArrayNext(String str, int[] next, double[] f, String strStart, String strEnd) {
     int n = 0;
     int pt = next[0];
     if (pt >= 0) {
@@ -1285,8 +1217,7 @@ public class PT {
     return f;
   }
   
-  public static double parseDoubleChecked(String str, int ichMax, int[] next,
-                                          boolean isStrict) {
+  public static double parseDoubleChecked(String str, int ichMax, int[] next, boolean isStrict) {
      boolean digitSeen = false;
      int ich = next[0];
      if (isStrict && str.indexOf('\n') != str.lastIndexOf('\n'))
@@ -1434,5 +1365,4 @@ public class PT {
     return (pt < 0 ? parseDouble(s) : parseDouble(s.substring(0, pt))
         / parseDouble(s.substring(pt + 1)));
   }
-
 }

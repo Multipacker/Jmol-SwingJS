@@ -52,5 +52,4 @@ public class ZipData {
 	public void addTo(SB data) {
 		data.append(ZipTools.getGzippedBytesAsString(buf));
 	}
-
 }

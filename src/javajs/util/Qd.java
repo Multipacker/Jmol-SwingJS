@@ -83,13 +83,6 @@ public class Qd {
     return q;
   }
 
-//  public static Qd newP4(P4d pt) {
-//    Qd q = new Qd();
-//    q.setP4(P4d.new4(pt.x, pt.y, pt.z, pt.w));
-//    return q;
-//  }
-//
-
   /**
    * Note that q0 is the last parameter here
    * 
@@ -151,8 +144,7 @@ public class Qd {
       q0 = 1;
       return;
     }
-    double fact = (Math.sin(theta / 2 * RAD_PER_DEG) / Math.sqrt(pt.x
-        * pt.x + pt.y * pt.y + pt.z * pt.z));
+    double fact = (Math.sin(theta / 2 * RAD_PER_DEG) / Math.sqrt(pt.x * pt.x + pt.y * pt.y + pt.z * pt.z));
     q0 = (Math.cos(theta / 2 * RAD_PER_DEG));
     q1 = (pt.x * fact);
     q2 = (pt.y * fact);
@@ -336,8 +328,7 @@ public class Qd {
    * @param xy
    * @return quaternion for frame
    */
-  public static final Qd getQuaternionFrame(P3d center, T3d x,
-                                                    T3d xy) {
+  public static final Qd getQuaternionFrame(P3d center, T3d x, T3d xy) {
     return newFrame(center, x, xy, true);
   }
 
@@ -357,12 +348,6 @@ public class Qd {
     return getQuaternionFrameV((V3d) vA, (V3d) vB, null, false);
   }
 
-//  public static final Qd getQuaternionFrameV(V3d vA, V3d vB, V3d vC,
-//                                             boolean yBased) {
-//    return getQuaternionFrameV(V3d.newV(vA), V3d.newV(vB), V3d.newV(vC),
-//        yBased);
-//  }
-
   /**
    * Create a quaternion based on a frame
    * @param vA
@@ -371,8 +356,7 @@ public class Qd {
    * @param yBased
    * @return quaternion
    */
-  public static final Qd getQuaternionFrameV(V3d vA, V3d vB,
-                                                    V3d vC, boolean yBased) {
+  public static final Qd getQuaternionFrameV(V3d vA, V3d vB, V3d vC, boolean yBased) {
     if (vC == null) {
       vC = new V3d();
       vC.cross(vA, vB);
@@ -389,39 +373,8 @@ public class Qd {
     mat.setColumnV(1, vBprime);
     mat.setColumnV(2, vC);
 
-    /*
-     * 
-     * Verification tests using Quat4f and AngleAxis4f:
-     * 
-     System.out.println("quaternion frame matrix: " + mat);
-     
-     Point3f pt2 = new Point3f();
-     mat.transform(Point3f.new3(1, 0, 0), pt2);
-     System.out.println("vA=" + vA + " M(100)=" + pt2);
-     mat.transform(Point3f.new3(0, 1, 0), pt2);
-     System.out.println("vB'=" + vBprime + " M(010)=" + pt2);
-     mat.transform(Point3f.new3(0, 0, 1), pt2);
-     System.out.println("vC=" + vC + " M(001)=" + pt2);
-     Quat4f q4 = new Quat4f();
-     q4.set(mat);
-     System.out.println("----");
-     System.out.println("Quat4f: {" + q4.w + " " + q4.x + " " + q4.y + " " + q4.z + "}");
-     System.out.println("Quat4f: 2xy + 2wz = m10: " + (2 * q4.x * q4.y + 2 * q4.w * q4.z) + " = " + mat.m10);   
-     
-     */
-
     Qd q = newM(mat);
 
-     /*
-     System.out.println("Quaternion mat from q \n" + q.getMatrix());
-     System.out.println("Quaternion: " + q.getNormal() + " " + q.getTheta());
-     AxisAngle4f a = new AxisAngle4f();
-     a.set(mat);
-     Vector3f v = Vector3f.new3(a.x, a.y, a.z);
-     v.normalize();
-     System.out.println("angleAxis: " + v + " "+(a.angle/Math.PI * 180));
-     */
-     
     return q;
   }
 
@@ -525,7 +478,6 @@ public class Qd {
   }
 
   /**
-   * 
    * @return  vector such that 0 <= angle <= 180
    */
   public V3d getNormal() {
@@ -543,7 +495,6 @@ public class Qd {
   }
 
   /**
-   * 
    * @return 0 <= angle <= 180 in degrees
    */
   public double getTheta() {
@@ -555,10 +506,8 @@ public class Qd {
   }
 
   /**
-   * 
    * @param v0
    * @return    vector option closest to v0
-   * 
    */
   public V3d getNormalDirected(V3d v0) {
     V3d v = getNormal();
@@ -574,7 +523,6 @@ public class Qd {
   }
   
   /**
-   * 
    * @param axisAngle
    * @return   fill in theta of axisAngle such that 
    */
@@ -591,7 +539,6 @@ public class Qd {
   }
 
   /**
-   * 
    * @param vector  a vector, same as for getNormalDirected
    * @return   return theta 
    */
@@ -651,7 +598,6 @@ public class Qd {
   }
 
   /**
-   * 
    *  Java axisAngle / plane / Point4f format
    *  all have the format {x y z w}
    *  so we go with that here as well
@@ -664,7 +610,6 @@ public class Qd {
   }
 
   /**
-   * 
    * @param data1
    * @param data2
    * @param nMax     > 0 --> limit to this number
@@ -837,5 +782,4 @@ public class Qd {
     rG = Math.atan2( 2 * (q1 * q3 + q0 * q2), 2 * (-q2 * q3 + q0 * q1));
     return new double[]  {(rA / RAD_PER_DEG), (rB / RAD_PER_DEG), (rG / RAD_PER_DEG)};
   }
-
 }

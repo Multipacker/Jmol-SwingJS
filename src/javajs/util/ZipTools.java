@@ -41,22 +41,15 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Note the JSmol/HTML5 must use its own version of java.util.zip.ZipOutputStream.
- * 
  */
-public class ZipTools {//implements GenericZipTools {
-
-//  public ZipTools() {
-//    // for reflection
-//  }
-//  
+public class ZipTools {
   //@Override
   public static ZipInputStream newZipInputStream(InputStream is) {
     return newZIS(is);
   }
 
   private static ZipInputStream newZIS(InputStream is) {
-    return (is instanceof ZipInputStream ? (ZipInputStream) is
-        :  new ZipInputStream(is));
+    return (is instanceof ZipInputStream ? (ZipInputStream) is :  new ZipInputStream(is));
   }
 
   /**
@@ -73,9 +66,7 @@ public class ZipTools {//implements GenericZipTools {
    * @return directory listing or subfile contents
    */
 //  @Override
-  public static Object getZipFileDirectory(BufferedInputStream bis, 
-                                           String[] list,
-                                    int listPtr, boolean asBufferedInputStream) {
+  public static Object getZipFileDirectory(BufferedInputStream bis, String[] list, int listPtr, boolean asBufferedInputStream) {
     SB ret;
     boolean justDir = (list == null || listPtr >= list.length);
     String fileName = (justDir ? "." : list[listPtr]);
@@ -115,8 +106,7 @@ public class ZipTools {//implements GenericZipTools {
       if (bytes == null)
         return "";
       if (Rdr.isZipB(bytes) || Rdr.isPngZipB(bytes))
-        return getZipFileDirectory(Rdr.getBIS(bytes), list, ++listPtr,
-            asBufferedInputStream);
+        return getZipFileDirectory(Rdr.getBIS(bytes), list, ++listPtr, asBufferedInputStream);
       if (asBufferedInputStream)
         return Rdr.getBIS(bytes);
       if (asBinaryString) {
@@ -133,9 +123,7 @@ public class ZipTools {//implements GenericZipTools {
     }
   }
 
-  private static Object getTarFileDirectory(BufferedInputStream bis,
-                                            String fileName,
-                                            boolean asBufferedInputStream) {
+  private static Object getTarFileDirectory(BufferedInputStream bis, String fileName, boolean asBufferedInputStream) {
     SB ret;
     try {
       boolean isAll = (fileName.equals("."));
@@ -155,8 +143,7 @@ public class ZipTools {//implements GenericZipTools {
   }
 
 //  @Override
-  public static byte[] getZipFileContentsAsBytes(BufferedInputStream bis,
-                                          String[] list, int listPtr) {
+  public static byte[] getZipFileContentsAsBytes(BufferedInputStream bis, String[] list, int listPtr) {
     byte[] ret = new byte[0];
     String fileName = list[listPtr];
     if (fileName.lastIndexOf("/") == fileName.length() - 1)
@@ -171,8 +158,7 @@ public class ZipTools {//implements GenericZipTools {
         if (!fileName.equals(ze.getName()))
           continue;
         byte[] bytes = Rdr.getLimitedStreamBytes(zis, ze.getSize());
-        return ((Rdr.isZipB(bytes) || Rdr.isPngZipB(bytes)) && ++listPtr < list.length ? getZipFileContentsAsBytes(
-            Rdr.getBIS(bytes), list, listPtr) : bytes);
+        return ((Rdr.isZipB(bytes) || Rdr.isPngZipB(bytes)) && ++listPtr < list.length ? getZipFileContentsAsBytes(Rdr.getBIS(bytes), list, listPtr) : bytes);
       }
     } catch (Exception e) {
     }
@@ -181,8 +167,7 @@ public class ZipTools {//implements GenericZipTools {
   
   private static byte[] b512;
   
-  private static byte[] getTarContents(BufferedInputStream bis, String fileName, SB sb)
-      throws IOException {
+  private static byte[] getTarContents(BufferedInputStream bis, String fileName, SB sb) throws IOException {
     if (b512 == null)
       b512 = new byte[512];
     int len = fileName.length();
@@ -194,9 +179,7 @@ public class ZipTools {//implements GenericZipTools {
     return null;
   }
 
-  private static byte[] getTarFile(BufferedInputStream bis, String fileName,
-                                   int len, SB sb, Map<String, Object> cache,
-                                   boolean oneFile)
+  private static byte[] getTarFile(BufferedInputStream bis, String fileName, int len, SB sb, Map<String, Object> cache, boolean oneFile)
       throws IOException {
     int j = 124;
     while (b512[j] == 48)
@@ -215,8 +198,7 @@ public class ZipTools {//implements GenericZipTools {
     if (sb != null) {
       if (name.length() == 0)
         return null;
-      if (isAll || (oneFile ? name.equalsIgnoreCase(fileName)
-          : name.startsWith(fileName))) {
+      if (isAll || (oneFile ? name.equalsIgnoreCase(fileName) : name.startsWith(fileName))) {
         found = (cache != null);
         sb.append(name).appendC('\n');
       }
@@ -254,8 +236,7 @@ public class ZipTools {//implements GenericZipTools {
   }
 
 //  @Override
-  public static String[] getZipDirectoryAndClose(BufferedInputStream bis,
-                                                 String manifestID) {
+  public static String[] getZipDirectoryAndClose(BufferedInputStream bis, String manifestID) {
     String[] s = new String[0];
     try {
       s = getZipDirectoryOrErrorAndClose(bis, manifestID);
@@ -266,9 +247,7 @@ public class ZipTools {//implements GenericZipTools {
     return s;
   }
 
-  private static String[] getZipDirectoryOrErrorAndClose(BufferedInputStream bis,
-                                                  String manifestID)
-      throws IOException {
+  private static String[] getZipDirectoryOrErrorAndClose(BufferedInputStream bis, String manifestID) throws IOException {
     bis = getPngZipStream(bis, true);
     Lst<String> v = new Lst<String>();
     ZipInputStream zis = new ZipInputStream(bis);
@@ -323,7 +302,6 @@ public class ZipTools {//implements GenericZipTools {
     return s;
   }
 
- 
   /**
    * Drill down into a GZIP stack until no more layers.
    * @param bis
@@ -342,7 +320,6 @@ public class ZipTools {//implements GenericZipTools {
       bis = new BufferedInputStream(newBZip2InputStream(bis));
     return bis;
   }
-
 
   /**
    * Retrieve the two numbers in a PNG iTXt tag indicating the 
@@ -418,16 +395,7 @@ public class ZipTools {//implements GenericZipTools {
 
   //@Override
   public static Object getZipOutputStream(Object bos) {
-//    /**
-//     * @j2sNative
-//     * 
-//     *            return javajs.api.Interface.getInterface(
-//     *            "java.util.zip.ZipOutputStream").setZOS(bos);
-//     * 
-//     */
-//    {
       return new ZipOutputStream((OutputStream) bos);
-//    }
   }
 
   //@Override
@@ -442,8 +410,7 @@ public class ZipTools {//implements GenericZipTools {
   	readFileAsMapStatic(bis, bdata, name);
   }
 
-  private static void readFileAsMapStatic(BufferedInputStream bis,
-			Map<String, Object> bdata, String name) {
+  private static void readFileAsMapStatic(BufferedInputStream bis, Map<String, Object> bdata, String name) {
     int pt = (name == null ? -1 : name.indexOf("|"));
     name = (pt >= 0 ? name.substring(pt + 1) : null);
     try {
@@ -618,5 +585,4 @@ public class ZipTools {//implements GenericZipTools {
   public static boolean isZipStream(Object br) {
     return br instanceof ZipInputStream;
   }
-
 }

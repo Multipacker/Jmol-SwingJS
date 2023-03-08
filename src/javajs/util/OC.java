@@ -191,18 +191,11 @@ public class OC extends OutputStream implements GenericOutputChannel {
       return;
     }
     try {
-      /**
-       * @j2sNative
-       * 
-       *            this.os = null;
-       */
-      {
-        if (os instanceof FileOutputStream) {
-          os.close();
-          os = new FileOutputStream(fileName);
-        } else {
-          os = null;
-        }
+      if (os instanceof FileOutputStream) {
+        os.close();
+        os = new FileOutputStream(fileName);
+      } else {
+        os = null;
       }
       if (os == null)
         os = new ByteArrayOutputStream();
@@ -217,9 +210,6 @@ public class OC extends OutputStream implements GenericOutputChannel {
     byteCount = 0;
   }
 
-  /**
-   * @param b
-   */
   @Override
   public void writeByteAsInt(int b) {
     if (os == null)
@@ -347,13 +337,7 @@ public class OC extends OutputStream implements GenericOutputChannel {
     J2SObjectInterface J2S = null;
     Object _function = null;
     boolean isSwingJS = false;
-    /**
-     * @j2sNative isSwingJS = !!self.J2S; J2S = self.J2S || self.Jmol; _function
-     *            = (typeof this.fileName == "function" ? this.fileName : null);
-     * 
-     */
     if (J2S != null && !isTemp) {
-
       // action here generally will be for the browser to display a download message
       // temp files will not be sent this way.
       Object data = (sb == null ? toByteArray() : sb.toString());
@@ -372,8 +356,7 @@ public class OC extends OutputStream implements GenericOutputChannel {
           }
         }
       } else {
-        Object info = /** @j2sNative { isBinary : (this.sb == null) } || */
-            null;
+        Object info = null;
         String mimetype = null;
         if (bytes != null && Rdr.isZipB(bytes)) {
           mimetype = "application/zip";
@@ -474,5 +457,4 @@ public class OC extends OutputStream implements GenericOutputChannel {
   public void writeFloat(float x) {
     writeInt(x == 0 ? 0 : Float.floatToIntBits(x));
   }
-
 }

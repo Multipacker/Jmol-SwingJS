@@ -16,8 +16,6 @@
 */
 package javajs.util;
 
-
-
 /**
  * A 3 element point that is represented by single precision doubleing point
  * x,y,z coordinates.
@@ -32,7 +30,6 @@ package javajs.util;
  * 
  */
 public class P3d extends T3d {
-
   public P3d() {
     // ignore T3
   }
@@ -66,5 +63,4 @@ public class P3d extends T3d {
   public static P3d newA(double[] a) {
    return new3(a[0], a[1], a[2]);    
   }
-
 }

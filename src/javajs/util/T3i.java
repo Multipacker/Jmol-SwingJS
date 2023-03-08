@@ -31,7 +31,6 @@ import java.io.Serializable;
  *         JavaScript using Java2Script
  */
 public abstract class T3i implements Serializable {
-
   /**
    * The x coordinate.
    */
@@ -147,5 +146,4 @@ public abstract class T3i implements Serializable {
   public String toString() {
     return "(" + x + ", " + y + ", " + z + ")";
   }
-
 }

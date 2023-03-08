@@ -49,13 +49,8 @@ import javajs.api.Interface;
  * various stream/reader methods, including UTF-encoded stream reading
  * 
  * reflection-protected access to a CIF parser and ZIP tools
- * 
- * 
- * 
- * 
  */
 public class Rdr implements GenericLineReader {
-
   public static class StreamReader extends BufferedReader {
 
     private BufferedInputStream stream;
@@ -73,7 +68,6 @@ public class Rdr implements GenericLineReader {
       }
       return stream;
     }
-
   }
 
   private static final int UNDERFLOW = 264;
@@ -120,7 +114,6 @@ public class Rdr implements GenericLineReader {
   ///////////
 
   /**
-   * 
    * Read a UTF-8 byte array fully, converting it to a String. Called by Jmol's
    * XMLReaders
    * 
@@ -132,7 +125,6 @@ public class Rdr implements GenericLineReader {
   }
 
   /**
-   * 
    * Read a UTF-8 stream fully, converting it to a String. Called by Jmol's
    * XMLReaders
    * 
@@ -198,11 +190,9 @@ public class Rdr implements GenericLineReader {
   private static Encoding getUTFEncoding(byte[] bytes) {
     if (bytes.length >= 3 && (bytes[0] & 0xFF) == 0xEF && (bytes[1] & 0xFF) == 0xBB && (bytes[2] & 0xFF) == 0xBF)
       return Encoding.UTF8;
-    if (bytes.length >= 4 && (bytes[0] & 0xFF) == 0 && (bytes[1] & 0xFF) == 0 && (bytes[2] & 0xFF) == 0xFE
-        && (bytes[3] & 0xFF) == 0xFF)
+    if (bytes.length >= 4 && (bytes[0] & 0xFF) == 0 && (bytes[1] & 0xFF) == 0 && (bytes[2] & 0xFF) == 0xFE && (bytes[3] & 0xFF) == 0xFF)
       return Encoding.UTF_32BE;
-    if (bytes.length >= 4 && (bytes[0] & 0xFF) == 0xFF && (bytes[1] & 0xFF) == 0xFE && (bytes[2] & 0xFF) == 0
-        && (bytes[3] & 0xFF) == 0)
+    if (bytes.length >= 4 && (bytes[0] & 0xFF) == 0xFF && (bytes[1] & 0xFF) == 0xFE && (bytes[2] & 0xFF) == 0 && (bytes[3] & 0xFF) == 0)
       return Encoding.UTF_32LE;
     if (bytes.length >= 2 && (bytes[0] & 0xFF) == 0xFF && (bytes[1] & 0xFF) == 0xFE)
       return Encoding.UTF_16LE;
@@ -276,8 +266,7 @@ public class Rdr implements GenericLineReader {
     // to check that the next byte is not "P" as in <89>PNG
     int b;
 
-    return (bytes != null && bytes.length >= 1
-        && (((b = bytes[0] & 0xFF)) == 0xDE || (b & 0xE0) == 0x80 && bytes[1] != 0x50));
+    return (bytes != null && bytes.length >= 1 && (((b = bytes[0] & 0xFF)) == 0xDE || (b & 0xE0) == 0x80 && bytes[1] != 0x50));
   }
 
   public static boolean isPngZipStream(InputStream is) {
@@ -410,7 +399,6 @@ public class Rdr implements GenericLineReader {
    * @throws IOException
    */
   public static byte[] getLimitedStreamBytes(InputStream is, long n) throws IOException {
-
     // Note: You cannot use InputStream.available() to reliably read
     // zip data from the web.
 
@@ -542,5 +530,4 @@ public class Rdr implements GenericLineReader {
           return true;
     return false;
   }
-
 }

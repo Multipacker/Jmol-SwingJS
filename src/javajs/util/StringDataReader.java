@@ -30,12 +30,7 @@ package javajs.util;
 
 import java.io.StringReader;
 
-
-
-
-
 public class StringDataReader extends DataReader {
-
   public StringDataReader() {
     super();
   }

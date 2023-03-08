@@ -273,5 +273,4 @@ public class VideoReader {
 	protected String readString(int n) throws IOException {
 		return new String(readBytes(n), 0, n);
 	}
-
 }

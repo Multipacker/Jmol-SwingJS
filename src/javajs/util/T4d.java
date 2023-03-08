@@ -29,16 +29,10 @@ package javajs.util;
  * for the optimization of compiled JavaScript using Java2Script
  */
 public abstract class T4d extends T3d {
-
-  /**
-   * The w coordinate.
-   */
   public double w;
 
   /**
    * Constructs and initializes a Tuple4f to (0,0,0,0).
-   * 
-   * @j2sIgnore   * 
    */
   public T4d() {
   }
@@ -82,8 +76,7 @@ public abstract class T4d extends T3d {
    */
   @Override
   public int hashCode() {
-    return T3d.doubleToIntBits(x) ^ T3d.doubleToIntBits(y)
-        ^ T3d.doubleToIntBits(z) ^ T3d.doubleToIntBits(w);
+    return T3d.doubleToIntBits(x) ^ T3d.doubleToIntBits(y) ^ T3d.doubleToIntBits(z) ^ T3d.doubleToIntBits(w);
   }
 
   /**
@@ -116,5 +109,4 @@ public abstract class T4d extends T3d {
   public String toJSON() {
     return "[" + x + ", " + y + ", " + z + ", " + w + "]";
   }
-
 }
