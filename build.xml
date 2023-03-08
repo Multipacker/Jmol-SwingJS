@@ -152,27 +152,6 @@ see build.README.txt
       </and>
     </condition>
 
-    <condition property="jmolHistory.uptodate">
-      <and>
-        <uptodate targetfile="build/doc/JmolHistory/ChangeLog.html">
-          <srcfiles dir="doc/source"
-                    includes="JmolHistory.xml,JmolHistoryToHtml.xsl,history/changes.xml" />
-        </uptodate>
-        <uptodate targetfile="build/doc/JmolHistory/ChangeLog_fr.html">
-          <srcfiles dir="doc/source"
-                    includes="JmolHistory_fr.xml,JmolHistoryToHtml.xsl,history/changes_fr.xml" />
-        </uptodate>
-        <uptodate targetfile="build/doc/JmolHistory/ChangeLog_nl.html">
-          <srcfiles dir="doc/source"
-                    includes="JmolHistory_nl.xml,JmolHistoryToHtml.xsl,history/changes_nl.xml" />
-        </uptodate>
-        <uptodate targetfile="build/doc/JmolHistory/ChangeLog_ro.html">
-          <srcfiles dir="doc/source"
-                    includes="JmolHistory_ro.xml,JmolHistoryToHtml.xsl,history/changes_ro.xml" />
-        </uptodate>
-      </and>
-    </condition>
-    
     <condition property="jmolDevelopersGuide.uptodate">
       <and>
         <uptodate targetfile="build/doc/JmolDevelopersGuide.html">
@@ -339,8 +318,7 @@ see build.README.txt
     <touch file="build/libjars.timestamp"/>
   </target>
 
-  <target name="jar" id="jar"
-          depends="init,classes,jmolGuide,jmolHistory,jmolDevelopersGuide,libjars,main-i18n">
+  <target name="jar" id="jar" depends="init,classes,jmolGuide,jmolDevelopersGuide,libjars,main-i18n">
     <if><equals arg1="${Private.propertyFile}" arg2="nojar" />
     	<then><echo>Skipping jar creation</echo></then><else>
 
@@ -352,11 +330,6 @@ see build.README.txt
     </copy>
     <copy todir="${classes.dir}/org/openscience/jmol/Data/guide_fr" >
       <fileset dir="build/doc/JmolUserGuide_fr">
-        <include name="**/*.html" />
-      </fileset>
-    </copy>
-    <copy todir="${classes.dir}/org/openscience/jmol/Data" >
-      <fileset dir="build/doc/JmolHistory">
         <include name="**/*.html" />
       </fileset>
     </copy>
@@ -488,14 +461,7 @@ see build.README.txt
 	          depends="main-i18n,main" 
 	          Bob's computer chokes on doc -->
 
-	<target name="dist" id="dist" depends="main-i18n,doc">
-		
-		  <!-- 
-		  
-		  Bob had problems with Eclipse Juno repeating the entire
-		  signing process twice here and crashing (io error in jarsigner) 
-		  close to the end of the second round. 	 -->
-		
+  <target name="dist" id="dist" depends="main-i18n,doc">
     <!-- first build binary distribution -->
     <delete dir="build/dist/jmol-${version}"/>
     <mkdir dir="build/dist/jmol-${version}"/>
@@ -523,9 +489,6 @@ see build.README.txt
       </fileset>
     </chmod>
 
-    <copy todir="build/dist/jmol-${version}" >
-    </copy>
-
    <!--
     zip distributions to not retain file permissions ...
     miguel 2 feb 2006 but there have been requests for them anyway -->
@@ -548,7 +511,6 @@ see build.README.txt
 
     <copy todir="build/dist/jmol-${version}/src" >
       <fileset dir="src" />
-<!--      <fileset dir="srcjsv" />  -->
     </copy>
 
     <copy todir="build/dist/jmol-${version}/ca-cert" >
@@ -581,7 +543,6 @@ see build.README.txt
     <copy file="build/Jvxl.jar" tofile="build/dist/Jvxl-${jvxl_version}.jar" failonerror="false" />
 
     <copy file="build/doc/JmolDevelopersGuide.html" tofile="build/dist/jmol-${version}/doc/JmolDevelopersGuide.html" />
-    <copy file="build/doc/JmolHistory/ChangeLog.html" tofile="build/dist/jmol-${version}/ChangeLog.html" />
     <copy todir="build/dist/jmol-${version}/doc/JmolUserGuide">
       <fileset dir="build/doc/JmolUserGuide">
         <include name="**/*.html" />
@@ -648,10 +609,7 @@ see build.README.txt
     </copy>
 
     <copy todir="build/dist/jmolapisio-${version}/${lib.dir}" >
-      <fileset dir="${lib.dir}">
-        <!-- include name="${vecmath.jar}"/ -->
-        <!-- include name="netscape.jar"/ -->
-      </fileset>
+      <fileset dir="${lib.dir}" />
     </copy>
 
     <tar tarfile="build/dist/jmolapisio-${version}.tar.gz" compression="gzip" >
@@ -727,7 +685,7 @@ see build.README.txt
   <!-- ********************************
        Documentation Targets
        ******************************** -->
-  <target name="doc" id="doc" depends="jmolGuide,jmolDevelopersGuide,jmolHistory,javadoc"/>
+  <target name="doc" id="doc" depends="jmolGuide,jmolDevelopersGuide,javadoc"/>
 
   <target name="initdoc" depends="init,check.docbook-xml,check.docbook-xsl,check.xsl" />
 
@@ -785,41 +743,6 @@ see build.README.txt
       <jvmarg value="${proxyPort}" />
       <arg value="../../../doc/source/JmolGuide_fr.docbook.xml" />
       <arg value="../../${docbook-xsl}/html/chunk.xsl" />
-    </java>
-  </target>
-
-  <target name="jmolHistory" id="jmolHistory" depends="initdoc" unless="jmolHistory.uptodate" description="Generation of history of changes">
-    <echo message="Generating history of changes" level="info"/>
-    <mkdir dir="build/doc/JmolHistory" />
-    <java fork="true" dir="build/doc/JmolHistory" classname="${saxon.main}" classpath="${lib.dir}/${saxon.jar}" >
-      <arg value="-o" />
-      <arg value="ChangeLog.html" />
-      <arg value="../../../doc/source/JmolHistory.xml" />
-      <arg value="../../../doc/source/JmolHistoryToHtml.xsl" />
-    </java>
-    <echo message="Generating history of changes (fr)" level="info"/>
-    <java fork="true" dir="build/doc/JmolHistory" classname="${saxon.main}" classpath="${lib.dir}/${saxon.jar}" >
-      <arg value="-o" />
-      <arg value="ChangeLog_fr.html" />
-      <arg value="../../../doc/source/JmolHistory_fr.xml" />
-      <arg value="../../../doc/source/JmolHistoryToHtml.xsl" />
-      <arg value="lang=fr" />
-    </java>
-    <echo message="Generating history of changes (nl)" level="info"/>
-    <java fork="true" dir="build/doc/JmolHistory" classname="${saxon.main}" classpath="${lib.dir}/${saxon.jar}" >
-      <arg value="-o" />
-      <arg value="ChangeLog_nl.html" />
-      <arg value="../../../doc/source/JmolHistory_nl.xml" />
-      <arg value="../../../doc/source/JmolHistoryToHtml.xsl" />
-      <arg value="lang=nl" />
-    </java>
-    <echo message="Generating history of changes (ro)" level="info"/>
-    <java fork="true" dir="build/doc/JmolHistory" classname="${saxon.main}" classpath="${lib.dir}/${saxon.jar}" >
-      <arg value="-o" />
-      <arg value="ChangeLog_ro.html" />
-      <arg value="../../../doc/source/JmolHistory_ro.xml" />
-      <arg value="../../../doc/source/JmolHistoryToHtml.xsl" />
-      <arg value="lang=ro" />
     </java>
   </target>
 
