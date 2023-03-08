@@ -6,14 +6,11 @@ package javajs.api;
  * in the javajs package for the background color of a javajs.swing.JComponent
  * 
  * @author hansonr
- *
  */
 public interface GenericColor {
-
 	int getRGB();
 
 	int getOpacity255();
 
 	void setOpacity255(int a);
-	
 }

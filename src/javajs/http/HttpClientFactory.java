@@ -8,21 +8,20 @@ package javajs.http;
  * Optionally, you can just use this one and call it with your desired 
  * class name or set the static default to what you want generally.
  * 
- * 
  * @author hansonr
- *
  */
 public class HttpClientFactory {
-	
 	private static String defaultClassName = "javajs.http.SimpleHttpClient";
 	
 	public static void setDefaultClassName(String className) {
-		if (className != null)
+		if (className != null) {
 			defaultClassName = className;
+		}
 	}
 	public static HttpClient getClient(String className) {
-		if (className == null)
+		if (className == null) {
 			className = defaultClassName;
+		}
 		try {
 			return (HttpClient) Class.forName(className).getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
@@ -30,5 +29,4 @@ public class HttpClientFactory {
 			return null;
 		}
 	}
-
 }

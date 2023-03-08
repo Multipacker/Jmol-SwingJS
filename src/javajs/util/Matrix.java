@@ -1,7 +1,6 @@
 package javajs.util;
 
 /**
- * 
  * streamlined and refined for Jmol by Bob Hanson
  * 
  * from http://math.nist.gov/javanumerics/jama/
@@ -12,9 +11,7 @@ package javajs.util;
  *         Technology.
  * @version 5 August 1998
  */
-
 public class Matrix implements Cloneable {
-
   public double[][] a;
   protected int m, n;
 
@@ -28,7 +25,6 @@ public class Matrix implements Cloneable {
    * @param n
    *        Number of colums.
    */
-
   public Matrix(double[][] a, int m, int n) {
     this.a = (a == null ? new double[m][n] : a);
     this.m = m;
@@ -40,7 +36,6 @@ public class Matrix implements Cloneable {
    * 
    * @return m, the number of rows.
    */
-
   public int getRowDimension() {
     return m;
   }
@@ -50,7 +45,6 @@ public class Matrix implements Cloneable {
    * 
    * @return n, the number of columns.
    */
-
   public int getColumnDimension() {
     return n;
   }
@@ -60,7 +54,6 @@ public class Matrix implements Cloneable {
    * 
    * @return Pointer to the two-dimensional array of matrix elements.
    */
-
   public double[][] getArray() {
     return a;
   }
@@ -70,7 +63,6 @@ public class Matrix implements Cloneable {
    * 
    * @return Two-dimensional array copy of matrix elements.
    */
-
   public double[][] getArrayCopy() {
     double[][] x = new double[m][n];
     for (int i = m; --i >= 0;)
@@ -84,7 +76,6 @@ public class Matrix implements Cloneable {
    * 
    * @return copy
    */
-
   public Matrix copy() {
     Matrix x = new Matrix(null, m, n);
     double[][] c = x.a;
@@ -93,10 +84,6 @@ public class Matrix implements Cloneable {
         c[i][j] = a[i][j];
     return x;
   }
-
-  /**
-   * Clone the Matrix object.
-   */
 
   @Override
   public Object clone() {
@@ -453,5 +440,4 @@ public class Matrix implements Cloneable {
       return x;
     }
   }
-
 }

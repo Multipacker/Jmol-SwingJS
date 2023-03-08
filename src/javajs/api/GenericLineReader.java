@@ -1,5 +1,5 @@
 package javajs.api;
 
 public interface GenericLineReader {
-  public String readNextLine() throws Exception;
+	public String readNextLine() throws Exception;
 }

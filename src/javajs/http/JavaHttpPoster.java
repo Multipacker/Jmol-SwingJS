@@ -20,10 +20,8 @@ import javajs.http.SimpleHttpClient.Request.FormData;
  * adapted from https://github.com/atulsm/https-multipart-purejava
  * 
  * @author Bob Hanson
- *
  */
 public class JavaHttpPoster {
-
 	public static void post(HttpURLConnection conn, List<FormData> formData) throws IOException {
 		String boundary = "---" + System.nanoTime() + "---";
 		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
@@ -35,8 +33,7 @@ public class JavaHttpPoster {
 			String contentType = data.getContentType();
 			String fileName = data.getFileName();
 			append(os, "--" + boundary + "\r\n");
-			append(os, "Content-Disposition: form-data; name=\"" + name
-					+ (fileName == null ? "" : "\"; filename=\"" + fileName) + "\"");
+			append(os, "Content-Disposition: form-data; name=\"" + name + (fileName == null ? "" : "\"; filename=\"" + fileName) + "\"");
 			append(os, "\r\nContent-Type: ");
 			append(os, contentType == null ? "application/octet-stream" : contentType);
 			append(os, "\r\n\r\n");
@@ -45,7 +42,6 @@ public class JavaHttpPoster {
 		}
 		append(os, "\r\n--" + boundary + "--\r\n");
 		os.flush();
-
 	}
 
 	private static void append(OutputStream outputStream, Object val) throws IOException {
@@ -55,5 +51,4 @@ public class JavaHttpPoster {
 			outputStream.write(val.toString().getBytes());
 		}
 	}
-
 }

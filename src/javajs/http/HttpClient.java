@@ -14,16 +14,13 @@ import java.util.function.Consumer;
  * Java or javajs.http.JSHttpClient for Java and SwingJS.
  * 
  * @author Mateusz Warowny
- *
  */
 public interface HttpClient {
-
 	public interface HttpRequest {
-
-		public final static String METHOD_GET = "GET";
-		public final static String METHOD_POST = "POST";
-		public final static String METHOD_PUT = "PUT";
-		public final static String METHOD_HEAD = "HEAD";
+		public final static String METHOD_GET    = "GET";
+		public final static String METHOD_POST   = "POST";
+		public final static String METHOD_PUT    = "PUT";
+		public final static String METHOD_HEAD   = "HEAD";
 		public final static String METHOD_DELETE = "DELETE";
 
 		/**
@@ -247,5 +244,4 @@ public interface HttpClient {
 	 * URL query, as for GET.
 	 */
 	public HttpRequest delete(URI uri);
-
 }

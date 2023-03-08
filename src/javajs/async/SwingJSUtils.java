@@ -32,10 +32,7 @@ import javajs.async.SwingJSUtils.Singleton.SingletonI;
  * alternatives to using getCodeBase() for loading resources, due to issues in
  * Eclipse setting that incorrectly (but no problem in JavaScript)
  * 
- * 
- * 
  * @author hansonr
- *
  */
 public class SwingJSUtils {
 	/**
@@ -60,17 +57,6 @@ public class SwingJSUtils {
 	 * @author hansonr
 	 */
 	public static Dimension setDim(int w, int h) {
-		String baseURI = (/** @j2sNative document.body.baseURI || */
-		null);
-		@SuppressWarnings("null")
-    boolean isTest = (baseURI == null || baseURI.indexOf("_applet.html") >= 0);
-		if (!isTest)
-			return null;
-		/**
-		 * @j2sNative
-		 * 
-		 * 			J2S.thisApplet.__Info.width = w; J2S.thisApplet.__Info.height = h;
-		 */
 		return new Dimension(w, h);
 	}
 
@@ -115,7 +101,6 @@ public class SwingJSUtils {
 	 */
 	public static void loadImagesStatic(Class<?> cl, Image[] images, String root, String ext, int nImages) {
 		for (int i = nImages; --i >= 0;) {
-
 			// Bild laden und beim MediaTracker registrieren
 			// MediaTracker ladekontrolle = new MediaTracker(this);
 
@@ -216,9 +201,7 @@ public class SwingJSUtils {
 	 *
 	 */
 	public interface StateMachine {
-
 		public boolean stateLoop();
-
 	}
 
 	/**
@@ -227,7 +210,6 @@ public class SwingJSUtils {
 	 * animations and other asynchronous business.
 	 * 
 	 * @author hansonr
-	 *
 	 */
 	public static class StateHelper {
 
@@ -292,7 +274,6 @@ public class SwingJSUtils {
 		}
 
 		/**
-		 * 
 		 * NOTE: this method must remain private; it is accessed via p$1
 		 * 
 		 * @return
@@ -331,12 +312,15 @@ public class SwingJSUtils {
 
 		static boolean nextStatePriv(Object oThis, int state, int level) {
 			StateHelper me = (StateHelper) oThis;
-			if (me.interrupted)
+			if (me.interrupted) {
 				return false;
-			if (level != UNCHANGED)
+			}
+			if (level != UNCHANGED) {
 				me.level = level;
-			if (state != UNCHANGED)
+			}
+			if (state != UNCHANGED) {
 				me.state = state;
+			}
 			return me.machine.stateLoop();
 		}
 
@@ -374,29 +358,25 @@ public class SwingJSUtils {
 		 */
 
 		public boolean delayedState(int ms, int stateNext, int levelNext) {
-			if (interrupted)
+			if (interrupted) {
 				return false;
-			if (ms == 0)
+			}
+			if (ms == 0) {
 				return next(stateNext, levelNext);
-			if (stateNext != UNCHANGED)
+			}
+			if (stateNext != UNCHANGED) {
 				this.stateNext = stateNext;
-			if (levelNext != UNCHANGED)
+			}
+			if (levelNext != UNCHANGED) {
 				this.levelNext = levelNext;
+			}
 
-			/**
-			 * @j2sNative var me = this; setTimeout(function(){ p$1.nextState.apply(me, []);
-			 *            },ms);
-			 */
-			{
-				// Java only
-
-				if (stateTimer == null) {
-					stateTimer = new Timer(ms, (e) -> nextState());
-					stateTimer.setRepeats(false);
-					stateTimer.start();
-				} else {
-					stateTimer.restart();
-				}
+			if (stateTimer == null) {
+				stateTimer = new Timer(ms, (e) -> nextState());
+				stateTimer.setRepeats(false);
+				stateTimer.start();
+			} else {
+				stateTimer.restart();
 			}
 			return true;
 		}
@@ -460,15 +440,14 @@ public class SwingJSUtils {
 		 * 
 		 * @author Bob Hanson hansonr@stolaf.edu
 		 */
-		public boolean delayedAction(int ms, int id, String command, ActionListener listener, int stateNext,
-				int levelNext) {
-			if (interrupted)
+		public boolean delayedAction(int ms, int id, String command, ActionListener listener, int stateNext, int levelNext) {
+			if (interrupted) {
 				return false;
+			}
 			ActionEvent event = new ActionEvent(this, id, command);
 			if (ms == 0) {
 				listener.actionPerformed(event);
-				return (stateNext == UNCHANGED && levelNext == UNCHANGED || nextStatePriv(this,
-						stateNext == UNCHANGED ? state : stateNext, levelNext == UNCHANGED ? level : levelNext));
+				return (stateNext == UNCHANGED && levelNext == UNCHANGED || nextStatePriv(this, stateNext == UNCHANGED ? state : stateNext, levelNext == UNCHANGED ? level : levelNext));
 			}
 
 			StateHelper me = this;
@@ -476,11 +455,12 @@ public class SwingJSUtils {
 			Timer timer = new Timer(ms, id == ActionEvent.ACTION_PERFORMED ? listener : new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (!interrupted)
+					if (!interrupted) {
 						listener.actionPerformed(event);
-					if (!interrupted && (stateNext != UNCHANGED || levelNext != UNCHANGED))
-						nextStatePriv(me, stateNext == UNCHANGED ? state : stateNext,
-								levelNext == UNCHANGED ? level : levelNext);
+					}
+					if (!interrupted && (stateNext != UNCHANGED || levelNext != UNCHANGED)) {
+						nextStatePriv(me, stateNext == UNCHANGED ? state : stateNext, levelNext == UNCHANGED ? level : levelNext);
+					}
 				}
 
 			});
@@ -512,28 +492,16 @@ public class SwingJSUtils {
 		 * @author Bob Hanson hansonr@stolaf.edu
 		 */
 		public boolean delayedRun(int ms, Runnable runnable, int stateNext, int levelNext) {
-			if (interrupted)
+			if (interrupted) {
 				return false;
+			}
 			if (ms == 0) {
-				return (stateNext == UNCHANGED && levelNext == UNCHANGED || nextStateIfUnchanged(this, runnable,
-						stateNext == UNCHANGED ? state : stateNext, levelNext == UNCHANGED ? level : levelNext));
+				return (stateNext == UNCHANGED && levelNext == UNCHANGED || nextStateIfUnchanged(this, runnable, stateNext == UNCHANGED ? state : stateNext, levelNext == UNCHANGED ? level : levelNext));
 			}
 			StateHelper me = this;
-			/**
-			 * @j2sNative
-			 * 
-			 * 			setTimeout(function() {
-			 * 
-			 *            me.nextStateIfUnchanged$O$O$I$I.apply(me, [me, runnable,
-			 *            stateNext, levelNext]);
-			 * 
-			 *            },ms);
-			 */
-			{
-				Timer timer = new Timer(ms, (e) -> nextStateIfUnchanged(me, runnable, stateNext, levelNext));
-				timer.setRepeats(false);
-				timer.start();
-			}
+			Timer timer = new Timer(ms, (e) -> nextStateIfUnchanged(me, runnable, stateNext, levelNext));
+			timer.setRepeats(false);
+			timer.start();
 			return true;
 		}
 
@@ -571,14 +539,10 @@ public class SwingJSUtils {
 	}
 
 	public static class Performance {
-
 		public final static int TIME_RESET = 0;
-
-		public final static int TIME_MARK = 1;
-
-		public static final int TIME_SET = 2;
-
-		public static final int TIME_GET = 3;
+		public final static int TIME_MARK  = 1;
+		public static final int TIME_SET   = 2;
+		public static final int TIME_GET   = 3;
 
 		public static long time, mark, set, duration;
 
@@ -602,8 +566,9 @@ public class SwingJSUtils {
 		 */
 		public static void timeCheck(String msg, int mode) {
 			msg = timeCheckStr(msg, mode);
-			if (msg != null)
+			if (msg != null) {
 				System.err.println(msg);
+			}
 		}
 
 		public static long now(long t) {
@@ -621,8 +586,9 @@ public class SwingJSUtils {
 				}
 				break;
 			case TIME_SET:
-				if (time == 0)
+				if (time == 0) {
 					time = t;
+				}
 				set = t;
 				break;
 			case TIME_MARK:
@@ -636,16 +602,16 @@ public class SwingJSUtils {
 					if (msg != null) {
 						long m0 = mark;
 						mark = t;
-						return ("Platform: timer mark\t" + ((t - time) / 1000f) + "\t" + ((t - m0) / 1000f) + "\t"
-								+ msg);
+						return ("Platform: timer mark\t" + ((t - time) / 1000f) + "\t" + ((t - m0) / 1000f) + "\t" + msg);
 					}
 					mark = t;
 				}
 				break;
 			case TIME_GET:
 				if (msg != null) {
-					if (mark < set)
+					if (mark < set) {
 						duration = t - set;
+					}
 					return ("Platform: timer get\t" + ((t - time) / 1000f) + "\t" + ((duration) / 1000f) + "\t" + msg);
 				}
 				set = 0;
@@ -706,14 +672,9 @@ public class SwingJSUtils {
 		 * @return
 		 */
 		private static Map<Class<? extends SingletonI>, SingletonI> getContextMap() {
-			@SuppressWarnings("unused")
-			ThreadGroup g = ((/** @j2sNative true || */
-			false) ? Thread.currentThread().getThreadGroup() : null);
 			Map<Class<? extends SingletonI>, SingletonI> map = singletons;
-			/** @j2sNative map = g._swingjsSingletons; */
 			if (map == null) {
 				map = new HashMap<>();
-				/** @j2sNative g._swingjsSingletons = map; */
 			}
 
 			return map;
@@ -742,8 +703,7 @@ public class SwingJSUtils {
 				Constructor<? extends SingletonI> con = c.getDeclaredConstructor();
 				con.setAccessible(true);
 				o = con.newInstance();
-			} catch (IllegalAccessException | InstantiationException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			} catch (IllegalAccessException | InstantiationException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				System.out.println("Failed to create singleton for " + c.toString() + ", error was: " + e.toString());
 				e.printStackTrace();
 			}
@@ -771,13 +731,12 @@ public class SwingJSUtils {
 	}
 
 	public static class Timeout extends Timer implements SingletonI {
-
 		private static int timeoutID = 0;
 
-		public final static int PENDING = 1;
+		public final static int PENDING   = 1;
 		public final static int EXECUTING = 2;
-		public final static int DONE = 3;
-		public final static int CANCELED = 4;
+		public final static int DONE      = 3;
+		public final static int CANCELED  = 4;
 
 		private int id;
 		private int delay;
@@ -797,8 +756,9 @@ public class SwingJSUtils {
 
 		public static int setTimeout(String name, int msDelay, boolean cancelPending, Runnable r) {
 			Timeout t = new Timeout(name, msDelay, r);
-			if (cancelPending)
+			if (cancelPending) {
 				cancelTimeoutsByName(name);
+			}
 			getInstance().timeouts.put(t.id, t);
 			t.state = PENDING;
 			t.startTimer();
@@ -819,7 +779,6 @@ public class SwingJSUtils {
 
 		public int cancel() {
 			if (state == PENDING) {
-				//System.out.println("Timeout cancel " + this);
 				state = CANCELED;
 				stop();
 			}
@@ -845,8 +804,9 @@ public class SwingJSUtils {
 		public static void cancelTimeoutsByName(String name) {
 			Timeout[] timeouts = getTimeoutsByName(name);
 			for (Timeout t : timeouts) {
-				if (name == null || t.getName().equals(name))
+				if (name == null || t.getName().equals(name)) {
 					cancelTimeoutById(t.getId());
+				}
 			}
 		}
 
@@ -864,8 +824,9 @@ public class SwingJSUtils {
 			List<Timeout> list = new ArrayList<>();
 			for (Entry<Integer, Timeout> entry : getInstance().timeouts.entrySet()) {
 				Timeout t = entry.getValue();
-				if (t.state == PENDING && (name == null || name.equals(t.name)))
+				if (t.state == PENDING && (name == null || name.equals(t.name))) {
 					list.add(t);
+				}
 			}
 			return list.toArray(new Timeout[list.size()]);
 		}
@@ -884,16 +845,14 @@ public class SwingJSUtils {
 		}
 
 		private void startTimer() {
-			if (state != PENDING)
+			if (state != PENDING) {
 				return;
-			//System.out.println("Timeout starting " + id + " "+  this);
+			}
 			Timeout me = this;
 			addActionListener((e) -> {
-				//System.out.println("Timeout action " + this);
 				getInstance().timeouts.remove(id);
 				if ((state == PENDING)) {
 					state = EXECUTING;
-					//System.out.println("Timeout run " + this);
 					r.run();
 					state = DONE;
 				}
@@ -905,7 +864,5 @@ public class SwingJSUtils {
 		public String toString() {
 			return "[Timeout " + id + " " + name + " " + isPending() + " " + state + "]";
 		}
-
 	}
-
 }

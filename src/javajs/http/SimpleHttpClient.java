@@ -21,7 +21,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-
 /**
  * SwingJS implementation of javajs.http.HttpClient and associated classes.
  * 
@@ -38,13 +37,10 @@ import java.util.function.Function;
  * The SimpleHttpClient is very light -- just a constructor and five methods,
  * providing limited access to HttpRequest and HttpResponse implementations.
  * 
- * 
  * @author Bob Hanson
  * @author Mateusz Warowny
- * 
  */
 class SimpleHttpClient implements HttpClient {
-
 	SimpleHttpClient() {
 		// for reflection
 	}
@@ -93,10 +89,8 @@ class SimpleHttpClient implements HttpClient {
 	 * synchronous or asynchronous jQuery.ajax() call via j2sApplet.js.
 	 * 
 	 * @author hansonr
-	 *
 	 */
 	abstract class AjaxURLConnection extends HttpURLConnection {
-
 		protected AjaxURLConnection(URL u) {
 			super(u);
 		}
@@ -119,9 +113,7 @@ class SimpleHttpClient implements HttpClient {
 	}
 
 	class Request implements HttpRequest {
-
 		 class FormData {
-
 			private final String name;
 			private final Object data;
 			private final String contentType;
@@ -149,7 +141,6 @@ class SimpleHttpClient implements HttpClient {
 			String getFileName() {
 				return fileName;
 			}
-
 		}
 
 		/**
@@ -164,7 +155,6 @@ class SimpleHttpClient implements HttpClient {
 
 		/**
 		 * headers, mostly ignored in SwingJS and AJAX
-		 * 
 		 */
 		private Map<String, String> htHeaders = new HashMap<>();
 
@@ -224,8 +214,9 @@ class SimpleHttpClient implements HttpClient {
 				clearFormParts(name);
 				return this;
 			}
-			if (queryData == null)
+			if (queryData == null) {
 				queryData = new ArrayList<>();
+			}
 			queryData.add(new FormData(name, value, null, null));
 			return this;
 		}
@@ -256,8 +247,9 @@ class SimpleHttpClient implements HttpClient {
 				clearFormParts(name);
 				return this;
 			}
-			if (formData == null)
+			if (formData == null) {
 				formData = new ArrayList<>();
+			}
 			formData.add(new FormData(name, data instanceof String ? data : toBytes(data), contentType, fileName));
 			return this;
 		}
@@ -309,14 +301,12 @@ class SimpleHttpClient implements HttpClient {
 		}
 
 		@Override
-		public void executeAsync(Consumer<HttpResponse> succeed,
-				BiConsumer<HttpResponse, ? super IOException> fail, BiConsumer<HttpResponse, ? super IOException> always) {
+		public void executeAsync(Consumer<HttpResponse> succeed, BiConsumer<HttpResponse, ? super IOException> fail, BiConsumer<HttpResponse, ? super IOException> always) {
 			executeImpl(new Response(succeed, fail, always));
 		}
 
 		private HttpResponse executeImpl(Response r) {
 			Runnable runner = new Runnable() {
-
 				@Override
 				public void run() {
 					try {
@@ -328,12 +318,12 @@ class SimpleHttpClient implements HttpClient {
 						r.handleError(e);
 					}
 				}
-
 			};
-			if (r.isAsync)
+			if (r.isAsync) {
 				new Thread(runner).start();
-			else
+			} else {
 				runner.run();
+			}
 			return r;
 		}
 
@@ -377,15 +367,12 @@ class SimpleHttpClient implements HttpClient {
 		
 		@SuppressWarnings("unused")
 		private void sendFormData(HttpURLConnection conn, List<FormData> formData) throws IOException {
-			if (formData == null)
+			if (formData == null) {
 				return;
-			/**
-			 * @j2sIgnore
-			 */
-			{
-				JavaHttpPoster.post(conn, formData);
-				if (true)
-					return;
+			}
+			JavaHttpPoster.post(conn, formData);
+			if (true) {
+				return;
 			}
 			for (int i = 0, n = formData.size(); i < n; i++) {
 				FormData data = formData.get(i);
@@ -406,10 +393,12 @@ class SimpleHttpClient implements HttpClient {
 			try {
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setUseCaches(false);
-				if (!method.equals(METHOD_HEAD))
+				if (!method.equals(METHOD_HEAD)) {
 					conn.setDoInput(true);
-				if (hasFormBody)
+				}
+				if (hasFormBody) {
 					conn.setDoOutput(true);
+				}
 				conn.setRequestMethod(method);
 				for (Entry<String, String> e : htHeaders.entrySet()) {
 					conn.addRequestProperty(e.getKey(), e.getValue());
@@ -419,11 +408,9 @@ class SimpleHttpClient implements HttpClient {
 				throw new IOException(e + ": " + uri);
 			}
 		}
-
 	}
 
 	 class Response implements HttpResponse {
-
 		int state = 0;
 
 		/**
@@ -432,7 +419,6 @@ class SimpleHttpClient implements HttpClient {
 		boolean isAsync;
 
 		private InputStream inputStream;
-
 
 		/**
 		 * the HTTP(S)URLConnection that will handle this request, actually
@@ -443,19 +429,16 @@ class SimpleHttpClient implements HttpClient {
 
 		/**
 		 * asynchronous callback functions
-		 * 
 		 */
 		private Consumer<HttpResponse> succeed;
 		private BiConsumer<HttpResponse, ? super IOException> fail;
 		private BiConsumer<HttpResponse, ? super IOException> always;
 
-
 		String method;
 
 		private URI uri;
 
-		Response(Consumer<HttpResponse> succeed, BiConsumer<HttpResponse, ? super IOException> fail,
-				BiConsumer<HttpResponse, ? super IOException> always) {
+		Response(Consumer<HttpResponse> succeed, BiConsumer<HttpResponse, ? super IOException> fail, BiConsumer<HttpResponse, ? super IOException> always) {
 			this.succeed = succeed;
 			this.fail = fail;
 			this.always = always;
@@ -491,7 +474,6 @@ class SimpleHttpClient implements HttpClient {
 			}
 
 			new Thread(new Runnable() {
-
 				@Override
 				public void run() {
 					// asynchronous methods cannot throw an exception.
@@ -505,16 +487,15 @@ class SimpleHttpClient implements HttpClient {
 						doCallback(state == 0 || state >= 400, exception);
 					} else {
 					  @SuppressWarnings("unused")
-            Function<byte[], Void> f = new Function<byte[], Void>() {
+					Function<byte[], Void> f = new Function<byte[], Void>() {
 
-              @Override
-              public Void apply(byte[] t) {
-                doCallback(t != null, null);
-                return null;
-              }
+					  @Override
+					  public Void apply(byte[] t) {
+						doCallback(t != null, null);
+						return null;
+					  }
 
-            };
-            /** @j2sNative conn.getBytesAsync$(); */
+					};
 					}
 				}
 			}).start();
@@ -529,12 +510,14 @@ class SimpleHttpClient implements HttpClient {
 		 */
 		protected void doCallback(boolean ok, IOException e) {
 			ok &= (e == null);
-			if (ok && succeed != null)
+			if (ok && succeed != null) {
 				succeed.accept(this);
-			else if (!ok && fail != null)
+			} else if (!ok && fail != null) {
 				fail.accept(this, e);
-			if (always != null)
+			}
+			if (always != null) {
 				always.accept(this, e);
+			}
 		}
 
 		/**
@@ -544,7 +527,6 @@ class SimpleHttpClient implements HttpClient {
 		 * @return true if aSynchronous and has been handled
 		 */
 		protected boolean handleError(Throwable e) {
-						
 			if (!(e instanceof IOException)) {
 				e = new IOException(e);
 			}
@@ -581,10 +563,12 @@ class SimpleHttpClient implements HttpClient {
 				String name = e.getKey();
 				List<String> list = e.getValue();
 				String val = null;
-				for (int i = 0; i < list.size(); i++)
+				for (int i = 0; i < list.size(); i++) {
 					val = (val == null ? "" : val + ",") + list.get(i);
-				if (val != null)
+				}
+				if (val != null) {
 					headers.put(name, val);
+				}
 			}
 			return headers;
 		}
@@ -599,8 +583,7 @@ class SimpleHttpClient implements HttpClient {
 		 */
 		@Override
 		public InputStream getContent() throws IOException {
-			return (inputStream == null ? (inputStream = conn.getInputStream())
-					: inputStream);
+			return (inputStream == null ? (inputStream = conn.getInputStream()) : inputStream);
 		}
 
 		@Override
@@ -612,11 +595,9 @@ class SimpleHttpClient implements HttpClient {
 		public String toString() {
 			return "JSHttpClient " + method + " state=" + state + " uri=" + uri;
 		}
-
 	}
 
 	public static String getBytes(InputStream is) throws IOException {
-	
 		// Java 9 version is better:
 		//		 return new String(is.readAllBytes());
 
@@ -629,7 +610,5 @@ class SimpleHttpClient implements HttpClient {
 		} 
 		is.close();
 		return new String(bos.toByteArray(), 0, ntotal);
-
 	}
-
 }

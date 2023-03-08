@@ -14,10 +14,8 @@ import javax.swing.plaf.UIResource;
  * A class to manage asynchronous input, option, and confirmation dialogs.
  * 
  * @author Bob Hanson hansonr_at_stolaf.edu
- *
  */
 public class AsyncDialog implements PropertyChangeListener {
-
 // see discussion in net.sf.j2s.core/doc/Differences.txt
 //
 // Confirmation dialog example. Note moving the parent component into the constructor.
@@ -67,7 +65,6 @@ public class AsyncDialog implements PropertyChangeListener {
 	private boolean wantsInput;
 
 	// These options can be supplemented as desired.
-
 	
 	/**
 	 * Synchronous call; OK in JavaScript as long as we are using a JavaScript prompt() call
@@ -88,12 +85,10 @@ public class AsyncDialog implements PropertyChangeListener {
 		unsetListener();
 	}
 
-	public void showInputDialog(Component frame, Object message, String title, int messageType, Icon icon,
-			Object[] selectionValues, Object initialSelectionValue, ActionListener a) {
+	public void showInputDialog(Component frame, Object message, String title, int messageType, Icon icon, Object[] selectionValues, Object initialSelectionValue, ActionListener a) {
 		setListener(a);
 		wantsInput = true;
-		process(JOptionPane.showInputDialog(frame, message, title, messageType, icon, selectionValues,
-				initialSelectionValue));
+		process(JOptionPane.showInputDialog(frame, message, title, messageType, icon, selectionValues, initialSelectionValue));
 		unsetListener();
 	}
 
@@ -101,25 +96,21 @@ public class AsyncDialog implements PropertyChangeListener {
 		setListener(a);
 		JOptionPane.showMessageDialog(frame, message);
 		unsetListener();
-		if (/** @j2sNative false || */true)
-			process("" + message);
+		process("" + message);
 	}
 
 	public void showMessageDialog(Component frame, Object message, String title, ActionListener a) {
 		setListener(a);
 		JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
 		unsetListener();
-		if (/** @j2sNative false || */true)
-			process("" + message);
+		process("" + message);
 	}
 
-	public void showOptionDialog(Component frame, Object message, String title, int optionType, int messageType,
-			Icon icon, Object[] options, Object initialValue, ActionListener a) {
+	public void showOptionDialog(Component frame, Object message, String title, int optionType, int messageType, Icon icon, Object[] options, Object initialValue, ActionListener a) {
 		actionListener = a;
 		this.options = options;
 		setListener(a);
-		process(JOptionPane.showOptionDialog(frame, message, title, optionType, messageType, icon, options,
-				initialValue));
+		process(JOptionPane.showOptionDialog(frame, message, title, optionType, messageType, icon, options, initialValue));
 		unsetListener();
 	}
 
@@ -131,8 +122,7 @@ public class AsyncDialog implements PropertyChangeListener {
 		showConfirmDialog(frame, message, title, optionType, JOptionPane.QUESTION_MESSAGE, a);
 	}
 
-	public void showConfirmDialog(Component frame, Object message, String title, int optionType, int messageType,
-			ActionListener a) {
+	public void showConfirmDialog(Component frame, Object message, String title, int optionType, int messageType, ActionListener a) {
 		setListener(a);
 		process(JOptionPane.showConfirmDialog(frame, message, title, optionType, messageType));
 		unsetListener();
@@ -164,8 +154,7 @@ public class AsyncDialog implements PropertyChangeListener {
 	 * @param listener Handle options based on an ActionEvent
 	 */
 	public static void showYesNoAsync(Component parent, Object message, String title, ActionListener listener) {
-		new AsyncDialog().showConfirmDialog(parent, message, (title == null ? "Question" : title),
-				JOptionPane.YES_NO_OPTION, listener);
+		new AsyncDialog().showConfirmDialog(parent, message, (title == null ? "Question" : title), JOptionPane.YES_NO_OPTION, listener);
 	}
 
 	/**
@@ -177,14 +166,12 @@ public class AsyncDialog implements PropertyChangeListener {
 	 */
 	public static void showYesAsync(Component parent, Object message, String title, Runnable yes) {
 		AsyncDialog.showYesNoAsync(parent, message, title, new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getID() == JOptionPane.YES_OPTION) {
 					yes.run();
 				}
 			}
-			
 		});
 	}
 
@@ -197,32 +184,26 @@ public class AsyncDialog implements PropertyChangeListener {
 	 */
 	public static void showOKAsync(Component parent, Object message, String title, Runnable ok) {
 		new AsyncDialog().showConfirmDialog(parent, message, title, JOptionPane.OK_CANCEL_OPTION, new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getID() == JOptionPane.OK_OPTION) {
 					ok.run();
 				}
 			}
-			
 		});
 	}
-
 
 	private void setListener(ActionListener a) {
 		actionListener = a;
 		@SuppressWarnings("unused")
 		Class c = JOptionPane.class; // loads the class
-		/** @j2sNative c.$clazz$.listener = this */
 	}
 
 	private void unsetListener() {
-		/** @j2sNative javax.swing.JOptionPane.listener = null */
 	}
 
 	/**
 	 * Switch from property change to action.
-	 * 
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -248,15 +229,17 @@ public class AsyncDialog implements PropertyChangeListener {
 	private int getOptionIndex(Object[] options, Object val) {
 		if (options != null)
 			for (int i = 0; i < options.length; i++) {
-				if (options[i] == val)
+				if (options[i] == val) {
 					return i;
+				}
 			}
 		return -1;
 	}
 
 	public Object getValue() {
-		if (wantsInput || options == null)
+		if (wantsInput || options == null) {
 			return value;
+		}
 		int val = ((Integer) value).intValue();
 		return (val < 0 ? null : options[val]);
 	}
@@ -269,22 +252,20 @@ public class AsyncDialog implements PropertyChangeListener {
 	 * @param ret may be JavaScript NaN, testable as ret != ret or ret != - -ret
 	 */
 	private void process(int ret) {
-		if (ret != -(-ret) || processed)
+		if (ret != -(-ret) || processed) {
 			return;
+		}
 		processed = true;
 		choice = ret;
 		actionListener.actionPerformed(new ActionEvent(this, ret, "SelectedOption"));
 	}
 
 	private void process(Object ret) {
-		if (ret instanceof UIResource || processed)
+		if (ret instanceof UIResource || processed) {
 			return;
+		}
 		processed = true;
 		choice = ret;
-		actionListener.actionPerformed(new ActionEvent(this, 
-				ret == null ? JOptionPane.CANCEL_OPTION : JOptionPane.OK_OPTION, 
-						(ret == null ? null : ret.toString())));
+		actionListener.actionPerformed(new ActionEvent(this, ret == null ? JOptionPane.CANCEL_OPTION : JOptionPane.OK_OPTION, (ret == null ? null : ret.toString())));
 	}
-
-
 }

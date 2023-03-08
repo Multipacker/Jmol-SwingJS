@@ -3,7 +3,6 @@ package javajs.util;
 import java.awt.Toolkit;
 import java.awt.event.InvocationEvent;
 
-
 /**
  * An abstract class that takes care of simple threading in Java or JavaScript.
  * 
@@ -14,20 +13,17 @@ import java.awt.event.InvocationEvent;
  * 
  * These states are passed into run1
  * 
- * 
  * @author Bob Hanson
- * 
  */
 //@J2SRequireImport(swingjs.JSToolkit.class)
 public abstract class JSThread extends Thread {
-
 	public static final int INIT = 0;
 	public static final int LOOP = 1;
 	public static final int DONE = 2;
 	
 	public static int threadCount = 0;
 
-	protected boolean isJS = /** @j2sNative true || */false;
+	protected boolean isJS = false;
 	
 	public JSThread() {
 		this(null, "JSThread-" + (++threadCount));
@@ -39,7 +35,7 @@ public abstract class JSThread extends Thread {
 	
 	public JSThread(ThreadGroup group, String name) {
 		super(group, name);
-		}
+	}
 
 	@Override
 	public void run() {
@@ -48,18 +44,7 @@ public abstract class JSThread extends Thread {
 
 	@Override
 	public synchronized void start() {
-
-		
-		/**
-		 * @j2sNative
-		 * 
-		 * 			  Clazz.load("swingjs.JSToolkit").dispatch$O$I$I(this, 1, 0);
-		 * 
-		 */
-		{
-			super.start();
-		}
-
+		super.start();
 	}
 
 	/**
@@ -77,18 +62,16 @@ public abstract class JSThread extends Thread {
 	protected abstract boolean isLooping();
 	
 	/**
-	 * 
 	 * @return false to handle sleepAndReturn yourself
 	 */
 	protected abstract boolean myLoop();
+
 	/**
 	 * what to do when the DONE state is reached
-	 * 
 	 */
 	protected abstract void whenDone();
 	
 	/**
-	 * 
 	 * @return the sleep time in milliseconds
 	 */
 	protected abstract int getDelayMillis();
@@ -104,7 +87,6 @@ public abstract class JSThread extends Thread {
 	 * anything you want done in  try{}catch(}finally().
 	 * Note that this method is not fired if we are in JavaScript
 	 * mode and the normal return from sleepAndReturn() is taken. 
-	 *  
 	 */
 	protected abstract void doFinally();
 	
@@ -164,14 +146,12 @@ public abstract class JSThread extends Thread {
 	}
 
 	/**
-	 * 
 	 * @param delay
 	 * @param state
 	 * @return true if we should interrupt (i.e. JavaScript)
 	 * @throws InterruptedException
 	 */
-	protected boolean sleepAndReturn(final int delay, final int state)
-			throws InterruptedException {
+	protected boolean sleepAndReturn(final int delay, final int state) throws InterruptedException {
 		if (!isJS) {
 			sleep(delay);
 			return false;
@@ -187,21 +167,7 @@ public abstract class JSThread extends Thread {
 				me.run1(state);
 			}
 		};
-		/**
-		 * @j2sNative
-		 * 
-		 *            setTimeout(
-		 *              function() {
-		 *              java.awt.Toolkit.getDefaultToolkit$().getSystemEventQueue$().postEvent$java_awt_AWTEvent(
-		 *              Clazz.new_(java.awt.event.InvocationEvent.c$$O$Runnable,[me, r]))}, 
-		 *              delay);
-		 * 
-		 */
-		{
-			Toolkit.getDefaultToolkit().getSystemEventQueue()
-					.postEvent(new InvocationEvent(me, r));
-		}
+		Toolkit.getDefaultToolkit().getSystemEventQueue() .postEvent(new InvocationEvent(me, r));
 		return true;
 	}
-	
 }

@@ -21,12 +21,9 @@ import javajs.api.js.J2SObjectInterface;
 import swingjs.api.JSUtilI;
 
 /**
- * 
  * A method to allow a JavaScript Ajax
- * 
  */
 public class AjaxURLConnection extends HttpURLConnection {
-
 	static private JSUtilI jsutil = null;
 	static {
 		try {
@@ -37,18 +34,9 @@ public class AjaxURLConnection extends HttpURLConnection {
 	}
 
 	public static class AjaxHttpsURLConnection extends AjaxURLConnection {
-
-		static {
-			/**
-			 * @j2sNative C$.implementz = [Clazz.load("javax.net.ssl.HttpsURLConnection")];
-			 * 
-			 */
-		}
-
 		protected AjaxHttpsURLConnection(URL url) {
 			super(url);
 		}
-
 	}
 
 	public static URLConnection newConnection(URL url) {
@@ -57,8 +45,7 @@ public class AjaxURLConnection extends HttpURLConnection {
 
 	protected AjaxURLConnection(URL url) {
 		super(url);
-		ajax = /** @j2sNative url.ajax || */
-				null;
+		ajax = null;
 	}
 
 	byte[] bytesOut;
@@ -72,11 +59,7 @@ public class AjaxURLConnection extends HttpURLConnection {
 	public String getHeaderField(String name) {
 		try {
 			if (getResponseCode() != -1) {
-				return /**
-						 * @j2sNative this.info && this.info.xhr &&
-						 *            this.info.xhr.getResponseHeader(name) ||
-						 */
-				null;
+				return null;
 			}
 		} catch (IOException e) {
 		}
@@ -86,36 +69,14 @@ public class AjaxURLConnection extends HttpURLConnection {
 	@SuppressWarnings({ "unused", "null" })
 	@Override
 	public Map<String, List<String>> getHeaderFields() {
-		Map<String, List<String>> map = new HashMap<>();
 		try {
-			if (getResponseCode() != -1) {
-				String[] data = null;
-				/**
-				 * @j2sNative data = this.info && this.info.xhr &&
-				 *            this.info.xhr.getAllResponseHeaders(); data && (data =
-				 *            data.trim().split("\n"));
-				 */
-				// ["content-length: 996"
-				// , "content-type: text/plain; charset=x-user-defined"
-				// , "last-modified: Fri, 01 May 2020 11:54:13 GMT"]
-				if (data != null) {
-					for (int i = 0; i < data.length; i++) {
-						String[] parts = data[i].split(":");
-						String key = parts[0].trim();
-						List<String> list = map.get(key);
-						if (list == null)
-							map.put(key, list = new ArrayList<>());
-						list.add(parts[1].trim());
-					}
-				}
-			}
+			getResponseCode();
 		} catch (IOException e) {
 		}
-		return map;
+		return new HashMap<String, List<String>>();
 	}
 
 	/**
-	 * 
 	 * doAjax() is where the synchronous call to AJAX is to happen. or at least
 	 * where we wait for the asynchronous call to return. This method should fill
 	 * the dataIn field with either a string or byte array, or null if you want to
@@ -126,29 +87,15 @@ public class AjaxURLConnection extends HttpURLConnection {
 	 * the method is "private", but in JavaScript that can still be overloaded. Just
 	 * set something to org.jmol.awtjs.JmolURLConnection.prototype.doAjax
 	 * 
-	 * 
 	 * @param isBinary
 	 * 
 	 * @return file data as a javajs.util.SB or byte[] depending upon the file type.
-	 * 
-	 * 
 	 */
 	@SuppressWarnings("null")
 	private Object doAjax(boolean isBinary, Function<Object, Void> whenDone) {
 		getBytesOut();
-		J2SObjectInterface J2S = /** @j2sNative self.J2S || */
-				null;
+		J2SObjectInterface J2S = null;
 		Object info = ajax;
-		/**
-		 * @j2sNative
-		 * 
-		 * 			info = info || {}; if (!info.dataType) { info.isBinary =
-		 *            !!isBinary; }
-		 * 
-		 *            whenDone && (info.fWhenDone =
-		 *            function(data){whenDone.apply$O(data)});
-		 * 
-		 */
 		this.info = info;
 		Map<String, List<String>> map = getRequestProperties();
 		boolean isnocache = false;
@@ -176,28 +123,17 @@ public class AjaxURLConnection extends HttpURLConnection {
 				if (s.length() > 0) {
 					/**
 					 * For now we are not enabling this. Causes too much problem with CORS.
-					 * 
-					 * @j2sNative
-					 * 
-					 * 			info.headers || (info.headers = {}); //info.headers[key] = s;
 					 */
 				}
 			}
 		}
 		if ("application/json".equals(type)) {
-			// Hack here we are turning off the content type for CORS for VBRC
-			/**
-			 * @j2sNative
-			 * 
-			 * 			info.contentType = false;
-			 */
 		}
 
 		Object result;
 		String myURL = url.toString();
 		boolean isEmpty = false;
 		if (myURL.startsWith("file:/TEMP/")) {
-
 			result = jsutil.getCachedBytes(myURL);
 			isEmpty = (result == null);
 			if (whenDone != null) {
@@ -223,29 +159,24 @@ public class AjaxURLConnection extends HttpURLConnection {
 						URL path = jsutil.getCodeBase();
 						if (path != null) {
 							j2s = path.toString();
-							if (myURL.indexOf(j2s) >= 0)
+							if (myURL.indexOf(j2s) >= 0) {
 								myURL = path + myURL.split(j2s)[1];
-							else
+							} else {
 								myURL = path + myURL.substring(5);
+							}
 						}
 					}
 				}
 			}
 			result = J2S.doAjax(myURL, postOut, bytesOut, info);
-			if (whenDone != null)
+			if (whenDone != null) {
 				return null;
+			}
 			// the problem is that jsmol.php is still returning crlf even if output is 0
 			// bytes
 			// and it is not passing through the not-found state, just 200
-			/**
-			 * @j2sNative
-			 * 
-			 * 			isEmpty = (!result || result.length == 2 && result[0] == 13 &&
-			 *            result[1] == 10); if (isEmpty) result = new Int8Array;
-			 */
 
-			responseCode = isEmpty ? HTTP_NOT_FOUND : /** @j2sNative info.xhr.status || */
-					0;
+			responseCode = isEmpty ? HTTP_NOT_FOUND : 0;
 		}
 		return result;
 	}
@@ -281,11 +212,9 @@ public class AjaxURLConnection extends HttpURLConnection {
 	 * @param fileName
 	 */
 	public void addFormData(String name, Object value, String contentType, String fileName) {
-		if (formData == null)
+		if (formData == null) {
 			formData = new Object[0][];
-		/**
-		 * @j2sNative this.formData.push([name, value, contentType, fileName]);
-		 */
+		}
 	}
 
 	/**
@@ -295,9 +224,6 @@ public class AjaxURLConnection extends HttpURLConnection {
 	@SuppressWarnings("unused")
 	private byte[] getBytesOut() {
 		if (streamOut != null) {
-			if (formData == null)
-				formData = /** @j2sNative this.streamOut._form_data || */
-						null;
 			if (formData == null) {
 				bytesOut = streamOut.toByteArray();
 			}
@@ -323,11 +249,7 @@ public class AjaxURLConnection extends HttpURLConnection {
 //
 
 		if (formData != null) {
-			Object map = ajax = (/**
-									 * @j2sNative 1 ? { data:new FormData(), processData:false, contentType:false,
-									 *            type:"POST", j2sNoProxy:true } :
-									 */
-			null);
+			Object map = ajax = null;
 			if (formData instanceof Map<?, ?>) {
 				@SuppressWarnings("unchecked")
         Map<String, Object> data = (Map<String, Object>) formData;
@@ -337,7 +259,6 @@ public class AjaxURLConnection extends HttpURLConnection {
 					if (val instanceof byte[]) {
 						val = toBlob((byte[]) val, null);
 					}
-					/** @j2sNative map.data.append(key, val); */
 				}
 			} else {
 				Object[][] adata = (Object[][]) formData;
@@ -353,10 +274,6 @@ public class AjaxURLConnection extends HttpURLConnection {
 					if (value instanceof byte[]) {
 						value = toBlob((byte[]) value, contentType);
 					}
-					/**
-					 * @j2sNative (filename ? map.data.append(name, value, filename) :
-					 *            map.data.append(name, value));
-					 */
 				}
 			}
 			formData = null;
@@ -367,11 +284,7 @@ public class AjaxURLConnection extends HttpURLConnection {
 	}
 
 	private static Object toBlob(byte[] val, String contentType) {
-		return /**
-				 * @j2sNative (contentType == null ? new Blob([val]) : new Blob([val],{type:
-				 *            contentType})) ||
-				 */
-		null;
+		return null;
 	}
 
 	public void outputString(String post) {
@@ -386,25 +299,21 @@ public class AjaxURLConnection extends HttpURLConnection {
 	@SuppressWarnings({ "null", "unused" })
   @Override
 	public InputStream getInputStream() throws FileNotFoundException {
-	  InputStream is = /** @j2sNative this.is || */null;
-		if (is != null)
-			return is;
-		responseCode = -1;
-		is = getInputStreamAndResponse(false);
-		if (is == null)
+	  InputStream is = getInputStreamAndResponse(false);
+		if (is == null) {
 			throw new FileNotFoundException("opening " + url);
+		}
 		return is;
 	}
 
 	// dont @Override
 	public void getBytesAsync(Function<byte[], Void> whenDone) {
 		getInputStreamAsync(new Function<InputStream, Void>() {
-
 			@Override
 			public Void apply(InputStream is) {
 				try {
 					if (is != null) {
-					  byte[] bytes = /** @j2sNative is.readAllBytes$() || */null;
+						byte[] bytes = null;
 						whenDone.apply(bytes);
 						return null;
 					}
@@ -413,19 +322,11 @@ public class AjaxURLConnection extends HttpURLConnection {
 				whenDone.apply(null);
 				return null;
 			}
-
 		});
-
 	}
 
 	@SuppressWarnings({ "null", "unused" })
   private void getInputStreamAsync(Function<InputStream, Void> whenDone) {
-	  InputStream is = /** @j2sNative is = this.is || */null;
-		if (is != null) {
-			whenDone.apply(is);
-			return;
-		}
-		responseCode = -1;
 		getInputStreamAndResponseAsync(whenDone);
 	}
 
@@ -488,53 +389,25 @@ public class AjaxURLConnection extends HttpURLConnection {
 
 	private BufferedInputStream getCachedStream(boolean allowNWError) {
 		Object data = urlCache.get(getCacheKey());
-		if (data == null)
+		if (data == null) {
 			return null;
+		}
 		@SuppressWarnings("unused")
 		URL url = this.url;
-		if (data instanceof byte[]) {
-			/** @j2sNative url._streamData = data */
-		}
-		boolean isAjax = /** @j2sNative url.ajax || */
-				false;
+		boolean isAjax = false;
 		BufferedInputStream bis = getBIS(data, isAjax);
 		return (!isNetworkError(bis) || allowNWError ? bis : null);
 	}
 
 	private static BufferedInputStream getBIS(Object data, boolean isJSON) {
-		if (data == null)
+		if (data == null) {
 			return null;
-		@SuppressWarnings("unused")
-		Object jsonData = (isJSON ? data : null);
-		if (isJSON) {
-			/**
-			 * @j2sNative
-			 * 
-			 * 			data = JSON.stringify(data);
-			 */
 		}
-		BufferedInputStream bis = Rdr.toBIS(data);
-		if (isJSON) {
-			/**
-			 * @j2sNative
-			 * 
-			 * 			bis._jsonData = jsonData;
-			 */
-		}
-		return bis;
+		return Rdr.toBIS(data);
 	}
 
 	@SuppressWarnings({ "unused", "null" })
 	void setCachedStream() {
-		Object data = /** @j2sNative this.url._streamData || */
-				null;
-		if (data != null) {
-			int code = this.responseCode;
-			/**
-			 * @j2sNative data._responseCode = code;
-			 */
-			urlCache.put(getCacheKey(), data);
-		}
 	}
 
 	private String getCacheKey() {
@@ -549,17 +422,16 @@ public class AjaxURLConnection extends HttpURLConnection {
 	boolean isNetworkError(BufferedInputStream is) {
 		if (is != null) {
 			responseCode = HTTP_OK;
-			if (/** @j2sNative is._jsonData || */
-			false)
-				return false;
 			is.mark(15);
 			byte[] bytes = new byte[13];
 			try {
 				is.read(bytes);
 				is.reset();
-				for (int i = NETWORK_ERROR.length; --i >= 0;)
-					if (bytes[i] != NETWORK_ERROR[i])
+				for (int i = NETWORK_ERROR.length; --i >= 0;) {
+					if (bytes[i] != NETWORK_ERROR[i]) {
 						return false;
+					}
+				}
 			} catch (IOException e) {
 			}
 		}
@@ -580,32 +452,19 @@ public class AjaxURLConnection extends HttpURLConnection {
 	 */
 	@SuppressWarnings("unused")
 	public static BufferedInputStream getAttachedStreamData(URL url, boolean andDelete) {
-
 		Object data = null;
 		boolean isJSON = false;
-		/**
-		 * @j2sNative data = url._streamData; if (andDelete) url._streamData = null;
-		 *            isJSON = (data && url.ajax && url.ajax.dataType == "json")
-		 */
 		return getBIS(data, isJSON);
 	}
 
 	/**
-	 * 
 	 * @param url
 	 * @param o
 	 * @return InputStream or possibly a wrapper for an empty string, but also with
 	 *         JSON data.
 	 */
 	public static BufferedInputStream attachStreamData(URL url, Object o) {
-		/**
-		 * @j2sNative
-		 * 
-		 * 			url._streamData = o;
-		 */
-
-		return getBIS(o, /** @j2sNative url.ajax || */
-				false);
+		return getBIS(o, false);
 	}
 
 	/**
@@ -636,7 +495,6 @@ public class AjaxURLConnection extends HttpURLConnection {
 	@Override
 	public void disconnect() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -659,5 +517,4 @@ public class AjaxURLConnection extends HttpURLConnection {
 	public String toString() {
 		return (url == null ? "[AjaxURLConnection]" : url.toString());
 	}
-
 }

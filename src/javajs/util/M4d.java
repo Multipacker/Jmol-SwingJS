@@ -26,7 +26,6 @@ package javajs.util;
  *         JavaScript using Java2Script
  */
 public class M4d extends M34d {
-
   /**
    * The fourth element of the first row.
    */
@@ -141,20 +140,6 @@ public class M4d extends M34d {
     m.setMV(m1, t);
     return m;
   }
-
-//  public static M4d newMV(M3d m1, T3d t) {
-//    M4d m = new M4d();
-//    m.setMV(M3d.newM3(m1), V3d.newV(t));
-//    return m;
-//  }
-//  
-//  public static M4d newMV(M3d m1, T3d t) {
-//    M4d m = new M4d();
-//    m.setMV(M3d.newM3(m1), V3d.newV(t));
-//    return m;
-//  }
-
-
 
   /**
    * Sets this matrix to all zeros.
@@ -983,10 +968,4 @@ public class M4d extends M34d {
   private double rnd(double n, double f) {
     return (Math.abs(n) < f ? 0 : n);
   }
-
-//  public void getTranslation(V3d trans) {
-//      trans.x =  m03;
-//      trans.y =  m13;
-//      trans.z =  m23;
-//  }
 }

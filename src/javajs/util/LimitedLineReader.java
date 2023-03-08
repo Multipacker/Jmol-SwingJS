@@ -8,7 +8,6 @@ import java.io.BufferedReader;
  *  start with #, and including the \n or \r characters at line ends.
  *  
  *  Generally useful for determining what sort of data a file contains.
- *   
  */
 public class LimitedLineReader {
   private char[] buf;

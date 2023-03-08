@@ -48,7 +48,6 @@ import java.io.InputStream;
  * </p>
  */
 public class CBZip2InputStream extends InputStream {
-
   /**
    * Index of the last char in the block, so the block size == last + 1.
    */
@@ -180,8 +179,7 @@ public class CBZip2InputStream extends InputStream {
    * @see java.io.InputStream#read(byte[], int, int)
    */
   @Override
-  public int read(final byte[] dest, final int offs, final int len)
-      throws IOException {
+  public int read(final byte[] dest, final int offs, final int len) throws IOException {
     if (offs < 0) {
       throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
     }
@@ -189,8 +187,7 @@ public class CBZip2InputStream extends InputStream {
       throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
     }
     if (offs + len > dest.length) {
-      throw new IndexOutOfBoundsException("offs(" + offs + ") + len(" + len
-          + ") > dest.length(" + dest.length + ").");
+      throw new IndexOutOfBoundsException("offs(" + offs + ") + len(" + len + ") > dest.length(" + dest.length + ").");
     }
     if (this.in == null) {
       throw new IOException("stream closed");
@@ -281,14 +278,12 @@ public class CBZip2InputStream extends InputStream {
 
     int magic2 = in.read();
     if (magic2 != 'h') {
-      throw new IOException(isFirstStream ? "Stream is not in the BZip2 format"
-          : "Garbage after a valid BZip2 stream");
+      throw new IOException(isFirstStream ? "Stream is not in the BZip2 format" : "Garbage after a valid BZip2 stream");
     }
 
     int blockSize = in.read();
     if ((blockSize < '1') || (blockSize > '9')) {
-      throw new IOException("Stream is not BZip2 formatted: illegal "
-          + "blocksize " + (char) blockSize);
+      throw new IOException("Stream is not BZip2 formatted: illegal " + "blocksize " + (char) blockSize);
     }
 
     this.blockSize100k = blockSize - '0';
@@ -365,15 +360,13 @@ public class CBZip2InputStream extends InputStream {
     if (this.storedBlockCRC != this.computedBlockCRC) {
       // make next blocks readable without error
       // (repair feature, not yet documented, not tested)
-      this.computedCombinedCRC = (this.storedCombinedCRC << 1)
-          | (this.storedCombinedCRC >>> 31);
+      this.computedCombinedCRC = (this.storedCombinedCRC << 1) | (this.storedCombinedCRC >>> 31);
       this.computedCombinedCRC ^= this.storedBlockCRC;
 
       reportCRCError();
     }
 
-    this.computedCombinedCRC = (this.computedCombinedCRC << 1)
-        | (this.computedCombinedCRC >>> 31);
+    this.computedCombinedCRC = (this.computedCombinedCRC << 1) | (this.computedCombinedCRC >>> 31);
     this.computedCombinedCRC ^= this.computedBlockCRC;
   }
 
@@ -595,8 +588,7 @@ public class CBZip2InputStream extends InputStream {
    * @param alphaSize
    * @param nGroups
    */
-  private void createHuffmanDecodingTables(final int alphaSize,
-                                           final int nGroups) {
+  private void createHuffmanDecodingTables(final int alphaSize, final int nGroups) {
     final Data dataShadow = this.data;
     final char[][] len = dataShadow.temp_charArray2d;
     final int[] minLens = dataShadow.minLens;
@@ -617,8 +609,7 @@ public class CBZip2InputStream extends InputStream {
           minLen = lent;
         }
       }
-      hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen, maxLen,
-          alphaSize);
+      hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen, maxLen, alphaSize);
       minLens[t] = minLen;
     }
   }
@@ -1202,5 +1193,4 @@ public class CBZip2InputStream extends InputStream {
     }
     this.globalCrc = globalCrcShadow;
   }
-
 }

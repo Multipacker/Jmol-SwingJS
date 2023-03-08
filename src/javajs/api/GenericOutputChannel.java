@@ -1,22 +1,19 @@
 package javajs.api;
 
 public interface GenericOutputChannel {
+	boolean isBigEndian();
 
-  boolean isBigEndian();
+	void writeByteAsInt(int b);
 
-  void writeByteAsInt(int b);
+	void write(byte[] b, int off, int n);
 
-  void write(byte[] b, int off, int n);
+	void writeInt(int i);
 
-  void writeInt(int i);
+	void reset();
 
-  void reset();
+	String closeChannel();
 
-  String closeChannel();
+	void writeLong(long b);
 
-  void writeLong(long b);
-
-  void writeShort(short i);
-
-
+	void writeShort(short i);
 }

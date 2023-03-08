@@ -26,12 +26,9 @@
  */
 package javajs.util;
 
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.util.Map;
-
-
 
 /* a simple compound document reader. 
  * 
@@ -50,7 +47,6 @@ import java.util.Map;
  */
 
 public class CompoundDocument extends BinaryDocument{
-
 //  RandomAccessFile file;
   CompoundDocHeader header = new CompoundDocHeader(this);
   Lst<CompoundDocDirEntry> directory = new  Lst<CompoundDocDirEntry>();
@@ -95,8 +91,7 @@ public class CompoundDocument extends BinaryDocument{
         sb.append(separator).append(thisEntry.entryName)
         .append("\tlen=").appendI(thisEntry.lenStream)
         .append("\tSID=").appendI(thisEntry.SIDfirstSector)
-        .append(thisEntry.isStandard ? "\tfileOffset="
-                + getOffset(thisEntry.SIDfirstSector) : "");
+        .append(thisEntry.isStandard ? "\tfileOffset=" + getOffset(thisEntry.SIDfirstSector) : "");
     }
     return sb.toString();
   }
@@ -211,10 +206,6 @@ public class CompoundDocument extends BinaryDocument{
     nShortSectorsPerStandardSector = sectorSize / shortSectorSize; // e.g. 512 / 64 = 8
     nIntPerSector = sectorSize / 4; // e.g. 512 / 4 = 128
     nDirEntriesperSector = sectorSize / 128; // e.g. 512 / 128 = 4
-//System.out.println(
-//          "compound document: revNum=" + header.revNumber +
-//          " verNum=" + header.verNumber + " isBigEndian=" + isBigEndian +
-//          " bytes per standard/short sector=" + sectorSize + "/" + shortSectorSize);
     return true;
   }
 
@@ -231,7 +222,6 @@ public class CompoundDocument extends BinaryDocument{
         gotoSector(thisSID);
         for (int j = 0; j < nIntPerSector; j++) {
           SAT[nSID++] = readInt();
-          //Logger.debug(thisSID+"."+j + "/" + (nSID - 1) + " : " + SAT[nSID - 1]);
         }
       }
       int nMaster = header.nAdditionalMATsectors;
@@ -269,7 +259,6 @@ public class CompoundDocument extends BinaryDocument{
         gotoSector(thisSID);
         for (int j = 0; j < nIntPerSector; j++) {
           SSAT[nSSID++] = readInt();
-          //System.out.println("short: " + thisSID+"."+j+" SSID=" +(nSSID-1)+" "+SSAT[nSSID-1]);
         }
         thisSID = SAT[thisSID];
       }
@@ -297,21 +286,17 @@ public class CompoundDocument extends BinaryDocument{
     } catch (Exception e) {
       System.out.println(e.toString());
     }
-//System.out.println("CompoundDocument directory entry: \n"
-//        + getDirectoryListing("\n"));
   }
 
   private SB getEntryAsString(CompoundDocDirEntry thisEntry, boolean asBinaryString) {
     if(thisEntry.isEmpty)
       return new SB();
-    //System.out.println(thisEntry.entryName + " " + thisEntry.entryType + " " + thisEntry.lenStream + " " + thisEntry.isStandard + " " + thisEntry.SIDfirstSector);
     return (thisEntry.isStandard ? getStandardStringData(
             thisEntry.SIDfirstSector, thisEntry.lenStream, asBinaryString)
             : getShortStringData(thisEntry.SIDfirstSector, thisEntry.lenStream, asBinaryString));
   }
   
-  private SB getStandardStringData(int thisSID, int nBytes,
-                                             boolean asBinaryString) {
+  private SB getStandardStringData(int thisSID, int nBytes, boolean asBinaryString) {
     SB data = new SB();
     byte[] byteBuf = new byte[sectorSize];
     ZipData gzipData = new ZipData(nBytes);
@@ -331,10 +316,7 @@ public class CompoundDocument extends BinaryDocument{
     return data;
   }
 
-  private int getSectorData(SB data, byte[] byteBuf,
-                            int nSectorBytes, int nBytes, 
-                            boolean asBinaryString, ZipData gzipData)
-      throws Exception {
+  private int getSectorData(SB data, byte[] byteBuf, int nSectorBytes, int nBytes, boolean asBinaryString, ZipData gzipData) throws Exception {
     readByteArray(byteBuf, 0, byteBuf.length);
     int n = gzipData.addBytes(byteBuf, nSectorBytes, nBytes);
     if (n >= 0)
@@ -366,7 +348,6 @@ public class CompoundDocument extends BinaryDocument{
     byte[] byteBuf = new byte[shortSectorSize];
     ZipData gzipData = new ZipData(nBytes);
     try {
-      //System.out.println("CD shortSID=" + shortSID);
       // point to correct short data sector, 512/64 = 4 per page
       while (thisSID >= 0 && shortSID >= 0 && nBytes > 0) {
         while (shortSID - ptShort >= nShortSectorsPerStandardSector) {
@@ -376,7 +357,6 @@ public class CompoundDocument extends BinaryDocument{
         seek(getOffset(thisSID) + (shortSID - ptShort) * shortSectorSize);
         nBytes = getSectorData(data, byteBuf, shortSectorSize, nBytes, asBinaryString, gzipData);
         shortSID = SSAT[shortSID];
-        //System.out.println("CD shortSID=" + shortSID);
       }
     } catch (Exception e) {
       System.out.println(data.toString());

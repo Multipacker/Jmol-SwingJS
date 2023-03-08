@@ -36,7 +36,6 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("serial")
 public class Lst<V> extends ArrayList<V> {
-
   public Lst() {
     super();  
   }
@@ -52,5 +51,4 @@ public class Lst<V> extends ArrayList<V> {
   public boolean removeObj(Object v) {
       return super.remove(v);
   }
-  
 }

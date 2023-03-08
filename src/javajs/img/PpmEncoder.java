@@ -30,12 +30,10 @@ package javajs.img;
 
 import java.util.Map;
 
-
 /**
  * see http://netpbm.sourceforge.net/doc/ppm.html
  */
 public class PpmEncoder extends ImageEncoder {
-
   @Override
   protected void setParams(Map<String, Object> params) {
     // no params

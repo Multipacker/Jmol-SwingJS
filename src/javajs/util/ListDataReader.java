@@ -2,18 +2,11 @@ package javajs.util;
 
 import java.io.IOException;
 
-
-
-
-
 /**
- * 
  * VectorDataReader subclasses BufferedReader and overrides its
  * read, readLine, mark, and reset methods so that JmolAdapter 
  * works with Vector<String> arrays without any further adaptation. 
- * 
  */
-
 public class ListDataReader extends DataReader {
   private Lst<String> data;
   private int pt;
@@ -41,10 +34,6 @@ public class ListDataReader extends DataReader {
     return (pt < len ? data.get(pt++) : null);
   }
 
-  /**
-   * 
-   * @param ptr
-   */
   public void mark(long ptr) {
     //ignore ptr.
     ptMark = pt;

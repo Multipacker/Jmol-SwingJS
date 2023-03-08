@@ -19,7 +19,6 @@ import javax.swing.plaf.UIResource;
  */
 
 public class AsyncColorChooser implements PropertyChangeListener {
-
 	private ActionListener listener;
 	private Color selectedColor;
 
@@ -32,7 +31,6 @@ public class AsyncColorChooser implements PropertyChangeListener {
 	public Color getSelectedColor() {
 		return selectedColor;
 	}
-
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -48,20 +46,16 @@ public class AsyncColorChooser implements PropertyChangeListener {
 
 	private void setListener(ActionListener a) {
 		listener = a;
-		/** @j2sNative Clazz.load("javax.swing.JColorChooser");javax.swing.JColorChooser.listener = this */
 	}
 
 	private void unsetListener() {
-		/** @j2sNative javax.swing.JColorChooser.listener = null */
 	}
 
-	
-	
 	private void process(Color c) {
-		if (c instanceof UIResource)
+		if (c instanceof UIResource) {
 			return;
+		}
 		selectedColor = c;
 		listener.actionPerformed(new ActionEvent(this, c == null ? 0 : c.getRGB(), c == null ? null : c.toString()));
 	}
-	
 }

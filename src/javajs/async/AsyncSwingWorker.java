@@ -82,8 +82,6 @@ import javajs.async.SwingJSUtils.StateMachine;
  *
  */
 public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implements StateMachine {
-
-
 	// PropertyChangeEvent getPropertyName()
 	
 	private static final String PROPERTY_STATE = "state";
@@ -119,7 +117,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 
 	/**
 	 * Do something when the task is finished or canceled.
-	 * 
 	 */
 	abstract public void doneAsync();
 
@@ -153,7 +150,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 	 * 
 	 * @param max         The last progress value. No range limit; may be greater
 	 *                    than min.
-	 * 
 	 */
 	public AsyncSwingWorker(Component owner, String title, int delayMillis, int min, int max) {
 		if (title != null && delayMillis > 0) {
@@ -224,7 +220,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 
 	/**
 	 * Cancel the asynchronous process.
-	 * 
 	 */
 	public void cancelAsync() {
 		helper.interrupt();
@@ -234,7 +229,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 	 * Check to see if the asynchronous process has been canceled.
 	 *
 	 * @return true if StateHelper is not alive anymore
-	 * 
 	 */
 	public boolean isCanceledAsync() {
 		return !helper.isAlive();
@@ -244,7 +238,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 	 * Check to see if the asynchronous process is completely done.
 	 * 
 	 * @return true only if the StateMachine is at STATE_DONE
-	 * 
 	 */
 	public boolean isDoneAsync() {
 		return helper.getState() == STATE_DONE;
@@ -305,12 +298,14 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 	private boolean isPaused;
 
 	protected void setPaused(boolean tf) {
-		if (isPaused == tf)
+		if (isPaused == tf) {
 			return;
+		}
 		isPaused = tf;
 		firePropertyChange(PROPERTY_PAUSE, null, (tf ? PAUSED : RESUMED));
-		if (!tf)
+		if (!tf) {
 			stateLoop();
+		}
 	}
 
 	protected boolean isPaused() {
@@ -402,7 +397,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 			doneAsync();
 			firePropertyChange(PROPERTY_STATE, null, DONE_ASYNC);
 		}
-
 	};
 
 	private boolean checkCanceled() {
@@ -421,7 +415,6 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 
 	/**
 	 * see SwingWorker, made final here.
-	 * 
 	 */
 	@Override
 	final protected Void doInBackground() throws Exception {
@@ -433,14 +426,12 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 
 	/**
 	 * see SwingWorker, made final here. Nothing to do.
-	 * 
 	 */
 	@Override
 	final public void done() {
 	}
 
 	public class AsyncSubtask {
-	
 		private int nextProgress;
 
 		public AsyncSubtask(int nextProgress) {
@@ -456,6 +447,5 @@ public abstract class AsyncSwingWorker extends SwingWorker<Void, Void> implement
 			setProgressAsync(nextProgress);
 			setPaused(false);
 		}
-	
 	}
 }

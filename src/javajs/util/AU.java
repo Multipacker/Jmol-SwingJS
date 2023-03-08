@@ -34,7 +34,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 final public class AU {
-
   /**
    * Very important that this not be used with Int32Array or Float32Array,
    * because it is not initialize to all zeros in MSIE 9.
@@ -44,38 +43,31 @@ final public class AU {
    * @return array
    */
   public static Object ensureLength(Object array, int minimumLength) {
-    return (array != null && getLength(array) >= minimumLength ? array
-        : arrayCopyObject(array, minimumLength));
+    return (array != null && getLength(array) >= minimumLength ? array : arrayCopyObject(array, minimumLength));
   }
 
   public static String[] ensureLengthS(String[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyS(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyS(array, minimumLength));
   }
 
   public static float[] ensureLengthA(float[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyF(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyF(array, minimumLength));
   }
 
   public static double[] ensureLengthD(double[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyD(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyD(array, minimumLength));
   }
 
   public static int[] ensureLengthI(int[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyI(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyI(array, minimumLength));
   }
 
   public static short[] ensureLengthShort(short[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyShort(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyShort(array, minimumLength));
   }
 
   public static byte[] ensureLengthByte(byte[] array, int minimumLength) {
-    return (array != null && array.length >= minimumLength ? array
-        : arrayCopyByte(array, minimumLength));
+    return (array != null && array.length >= minimumLength ? array : arrayCopyByte(array, minimumLength));
   }
 
   /**
@@ -117,21 +109,25 @@ final public class AU {
     return arrayCopyBool(array, (array == null ? 16 : 2 * array.length));
   }
 
-  public static Object deleteElements(Object array, int firstElement,
-                                      int nElements) {
-    if (nElements == 0 || array == null)
+  public static Object deleteElements(Object array, int firstElement, int nElements) {
+    if (nElements == 0 || array == null) {
       return array;
+	}
     int oldLength = getLength(array);
-    if (firstElement >= oldLength)
+    if (firstElement >= oldLength) {
       return array;
+	}
     int n = oldLength - (firstElement + nElements);
-    if (n < 0)
+    if (n < 0) {
       n = 0;
+	}
     Object t = newInstanceO(array, firstElement + n);
-    if (firstElement > 0)
+    if (firstElement > 0) {
       System.arraycopy(array, 0, t, 0, firstElement);
-    if (n > 0)
+	}
+    if (n > 0) {
       System.arraycopy(array, firstElement + nElements, t, firstElement, n);
+	}
     return t;
   }
 
@@ -144,22 +140,16 @@ final public class AU {
    */
   public static Object arrayCopyObject(Object array, int newLength) {
     int oldLength = (array == null ? -1 : getLength(array));
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    if (newLength == oldLength)
+	}
+    if (newLength == oldLength) {
       return array;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     Object t = newInstanceO(array, newLength);
-    if (oldLength > 0)
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+    if (oldLength > 0) {
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
+	}
     return t;
 
   }
@@ -178,53 +168,29 @@ final public class AU {
   }
 
   public static int getLength(Object array) {
-    /**
-     * @j2sNative
-     * 
-     *            return array.length
-     * 
-     */
-    {
       return Array.getLength(array);
-    }
   }
 
   public static P3d[] arrayCopyP3d(P3d[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     P3d[] t = new P3d[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static String[] arrayCopyS(String[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     String[] t = new String[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
@@ -233,80 +199,55 @@ final public class AU {
     int[][] t = newInt2(newLength);
     if (array != null) {
       int oldLength = array.length;
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static T3d[] arrayCopyPt(T3d[] array, int newLength) {
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = array.length;
+	}
     T3d[] t = new T3d[newLength];
     if (array != null) {
       int oldLength = array.length;
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static float[] arrayCopyF(float[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     float[] t = new float[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static double[] arrayCopyD(double[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     double[] t = new double[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static int[] arrayCopyI(int[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     int[] t = new int[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
@@ -321,101 +262,68 @@ final public class AU {
    * @return array or null
    */
   public static int[] arrayCopyRangeI(int[] array, int i0, int n) {
-    if (array == null)
+    if (array == null) {
       return null;
+	}
     int oldLength = array.length;
-    if (n == -1)
+    if (n == -1) {
       n = oldLength;
-    if (n == -2)
+	}
+    if (n == -2) {
       n = oldLength / 2;
-    /**
-     * @j2sNative
-     * 
-     *            return Clazz.array(-1, array, i0, n);
-     * 
-     */
-    {
-      n -= i0;
-      int[] t = new int[n];
-      System.arraycopy(array, i0, t, 0, n);
-      return t;
-    }
+	}
+    n -= i0;
+    int[] t = new int[n];
+    System.arraycopy(array, i0, t, 0, n);
+    return t;
   }
 
   public static int[] arrayCopyRangeRevI(int[] array, int i0, int n) {
-    if (array == null)
+    if (array == null) {
       return null;
-    /**
-     * @j2sNative
-     * 
-     *            return Clazz.array(-1, array, i0, n).reverse();
-     */
-    {
-      int[] t = arrayCopyRangeI(array, i0, n);
-      if (n < 0)
-        n = array.length;
-      for (int i = n / 2; --i >= 0;)
-        swapInt(t, i, n - 1 - i);
-      return t;
-    }
+	}
+    int[] t = arrayCopyRangeI(array, i0, n);
+    if (n < 0) {
+      n = array.length;
+	}
+    for (int i = n / 2; --i >= 0;) {
+      swapInt(t, i, n - 1 - i);
+	}
+    return t;
   }
 
   public static short[] arrayCopyShort(short[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     short[] t = new short[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static byte[] arrayCopyByte(byte[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     byte[] t = new byte[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
 
   public static boolean[] arrayCopyBool(boolean[] array, int newLength) {
     int oldLength = (array == null ? -1 : array.length);
-    if (newLength < 0)
+    if (newLength < 0) {
       newLength = oldLength;
-    /**
-     * @j2sNative
-     * 
-     *            if (newLength < oldLength) return Clazz.array(-1, array, 0,
-     *            newLength);
-     */
-    {
-    }
+	}
     boolean[] t = new boolean[newLength];
     if (array != null) {
-      System.arraycopy(array, 0, t, 0,
-          oldLength < newLength ? oldLength : newLength);
+      System.arraycopy(array, 0, t, 0, oldLength < newLength ? oldLength : newLength);
     }
     return t;
   }
@@ -434,31 +342,35 @@ final public class AU {
    * array[indexA]; array[indexA] = array[indexB]; array[indexB] = t; }
    */
 
-  public static String dumpArray(String msg, float[][] A, int x1, int x2,
-                                 int y1, int y2) {
+  public static String dumpArray(String msg, float[][] A, int x1, int x2, int y1, int y2) {
     String s = "dumpArray: " + msg + "\n";
-    for (int x = x1; x <= x2; x++)
+    for (int x = x1; x <= x2; x++) {
       s += "\t*" + x + "*";
+	}
     for (int y = y2; y >= y1; y--) {
       s += "\n*" + y + "*";
-      for (int x = x1; x <= x2; x++)
+      for (int x = x1; x <= x2; x++) {
         s += "\t" + (x < A.length && y < A[x].length ? A[x][y] : Float.NaN);
+	  }
     }
     return s;
   }
 
   public static String dumpIntArray(int[] A, int n) {
     String str = "";
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
       str += " " + A[i];
+	}
     return str;
   }
 
   public static String sortedItem(Lst<String> v, int n) {
-    if (v.size() == 0)
+    if (v.size() == 0) {
       return null;
-    if (v.size() == 1)
+	}
+    if (v.size() == 1) {
       return v.get(0);
+	}
     String[] keys = v.toArray(new String[v.size()]);
     Arrays.sort(keys);
     return keys[n % keys.length];
@@ -549,11 +461,14 @@ final public class AU {
    */
   public static int removeMapKeys(Map<String, ?> map, String root) {
     Lst<String> list = new Lst<String>();
-    for (String key : map.keySet())
-      if (key.startsWith(root))
+    for (String key : map.keySet()) {
+      if (key.startsWith(root)) {
         list.addLast(key);
-    for (int i = list.size(); --i >= 0;)
+	  }
+	}
+    for (int i = list.size(); --i >= 0;) {
       map.remove(list.get(i));
+	}
     return list.size();
   }
 
@@ -618,17 +533,7 @@ final public class AU {
    */
   public static byte[] ensureSignedBytes(byte[] b) {
     if (b != null) {
-      /**
-       * @j2sNative
-       * 
-       *            for (var i = b.length; --i >= 0;) { var j = b[i] & 0xFF; if
-       *            (j >= 0x80) j -= 0x100; b[i] = j; }
-       * 
-       */
-      {
-      }
     }
     return b;
   }
-
 }

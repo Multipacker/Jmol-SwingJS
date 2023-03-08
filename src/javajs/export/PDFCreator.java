@@ -35,16 +35,11 @@ import java.util.Map.Entry;
 import javajs.util.Lst;
 import javajs.util.SB;
 
-
-
 public class PDFCreator {
- 
   private OutputStream os;
   private Lst<PDFObject> indirectObjects;
   private PDFObject root;
   private PDFObject graphics; 
-//  private PDFObject pageResources;
-//  private PDFObject graphicsResources;
 
   private int pt;
   private int xrefPt;
@@ -56,7 +51,6 @@ public class PDFCreator {
   private Map<String, PDFObject>fonts;
 
   public PDFCreator() {
-   // for Class.forName  
   }
 
   public void setOutputStream(OutputStream os) {
@@ -69,8 +63,6 @@ public class PDFCreator {
     System.out.println("Creating PDF with width=" + width + " and height=" + height);
     fonts = new Hashtable<String, PDFObject>();
     indirectObjects = new Lst<PDFObject>();
-    //graphicsResources = newObject(null);
-    //pageResources = newObject(null); // will set this to compressed stream later
     root = newObject("Catalog");
     PDFObject pages = newObject("Pages");
     PDFObject page = newObject("Page");
@@ -82,8 +74,9 @@ public class PDFCreator {
     pages.addDef("Kids", "[ " + page.getRef() +" ]");
     page.addDef("Parent", pages.getRef());
     page.addDef("MediaBox", "[ 0 0 " + paperWidth + " " + paperHeight + " ]");
-    if (isLandscape)
+    if (isLandscape) {
       page.addDef("Rotate", "90");
+	}
 
     pageContents.addDef("Length", "?");
     pageContents.append((isLandscape ? "q 0 1 1 0 0 0 " : "q 1 0 0 -1 0 "+(paperHeight))+" cm /" + graphics.getID() + " Do Q");
@@ -123,8 +116,9 @@ public class PDFCreator {
 
   private PDFObject newObject(String type) {
     PDFObject o = new PDFObject(++count);
-    if (type != null)
+    if (type != null) {
       o.addDef("Type", "/" + type);
+	}
     indirectObjects.addLast(o);
     return o;
   }
@@ -152,8 +146,9 @@ public class PDFCreator {
   
   public void addImageResource(Object newImage, int width, int height, int[] buffer, boolean isRGB) {
     PDFObject imageObj = newObject("XObject");
-    if (images == null)
+    if (images == null) {
       images = new Hashtable<Object, PDFObject>();
+	}
     images.put(newImage, imageObj);   
     imageObj.addDef("Subtype", "/Image");
     imageObj.addDef("Length", "?");
@@ -171,8 +166,9 @@ public class PDFCreator {
         stream[pt++] = (byte) (buffer[i] & 0xFF);
       }
     } else {
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i < n; i++) {
         stream[i] = (byte) buffer[i];
+	  }
     }
     imageObj.setStream(stream);
     graphics.addResource("XObject", imageObj.getID(), imageObj.getRef());
@@ -226,15 +222,17 @@ public class PDFCreator {
     int nObj = indirectObjects.size();
     for (int i = 0; i < nObj; i++) {
       PDFObject o = indirectObjects.get(i);
-      if (!o.isFont())
+      if (!o.isFont()) {
         continue;
+	  }
       o.pt = pt;
       pt += o.output(os);
     }
     for (int i = 0; i < nObj; i++) {
       PDFObject o = indirectObjects.get(i);
-      if (o.isFont())
+      if (o.isFont()) {
         continue;
+	  }
       o.pt = pt;
       pt += o.output(os);
     }
@@ -245,8 +243,7 @@ public class PDFCreator {
     int nObj = indirectObjects.size();
     SB sb = new SB();
     // note trailing space, needed because \n is just one character
-    sb.append("xref\n0 " + (nObj + 1) 
-        + "\n0000000000 65535 f\r\n");
+    sb.append("xref\n0 " + (nObj + 1) + "\n0000000000 65535 f\r\n");
     for (int i = 0; i < nObj; i++) {
       PDFObject o = indirectObjects.get(i);
       String s = "0000000000" + o.pt;
@@ -282,8 +279,9 @@ public class PDFCreator {
 
   public void doPolygon(int[] axPoints, int[] ayPoints, int nPoints, boolean doFill) {
     moveto(axPoints[0], ayPoints[0]);
-    for (int i = 1; i < nPoints; i++)
+    for (int i = 1; i < nPoints; i++) {
       lineto(axPoints[i], ayPoints[i]);
+	}
     g(doFill ? "f" : "s");
   }
 
@@ -291,11 +289,11 @@ public class PDFCreator {
     g(x + " " + y + " " + width + " " + height + " re " + (doFill ? "f" : "s"));
   }
 
-  public void drawImage(Object image, int destX0, int destY0,
-      int destX1, int destY1, int srcX0, int srcY0, int srcX1, int srcY1) {
+  public void drawImage(Object image, int destX0, int destY0, int destX1, int destY1, int srcX0, int srcY0, int srcX1, int srcY1) {
     PDFObject imageObj = images.get(image);
-    if (imageObj == null)
+    if (imageObj == null) {
       return;
+	}
     g("q");
     clip(destX0, destY0, destX1, destY1);
     double iw = Double.parseDouble((String) imageObj.getDef("Width"));
@@ -314,8 +312,7 @@ public class PDFCreator {
   }
 
   public void drawStringRotated(String s, int x, int y, int angle) {
-    g("q " + getRotation(angle) + " " + x + " " + y
-        + " cm BT(" + s + ")Tj ET Q");
+    g("q " + getRotation(angle) + " " + x + " " + y + " cm BT(" + s + ")Tj ET Q");
   }
 
   public String getRotation(int angle) {    
@@ -337,10 +334,12 @@ public class PDFCreator {
       float a = (float) (angle * (Math.PI / 180));
       cos = (float) Math.cos(a);
       sin = (float) Math.sin(a);
-      if (Math.abs(cos) < 0.0001)
+      if (Math.abs(cos) < 0.0001) {
         cos = 0;
-      if (Math.abs(sin) < 0.0001)
+	  }
+      if (Math.abs(sin) < 0.0001) {
         sin = 0;
+	  }
     }
     return  cos + " " + sin + " " + sin + " " + -cos;
   }
@@ -351,8 +350,9 @@ public class PDFCreator {
 
   public void setFont(String fname, float size) {
     PDFObject f = fonts.get(fname);
-    if (f == null)
+    if (f == null) {
       f = addFontResource(fname);
+	}
     g("/" + f.getID() + " " + size + " Tf");
   }
 
@@ -363,5 +363,4 @@ public class PDFCreator {
   public void translateScale(float x, float y, float scale) {
     g(scale + " 0 0 " + scale + " " + x + " " + y + " cm");
   }
-
 }

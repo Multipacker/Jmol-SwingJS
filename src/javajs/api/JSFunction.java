@@ -5,8 +5,6 @@ package javajs.api;
  * might be called from setTimeout(). 
  * 
  * @author Bob Hanson
- *
  */
 public interface JSFunction {
-
 }

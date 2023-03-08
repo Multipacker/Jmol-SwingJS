@@ -28,17 +28,9 @@
 
 package javajs.util;
 
-
 class CompoundDocHeader {
-
-  /**
-   * 
-   */
   private final CompoundDocument cd;
 
-  /**
-   * @param compoundDocument
-   */
   CompoundDocHeader(CompoundDocument compoundDocument) {
     cd = compoundDocument;
   }

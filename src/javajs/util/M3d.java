@@ -18,8 +18,6 @@ package javajs.util;
 
 import java.io.Serializable;
 
-
-
 /**
  * A single precision doubleing point 3 by 3 matrix.
  * 
@@ -28,11 +26,8 @@ import java.io.Serializable;
  *         additions by Bob Hanson hansonr@stolaf.edu 9/30/2012 for unique
  *         constructor and method names for the optimization of compiled
  *         JavaScript using Java2Script
- *         
- *         
  */
 public class M3d extends M34d implements Serializable {
-
   /**
    * Constructs and initializes a Matrix3f to all zeros.
    * @j2sIgnore
@@ -82,26 +77,6 @@ public class M3d extends M34d implements Serializable {
     return m;
   }
 
-//  public static M3d newM3(M3d m1) {
-//    M3d m = new M3d();
-//    if (m1 == null) {
-//      m.setScale(1);
-//      return m;
-//    }
-//    m.m00 = m1.m00;
-//    m.m01 = m1.m01;
-//    m.m02 = m1.m02;
-//
-//    m.m10 = m1.m10;
-//    m.m11 = m1.m11;
-//    m.m12 = m1.m12;
-//
-//    m.m20 = m1.m20;
-//    m.m21 = m1.m21;
-//    m.m22 = m1.m22;
-//    return m;
-//  }
-//
   /**
    * Sets this Matrix3f to a scalar * Identity.
    * @param scale 
@@ -320,29 +295,6 @@ public class M3d extends M34d implements Serializable {
       err();
     }
   }
-
-//  public void setColumnV(int column, T3d v) {
-//    switch (column) {
-//    case 0:
-//      m00 = v.x;
-//      m10 = v.y;
-//      m20 = v.z;
-//      break;
-//    case 1:
-//      m01 = v.x;
-//      m11 = v.y;
-//      m21 = v.z;
-//      break;
-//    case 2:
-//      m02 = v.x;
-//      m12 = v.y;
-//      m22 = v.z;
-//      break;
-//    default:
-//      err();
-//    }
-//  }
-//
 
   /**
    * Copies the matrix values in the specified column into the vector parameter.
@@ -642,11 +594,6 @@ public class M3d extends M34d implements Serializable {
     return this;
   }
 
-//  public M3d setAA(A4d a) {
-//    setAA33(a);
-//    return this;
-//  }
-//
   /**
    * 3D ball rotation from dx dy in-plane mouse motion
    * adapted from Andrew Hanson
@@ -685,5 +632,4 @@ public class M3d extends M34d implements Serializable {
   public boolean isRotation() {
     return (Math.abs(determinant3() - 1) < 0.001f);
   }
-
 }

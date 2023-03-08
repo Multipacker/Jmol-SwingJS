@@ -3,45 +3,42 @@ package javajs.api;
 import java.io.BufferedReader;
 import java.util.Map;
 
-
 public interface GenericCifDataParser {
+	static final int NONE = -1;
 
-  static final int NONE = -1;
+	String fullTrim(String str);
 
-  String fullTrim(String str);
+	Map<String, Object> getAllCifData();
 
-  Map<String, Object> getAllCifData();
+	boolean getData() throws Exception;
 
-  boolean getData() throws Exception;
+	String getColumnName(int i);
 
-  String getColumnName(int i);
+	int getColumnCount();
 
-  int getColumnCount();
+	String getFileHeader();
 
-  String getFileHeader();
+	Object peekToken() throws Exception;
 
-  Object peekToken() throws Exception;
+	Object getTokenPeeked();
 
-  Object getTokenPeeked();
+	Object getColumnData(int i);
 
-  Object getColumnData(int i);
+	Object getNextDataToken() throws Exception;
 
-  Object getNextDataToken() throws Exception;
+	String getNextToken() throws Exception;
 
-  String getNextToken() throws Exception;
+	void parseDataBlockParameters(String[] fields, String key, String data, int[] key2col, int[] col2key) throws Exception;
 
-  void parseDataBlockParameters(String[] fields, String key, String data, int[] key2col, int[] col2key) throws Exception;
+	String readLine();
 
-  String readLine();
+	GenericCifDataParser set(GenericLineReader reader, BufferedReader br, boolean debugging);
 
-  GenericCifDataParser set(GenericLineReader reader, BufferedReader br, boolean debugging);
+	String toUnicode(String data);
 
-  String toUnicode(String data);
+	String skipLoop(boolean doReport) throws Exception;
 
-  String skipLoop(boolean doReport) throws Exception;
+	String fixKey(String key);
 
-  String fixKey(String key);
-
-  String skipNextToken() throws Exception;
-
+	String skipNextToken() throws Exception;
 }

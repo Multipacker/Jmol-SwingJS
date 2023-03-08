@@ -30,10 +30,7 @@ package javajs.util;
 
 import javajs.api.JSONEncodable;
 
-
-
 /**
- * 
  * a fast 32-bit BitSet optimized for Java2Script -- about 25 times faster than
  * java.util.BitSet
  * 
@@ -91,7 +88,6 @@ public class BS implements Cloneable, JSONEncodable {
   /* Used to shift left or right for a partial word mask */
   protected static final int WORD_MASK = 0xffffffff;
 
-
   /**
    * The internal field corresponding to the serialField "bits".
    */
@@ -128,9 +124,11 @@ public class BS implements Cloneable, JSONEncodable {
   protected void recalculateWordsInUse() {
     // Traverse the bitset until a used word is found
     int i;
-    for (i = wordsInUse - 1; i >= 0; i--)
-      if (words[i] != 0)
+    for (i = wordsInUse - 1; i >= 0; i--) {
+      if (words[i] != 0) {
         break;
+	  }
+	}
 
     wordsInUse = i + 1; // The new logical size
   }
@@ -162,8 +160,9 @@ public class BS implements Cloneable, JSONEncodable {
 
   protected void init(int nbits) {
     // nbits can't be negative; size 0 is OK
-    if (nbits < 0)
+    if (nbits < 0) {
       throw new NegativeArraySizeException("nbits < 0: " + nbits);
+	}
     initWords(nbits);
     sizeIsSticky = true;
   }
@@ -203,7 +202,6 @@ public class BS implements Cloneable, JSONEncodable {
     }
   }
 
-
   /**
    * Sets the bit at the specified index to {@code true}.
    * 
@@ -214,14 +212,14 @@ public class BS implements Cloneable, JSONEncodable {
    * @since JDK1.0
    */
   public void set(int bitIndex) {
-    if (bitIndex < 0)
+    if (bitIndex < 0) {
       throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
+	}
 
     int wordIndex = wordIndex(bitIndex);
     expandTo(wordIndex);
 
     words[wordIndex] |= (1 << bitIndex); // Restores invariants
-
   }
 
   /**
@@ -236,10 +234,11 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.4
    */
   public void setBitTo(int bitIndex, boolean value) {
-    if (value)
+    if (value) {
       set(bitIndex);
-    else
+	} else {
       clear(bitIndex);
+	}
   }
 
   /**
@@ -256,9 +255,9 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.4
    */
   public void setBits(int fromIndex, int toIndex) {
-
-    if (fromIndex == toIndex)
+    if (fromIndex == toIndex) {
       return;
+	}
 
     // Increase capacity if necessary
     int startWordIndex = wordIndex(fromIndex);
@@ -276,8 +275,9 @@ public class BS implements Cloneable, JSONEncodable {
       words[startWordIndex] |= firstWordMask;
 
       // Handle intermediate words, if any
-      for (int i = startWordIndex + 1; i < endWordIndex; i++)
+      for (int i = startWordIndex + 1; i < endWordIndex; i++) {
         words[i] = WORD_MASK;
+	  }
 
       // Handle last word (restores invariants)
       words[endWordIndex] |= lastWordMask;
@@ -294,12 +294,14 @@ public class BS implements Cloneable, JSONEncodable {
    * @since JDK1.0
    */
   public void clear(int bitIndex) {
-    if (bitIndex < 0)
+    if (bitIndex < 0) {
       throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
+	}
 
     int wordIndex = wordIndex(bitIndex);
-    if (wordIndex >= wordsInUse)
+    if (wordIndex >= wordsInUse) {
       return;
+	}
 
     words[wordIndex] &= ~(1 << bitIndex);
 
@@ -320,12 +322,14 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.4
    */
   public void clearBits(int fromIndex, int toIndex) {
-    if (fromIndex == toIndex)
+    if (fromIndex == toIndex) {
       return;
+	}
 
     int startWordIndex = wordIndex(fromIndex);
-    if (startWordIndex >= wordsInUse)
+    if (startWordIndex >= wordsInUse) {
       return;
+	}
 
     int endWordIndex = wordIndex(toIndex - 1);
     if (endWordIndex >= wordsInUse) {
@@ -344,8 +348,9 @@ public class BS implements Cloneable, JSONEncodable {
       words[startWordIndex] &= ~firstWordMask;
 
       // Handle intermediate words, if any
-      for (int i = startWordIndex + 1; i < endWordIndex; i++)
+      for (int i = startWordIndex + 1; i < endWordIndex; i++) {
         words[i] = 0;
+	  }
 
       // Handle last word
       words[endWordIndex] &= ~lastWordMask;
@@ -360,8 +365,9 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.4
    */
   public void clearAll() {
-    while (wordsInUse > 0)
+    while (wordsInUse > 0) {
       words[--wordsInUse] = 0;
+	}
   }
 
   /**
@@ -376,12 +382,12 @@ public class BS implements Cloneable, JSONEncodable {
    *           if the specified index is negative
    */
   public boolean get(int bitIndex) {
-    if (bitIndex < 0)
+    if (bitIndex < 0) {
       throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
+	}
 
     int wordIndex = wordIndex(bitIndex);
-    return (wordIndex < wordsInUse)
-        && ((words[wordIndex] & (1 << bitIndex)) != 0);
+    return (wordIndex < wordsInUse) && ((words[wordIndex] & (1 << bitIndex)) != 0);
   }
 
   /**
@@ -441,20 +447,24 @@ public class BS implements Cloneable, JSONEncodable {
   public int nextClearBit(int fromIndex) {
     // Neither spec nor implementation handle bitsets of maximal length.
     // See 4816253.
-    if (fromIndex < 0)
+    if (fromIndex < 0) {
       throw new IndexOutOfBoundsException("fromIndex < 0: " + fromIndex);
+	}
 
     int u = wordIndex(fromIndex);
-    if (u >= wordsInUse)
+    if (u >= wordsInUse) {
       return fromIndex;
+	}
 
     int word = ~words[u] & (WORD_MASK << fromIndex);
 
     while (true) {
-      if (word != 0)
+      if (word != 0) {
         return (u * BITS_PER_WORD) + Integer.numberOfTrailingZeros(word);
-      if (++u == wordsInUse)
+	  }
+      if (++u == wordsInUse) {
         return wordsInUse * BITS_PER_WORD;
+	  }
       word = ~words[u];
     }
   }
@@ -468,11 +478,11 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.2
    */
   public int length() {
-    if (wordsInUse == 0)
+    if (wordsInUse == 0) {
       return 0;
+	}
 
-    return BITS_PER_WORD * (wordsInUse - 1)
-        + (BITS_PER_WORD - Integer.numberOfLeadingZeros(words[wordsInUse - 1]));
+    return BITS_PER_WORD * (wordsInUse - 1) + (BITS_PER_WORD - Integer.numberOfLeadingZeros(words[wordsInUse - 1]));
   }
 
   /**
@@ -497,9 +507,11 @@ public class BS implements Cloneable, JSONEncodable {
    * @since 1.4
    */
   public boolean intersects(BS set) {
-    for (int i = Math.min(wordsInUse, set.wordsInUse) - 1; i >= 0; i--)
-      if ((words[i] & set.words[i]) != 0)
+    for (int i = Math.min(wordsInUse, set.wordsInUse) - 1; i >= 0; i--) {
+      if ((words[i] & set.words[i]) != 0) {
         return true;
+	  }
+	}
     return false;
   }
 
@@ -511,8 +523,9 @@ public class BS implements Cloneable, JSONEncodable {
    */
   public int cardinality() {
     int sum = 0;
-    for (int i = 0; i < wordsInUse; i++)
+    for (int i = 0; i < wordsInUse; i++) {
       sum += Integer.bitCount(words[i]);
+	}
     return sum;
   }
 
@@ -526,15 +539,18 @@ public class BS implements Cloneable, JSONEncodable {
    *          a bit set
    */
   public void and(BS set) {
-    if (this == set)
+    if (this == set) {
       return;
+	}
 
-    while (wordsInUse > set.wordsInUse)
+    while (wordsInUse > set.wordsInUse) {
       words[--wordsInUse] = 0;
+	}
 
     // Perform logical AND on words in common
-    for (int i = 0; i < wordsInUse; i++)
+    for (int i = 0; i < wordsInUse; i++) {
       words[i] &= set.words[i];
+	}
 
     recalculateWordsInUse();
   }
@@ -549,8 +565,9 @@ public class BS implements Cloneable, JSONEncodable {
    *          a bit set
    */
   public void or(BS set) {
-    if (this == set)
+    if (this == set) {
       return;
+	}
 
     int wordsInCommon = Math.min(wordsInUse, set.wordsInUse);
 
@@ -560,14 +577,14 @@ public class BS implements Cloneable, JSONEncodable {
     }
 
     // Perform logical OR on words in common
-    for (int i = 0; i < wordsInCommon; i++)
+    for (int i = 0; i < wordsInCommon; i++) {
       words[i] |= set.words[i];
+	}
 
     // Copy any remaining words
-    if (wordsInCommon < set.wordsInUse)
-      System.arraycopy(set.words, wordsInCommon, words, wordsInCommon,
-          wordsInUse - wordsInCommon);
-
+    if (wordsInCommon < set.wordsInUse) {
+      System.arraycopy(set.words, wordsInCommon, words, wordsInCommon, wordsInUse - wordsInCommon);
+	}
   }
 
   /**
@@ -593,13 +610,14 @@ public class BS implements Cloneable, JSONEncodable {
     }
 
     // Perform logical XOR on words in common
-    for (int i = 0; i < wordsInCommon; i++)
+    for (int i = 0; i < wordsInCommon; i++) {
       words[i] ^= set.words[i];
+	}
 
     // Copy any remaining words
-    if (wordsInCommon < set.wordsInUse)
-      System.arraycopy(set.words, wordsInCommon, words, wordsInCommon,
-          set.wordsInUse - wordsInCommon);
+    if (wordsInCommon < set.wordsInUse) {
+      System.arraycopy(set.words, wordsInCommon, words, wordsInCommon, set.wordsInUse - wordsInCommon);
+	}
 
     recalculateWordsInUse();
   }
@@ -614,8 +632,9 @@ public class BS implements Cloneable, JSONEncodable {
    */
   public void andNot(BS set) {
     // Perform logical (a & !b) on words in common
-    for (int i = Math.min(wordsInUse, set.wordsInUse) - 1; i >= 0; i--)
+    for (int i = Math.min(wordsInUse, set.wordsInUse) - 1; i >= 0; i--) {
       words[i] &= ~set.words[i];
+	}
 
     recalculateWordsInUse();
   }
@@ -656,8 +675,9 @@ public class BS implements Cloneable, JSONEncodable {
   @Override
   public int hashCode() {
     long h = 1234;
-    for (int i = wordsInUse; --i >= 0;)
+    for (int i = wordsInUse; --i >= 0;) {
       h ^= words[i] * (i + 1);
+	}
 
     return (int) ((h >> 32) ^ h);
   }
@@ -732,15 +752,6 @@ public class BS implements Cloneable, JSONEncodable {
    * @param n 
    */
   private void setLength(int n) {
-    /**
-     * @j2sNative
-     *     if (n == this.words.length) return;
-     *     if (n == this.wordsInUse) {
-     *      this.words = Clazz.array(-1, this.words, 0, n);
-     *      return;
-     *     }
-     */
-    {}
     int[] a = new int[n];
     System.arraycopy(words, 0, a, 0, wordsInUse);
     words = a;    
@@ -794,44 +805,18 @@ public class BS implements Cloneable, JSONEncodable {
    * @return bs
    */
   public static BS copy(BS bitsetToCopy) {
-    BS bs;
-    /**
-     * Clazz.clone will copy wordsInUse and sizeIsSticky, 
-     * but just a pointer to the words array.
-     * 
-     * @j2sNative
-     * 
-     *            bs = Clazz.clone(bitsetToCopy);
-     * 
-     */
-    {
-      bs = new BS();
-    }
+    BS bs = new BS();
     int wordCount = bitsetToCopy.wordsInUse;
     if (wordCount == 0) {
       bs.words = emptyBitmap;
     } else {
-      
-      /**
-       * Clazz.clone will copy wordsInUse and sizeIsSticky, 
-       * but just a pointer to the words array.
-       * 
-       * @j2sNative
-       * 
-       *   bs.words = Clazz.array(-1, bitsetToCopy.words, 0, bs.wordsInUse = wordCount);
-       * 
-       */
-      {
-        bs.words = new int[bs.wordsInUse = wordCount];
-        System.arraycopy(bitsetToCopy.words, 0, bs.words, 0, wordCount);
-      }
-
+      bs.words = new int[bs.wordsInUse = wordCount];
+      System.arraycopy(bitsetToCopy.words, 0, bs.words, 0, wordCount);
     }
     return bs;
   }
 
   /**
-   * 
    * @param max
    * @return n bits below max
    */
@@ -845,9 +830,7 @@ public class BS implements Cloneable, JSONEncodable {
 
   @Override
   public String toJSON() {
-
-    int numBits = (wordsInUse > 128 ? cardinality() : wordsInUse
-        * BITS_PER_WORD);
+    int numBits = (wordsInUse > 128 ? cardinality() : wordsInUse * BITS_PER_WORD);
     SB b = SB.newN(6 * numBits + 2);
     b.appendC('[');
 
@@ -956,5 +939,4 @@ public class BS implements Cloneable, JSONEncodable {
     }
     return (iPrev >= 0 ? null : bs);
   }
-
 }

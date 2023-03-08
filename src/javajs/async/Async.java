@@ -162,14 +162,11 @@ package javajs.async;
  * 
  * Bob Hanson 2019.11.07
  * 
- * 
  * @author Bob Hanson hansonr_at_stolaf.edu
- *
  */
 public class Async {
-
 	public static boolean isJS() {
-		return  (/** @j2sNative 1 ? true : */false);
+		return false;
 	}
 
 	/**
@@ -177,13 +174,9 @@ public class Async {
 	 * @param ms
 	 */
 	public static void javaSleep(int ms) {
-		if (!isJS()) {
-			try {
-				Thread.sleep(ms);
-			} catch (InterruptedException e) {
-			}
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
 		}
-	
 	}
-
 }

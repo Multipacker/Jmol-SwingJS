@@ -32,7 +32,6 @@ import javajs.api.EigenInterface;
 import javajs.api.Interface;
 
 final public class MeasureD {
-
   public final static double radiansPerDegree = (2 * Math.PI / 360);
   
   public static double computeAngle(T3d pointA, T3d pointB, T3d pointC, V3d vectorBA, V3d vectorBC, boolean asDegrees) {
@@ -180,8 +179,7 @@ final public class MeasureD {
   }
   
   public static double distanceToPlane(P4d plane, T3d pt) {
-    return (plane == null ? Double.NaN 
-        : (plane.dot(pt) + plane.w) / Math.sqrt(plane.dot(plane)));
+    return (plane == null ? Double.NaN : (plane.dot(pt) + plane.w) / Math.sqrt(plane.dot(plane)));
   }
 
   public static double directedDistanceToPlane(P3d pt, P4d plane, P3d ptref) {
@@ -195,8 +193,7 @@ final public class MeasureD {
   }
 
   public static double distanceToPlaneV(V3d norm, double w, P3d pt) {
-    return (norm == null ? Double.NaN 
-        : (norm.dot(pt) + w)  / Math.sqrt(norm.dot(norm)));
+    return (norm == null ? Double.NaN : (norm.dot(pt) + w)  / Math.sqrt(norm.dot(norm)));
   }
 
   /**
@@ -207,17 +204,14 @@ final public class MeasureD {
    * @param vNormNorm
    * @param vAB
    */
-  public static void calcNormalizedNormal(T3d pointA, T3d pointB,
-         T3d pointC, T3d vNormNorm, T3d vAB) {
+  public static void calcNormalizedNormal(T3d pointA, T3d pointB, T3d pointC, T3d vNormNorm, T3d vAB) {
     vAB.sub2(pointB, pointA);
     vNormNorm.sub2(pointC, pointA);
     vNormNorm.cross(vAB, vNormNorm);
     vNormNorm.normalize();
   }
 
-  public static double getDirectedNormalThroughPoints(T3d pointA, 
-         T3d pointB, T3d pointC, T3d ptRef, V3d vNorm, 
-         V3d vAB) {
+  public static double getDirectedNormalThroughPoints(T3d pointA, T3d pointB, T3d pointC, T3d ptRef, V3d vNorm, V3d vAB) {
     // for x = plane({atomno=1}, {atomno=2}, {atomno=3}, {atomno=4})
     double nd = getNormalThroughPoints(pointA, pointB, pointC, vNorm, vAB);
     if (ptRef != null) {
@@ -233,16 +227,7 @@ final public class MeasureD {
     return nd;
   }
   
-  /**
-   * @param pointA
-   * @param pointB
-   * @param pointC
-   * @param vNorm
-   * @param vTemp
-   * @return w
-   */
-  public static double getNormalThroughPoints(T3d pointA, T3d pointB,
-                                   T3d pointC, T3d vNorm, T3d vTemp) {
+  public static double getNormalThroughPoints(T3d pointA, T3d pointB, T3d pointC, T3d vNorm, T3d vTemp) {
     // for Polyhedra
     calcNormalizedNormal(pointA, pointB, pointC, vNorm, vTemp);
     // ax + by + cz + d = 0
@@ -281,8 +266,7 @@ final public class MeasureD {
    * @param vTemp
    * @return true if winding is CCW; false if CW
    */
-  public static boolean getNormalFromCenter(P3d ptCenter, P3d ptA, P3d ptB, P3d ptC,
-                                      boolean isOutward, V3d normal, V3d vTemp) {
+  public static boolean getNormalFromCenter(P3d ptCenter, P3d ptA, P3d ptB, P3d ptC, boolean isOutward, V3d normal, V3d vTemp) {
     double d = getNormalThroughPoints(ptA, ptB, ptC, normal, vTemp);
     boolean isReversed = (distanceToPlaneV(normal, d, ptCenter) > 0);
     if (isReversed == isOutward)
@@ -292,8 +276,7 @@ final public class MeasureD {
 
   public final static V3d axisY = V3d.new3(0, 1, 0);
   
-  public static void getNormalToLine(P3d pointA, P3d pointB,
-                                   V3d vNormNorm) {
+  public static void getNormalToLine(P3d pointA, P3d pointB, V3d vNormNorm) {
     // vector in xy plane perpendicular to a line between two points RMH
     vNormNorm.sub2(pointA, pointB);
     vNormNorm.cross(vNormNorm, axisY);
@@ -302,8 +285,7 @@ final public class MeasureD {
       vNormNorm.set(1, 0, 0);
   }
   
-  public static void getBisectingPlane(P3d pointA, V3d vAB,
-                                                 T3d ptTemp, V3d vTemp, P4d plane) {
+  public static void getBisectingPlane(P3d pointA, V3d vAB, T3d ptTemp, V3d vTemp, P4d plane) {
     ptTemp.scaleAdd2(0.5f, vAB, pointA);
     vTemp.setT(vAB);
     vTemp.normalize();
@@ -319,9 +301,7 @@ final public class MeasureD {
    * @param vectorProjection return for pt.sub(ptA) parallel to the axis
    * @return distance moved
    */
-  public static double projectOntoAxis(P3d pt, P3d ptA,
-                                     V3d axisUnitVector,
-                                     V3d vectorProjection) {
+  public static double projectOntoAxis(P3d pt, P3d ptA, V3d axisUnitVector, V3d vectorProjection) {
     vectorProjection.sub2(pt, ptA);
     double projectedLength = vectorProjection.dot(axisUnitVector);
     pt.scaleAdd2(projectedLength, axisUnitVector, ptA);
@@ -329,19 +309,7 @@ final public class MeasureD {
     return projectedLength;
   }
 
-  /**
-   * 
-   * @param points
-   * @param nPoints 
-   * @param axisA
-   * @param axisUnitVector
-   * @param vectorProjection
-   * @param nTriesMax
-   */
-  public static void calcBestAxisThroughPoints(P3d[] points, int nPoints, P3d axisA,
-                                               V3d axisUnitVector,
-                                               V3d vectorProjection,
-                                               int nTriesMax) {
+  public static void calcBestAxisThroughPoints(P3d[] points, int nPoints, P3d axisA, V3d axisUnitVector, V3d vectorProjection, int nTriesMax) {
     // just a crude starting point.
 
     axisA.setT(points[0]);
@@ -412,8 +380,7 @@ final public class MeasureD {
     axisA.setT(tempA);
   }
 
-  public static double findAxis(P3d[] points, int nPoints, P3d axisA,
-                        V3d axisUnitVector, V3d vectorProjection) {
+  public static double findAxis(P3d[] points, int nPoints, P3d axisA, V3d axisUnitVector, V3d vectorProjection) {
     V3d sumXiYi = new V3d();
     V3d vTemp = new V3d();
     P3d pt = new P3d();
@@ -424,8 +391,7 @@ final public class MeasureD {
     for (int i = nPoints; --i >= 0;) {
       pt.setT(points[i]);
       ptProj.setT(pt);
-      projectOntoAxis(ptProj, axisA, axisUnitVector,
-          vectorProjection);
+      projectOntoAxis(ptProj, axisA, axisUnitVector, vectorProjection);
       vTemp.sub2(pt, ptProj);
       //sum_Yi2 += vTemp.lengthSquared();
       vTemp.cross(vectorProjection, vTemp);
@@ -443,14 +409,11 @@ final public class MeasureD {
   }
   
   
-  public static void calcAveragePoint(P3d pointA, P3d pointB,
-                                      P3d pointC) {
-    pointC.set((pointA.x + pointB.x) / 2, (pointA.y + pointB.y) / 2,
-        (pointA.z + pointB.z) / 2);
+  public static void calcAveragePoint(P3d pointA, P3d pointB, P3d pointC) {
+    pointC.set((pointA.x + pointB.x) / 2, (pointA.y + pointB.y) / 2, (pointA.z + pointB.z) / 2);
   }
   
-  public static void calcAveragePointN(P3d[] points, int nPoints,
-                                P3d averagePoint) {
+  public static void calcAveragePointN(P3d[] points, int nPoints, P3d averagePoint) {
     averagePoint.setT(points[0]);
     for (int i = 1; i < nPoints; i++)
       averagePoint.add(points[i]);
@@ -541,8 +504,7 @@ final public class MeasureD {
    * @param vTemp 
    * @return       ptRtet
    */
-  public static P3d getIntersection(P3d pt1, V3d v,
-                                               P4d plane, P3d ptRet, V3d tempNorm, V3d vTemp) {
+  public static P3d getIntersection(P3d pt1, V3d v, P4d plane, P3d ptRet, V3d tempNorm, V3d vTemp) {
     getPlaneProjection(pt1, plane, ptRet, tempNorm);
     tempNorm.set(plane.x, plane.y, plane.z);
     tempNorm.normalize();
@@ -734,9 +696,7 @@ final public class MeasureD {
     return getProjectedLineSegment(points, nPoints, ptA, unitVector, vTemp);
   }
 
-  public static P3d[] getProjectedLineSegment(P3d[] points, int nPoints,
-                                              P3d ptA, V3d unitVector,
-                                              V3d vTemp) {
+  public static P3d[] getProjectedLineSegment(P3d[] points, int nPoints, P3d ptA, V3d unitVector, V3d vTemp) {
     if (nPoints < 0)
       nPoints = points.length;
     if (vTemp == null)
@@ -788,8 +748,7 @@ final public class MeasureD {
    * 
    * @author hansonr 2022.01.26
    */
-  public static double calcBestPlaneThroughPoints(P3d[] points, int nPoints,
-                                                 P4d plane) {
+  public static double calcBestPlaneThroughPoints(P3d[] points, int nPoints, P4d plane) {
     if (nPoints <= 0) {
       nPoints = points.length;
     }
@@ -1024,5 +983,4 @@ final public class MeasureD {
     System.out.println(Arrays.toString(rmsd));
     System.out.println(m);
   }
-
 }

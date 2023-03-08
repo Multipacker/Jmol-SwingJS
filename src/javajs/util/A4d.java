@@ -30,14 +30,10 @@ package javajs.util;
  * for the optimization of compiled JavaScript using Java2Script
  */
 public class A4d extends P3d {
-
   /*
    * I assumed that the length of the axis vector is not significant.
    */
 
-   /**
-   * The angle.
-   */
   public double angle;
 
   /**
@@ -185,8 +181,7 @@ public class A4d extends P3d {
    */
   @Override
   public int hashCode() {
-    return T3d.doubleToIntBits(x) ^ T3d.doubleToIntBits(y)
-        ^ T3d.doubleToIntBits(z) ^ T3d.doubleToIntBits(angle);
+    return T3d.doubleToIntBits(x) ^ T3d.doubleToIntBits(y) ^ T3d.doubleToIntBits(z) ^ T3d.doubleToIntBits(angle);
   }
 
   /**
@@ -200,8 +195,9 @@ public class A4d extends P3d {
    */
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof A4d))
+    if (!(o instanceof A4d)) {
       return false;
+	}
     A4d a1 = (A4d) o;
     return x == a1.x && y == a1.y && z == a1.z && angle == a1.angle;
   }
@@ -221,8 +217,4 @@ public class A4d extends P3d {
   public String toJSON() {
     return "[" + x + "," + y + "," + z + "," + (angle * 180.0 / Math.PI) + "]";
   }
-
-//  public void setM(M3d m3) {
-//    setM(m3.toM3());
-//  }
 }

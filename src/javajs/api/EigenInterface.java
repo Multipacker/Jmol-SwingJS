@@ -4,14 +4,11 @@ import javajs.util.V3d;
 import javajs.util.V3d;
 
 public interface EigenInterface {
+	EigenInterface setM(double[][] n);
 
-  EigenInterface setM(double[][] n);
+	double[] getEigenvalues();
 
-  double[] getEigenvalues();
+	void fillDoubleArrays(V3d[] eigenVectors, double[] eigenValues);
 
-  void fillDoubleArrays(V3d[] eigenVectors, double[] eigenValues);
-
-  double[][] getEigenvectorsDoubleTransposed();
-
- 
+	double[][] getEigenvectorsDoubleTransposed();
 }

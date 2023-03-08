@@ -7,11 +7,8 @@ import javajs.api.GenericColor;
 
 /**
  * ColorUtility 
- * 
  */
-
 public class CU {
-
   public static String toRGBHexString(GenericColor c) {
     int rgb = c.getRGB();    
     if (rgb == 0)
@@ -394,8 +391,7 @@ public class CU {
     if (strColor.charAt(0) == '[' && strColor.charAt(len - 1) == ']') {
       String check;
       if (strColor.indexOf(",") >= 0) {
-        String[] tokens = PT.split(strColor.substring(1, strColor
-            .length() - 1), ",");
+        String[] tokens = PT.split(strColor.substring(1, strColor.length() - 1), ",");
         if (tokens.length != 3)
           return 0;
         double red = PT.parseDouble(tokens[0]);
@@ -449,24 +445,12 @@ public class CU {
     return colorPtFromInt(getArgbFromString(colorName), null);
   }
 
-//  public final static P3d colorPtFromStringD(String colorName) {
-//    return colorPtFromIntD(getArgbFromString(colorName), null);
-//  }
-//
-//
   public final static P3d colorPtFromInt(int color, P3d pt) {
     if (pt == null)
       pt = new P3d();
     pt.set((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
     return pt;
   }
-
-//  public final static P3d colorPtFromIntD(int color, P3d pt) {
-//    if (pt == null)
-//      pt = new P3d();
-//    pt.set((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
-//    return pt;
-//  }
 
   public static int colorPtToFFRGB(T3d pt) {
     return colorTriadToFFRGB(pt.x, pt.y, pt.z);
@@ -560,8 +544,6 @@ public class CU {
   }
 
   private static double toRGB(double p, double q, double h) {
-    return ((h = (h + (h < 0 ? 6 : h > 6 ? -6 : 0))) < 1 ? p + q * h
-        : h < 3 ? p + q : h < 4 ? p + q * (4 - h) : p);
+    return ((h = (h + (h < 0 ? 6 : h > 6 ? -6 : 0))) < 1 ? p + q * h : h < 3 ? p + q : h < 4 ? p + q * (4 - h) : p);
   }
-
 }

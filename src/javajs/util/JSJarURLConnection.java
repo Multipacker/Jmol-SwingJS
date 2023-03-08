@@ -30,30 +30,23 @@ public class JSJarURLConnection extends JarURLConnection {
   @SuppressWarnings({ "unused", "null" })
   @Override
   public void connect() throws IOException {
-    Object data = /** @j2sNative this.url._streamData ||*/null;
-    if (data != null)
-      return;
     BufferedInputStream bis = (BufferedInputStream) getJarFileURL().openStream();
     byte[] bytes = ZipTools.getZipFileContentsAsBytes(bis, new String[] { getEntryName() }, 0);
     if (bytes == null)
       throw new JarException("Jar entry " + getEntryName() + " was not found in " + getJarFileURL());
-    /**
-     * @j2sNative this.url._streamData = bytes
-     */
     return;
   }
   
   @SuppressWarnings("null")
   @Override
   public InputStream getInputStream() {
-    Object data = /** @j2sNative this.url._streamData ||*/null;
-    if (!connected && data == null)
+    if (!connected)
       try {
         connect();
       } catch (IOException e) {
         return null;
       }
-    return new ByteArrayInputStream(/** @j2sNative this.url._streamData || */null);
+    return new ByteArrayInputStream(null);
   }
 
     public Manifest getManifest() throws IOException {
@@ -87,10 +80,9 @@ public class JSJarURLConnection extends JarURLConnection {
     byte[] bytes = null;
     try {
       InputStream is = getInputStream();
-      bytes = /** @j2sNative is.readAllBytes$() || */null;
+      bytes = null;
     } catch (Exception e) {
     }
     whenDone.apply(bytes);
   }
-
 }

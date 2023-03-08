@@ -1,6 +1,5 @@
 package javajs.async;
 
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +22,6 @@ import javax.swing.filechooser.FileSystemView;
  */
 
 public class AsyncFileChooser extends JFileChooser implements PropertyChangeListener {
-
 	private int optionSelected;
 	private Runnable ok, cancel; // sorry, no CANCEL in JavaScript for file open
 	private boolean isAsyncSave = true;
@@ -71,7 +69,6 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 	}
 
 	/**
-	 * 
 	 * @param frame
 	 * @param btnLabel "open" or "save"
 	 * @param ok
@@ -79,26 +76,26 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 	 */
 	public void showDialog(Component frame, String btnLabel, Runnable ok, Runnable cancel) {
 		this.ok = ok;
-		if (getDialogType() != JFileChooser.SAVE_DIALOG && cancel != null)
+		if (getDialogType() != JFileChooser.SAVE_DIALOG && cancel != null) {
 			notifyCancel();
+		}
 		process(super.showDialog(frame, btnLabel));
 	}
 
 	/**
-	 * 
 	 * @param frame
 	 * @param ok
 	 * @param cancel must be null; JavaScript cannot capture a cancel from a file dialog
 	 */
 	public void showOpenDialog(Component frame, Runnable ok, Runnable cancel) {
 		this.ok = ok;
-		if (cancel != null)
+		if (cancel != null) {
 			notifyCancel();
+		}
 		process(super.showOpenDialog(frame));
 	}
 
 	/**
-	 * 
 	 * This just completes the set. It is not necessary for JavaScript, because JavaScript
 	 * will just throw up a simple modal OK/Cancel message anyway.
 	 * 
@@ -127,19 +124,16 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 		AsyncFileChooser fc = new AsyncFileChooser();
 		fc.setDialogTitle(title);
 		Runnable after = new Runnable() {
-
 			@Override
 			public void run() {
 				processFile.apply(fc.getSelectedFile());
 			}
-	
 		};
 		if (mode == JFileChooser.OPEN_DIALOG) {
 			fc.showOpenDialog(parent, after, after);  
 		} else {
 			fc.showSaveDialog(parent, after, after);  
 		}
-				
 	  }
 	    
 		/**
@@ -152,24 +146,20 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 		 */
 		public static void checkReplaceFileAsync(Component parent, File outfile, String title, Runnable yes, Runnable no) {
 			if (outfile.exists()) {
-				AsyncDialog.showYesNoAsync(parent,
-						outfile + " exists. Replace it?", null, new ActionListener() {
-		
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								switch (e.getID()) {
-								case JOptionPane.YES_OPTION:
-									yes.run();
-									break;
-								default:
-									if (no != null)
-										no.run();
-									break;
-								}
-							}
-		
-						});
-		
+				AsyncDialog.showYesNoAsync(parent, outfile + " exists. Replace it?", null, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						switch (e.getID()) {
+						case JOptionPane.YES_OPTION:
+							yes.run();
+							break;
+						default:
+							if (no != null)
+								no.run();
+							break;
+						}
+					}
+				});
 			} else {
 				yes.run();
 			}
@@ -188,23 +178,25 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 		switch (evt.getPropertyName()) {
 		case "SelectedFile":
 		case "SelectedFiles":
-			
 			process(optionSelected = (evt.getNewValue() == null ? CANCEL_OPTION : APPROVE_OPTION));
 			break;
 		}
 	}
 
 	private void process(int ret) {
-		if (ret != -(-ret))
+		if (ret != -(-ret)) {
 			return; // initial JavaScript return is NaN
+		}
 		optionSelected = ret;
 		File f = getSelectedFile();
 		if (f == null) {
-			if (cancel != null)
+			if (cancel != null) {
 				cancel.run();
+			}
 		} else {
-			if (ok != null)
+			if (ok != null) {
 				ok.run();
+			}
 		}
 	}
 
@@ -213,7 +205,6 @@ public class AsyncFileChooser extends JFileChooser implements PropertyChangeList
 	}
 
 	public static byte[] getFileBytes(File f) {
-		return /** @j2sNative f.秘bytes || */null;
+		return null;
 	}
-
 }

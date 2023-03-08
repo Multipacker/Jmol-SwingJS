@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 /**
  * a very simple JSON parser for JSON objects that are compatible with JavaScript
  * A gross simplification of https://github.com/douglascrockford/JSON-java
@@ -19,7 +18,6 @@ import java.util.Map;
  *  -- does not allow /xxx/ objects
  *  
  *  @author Bob Hanson
- *  
  */
 public class JSJSONParser {
 

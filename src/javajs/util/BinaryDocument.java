@@ -46,10 +46,8 @@ import javajs.api.GenericOutputChannel;
  */
 
 public class BinaryDocument extends BC implements GenericBinaryDocument {
-
   public BinaryDocument() {  
   }
-
 
   // called by reflection
   
@@ -69,8 +67,9 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
       } catch (IOException e) {
         // ignore
       }
-    if (out != null)
+    if (out != null) {
        out.closeChannel();
+	}
   }
   
   @Override
@@ -90,8 +89,9 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   
   @Override
   public void setStreamData(DataInputStream stream, boolean isBigEndian) {
-    if (stream != null)
+    if (stream != null) {
       this.stream = stream;
+	}
     this.isBigEndian = isBigEndian;
   }
   
@@ -115,15 +115,17 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   public int readUInt8() throws IOException {
     nBytes++;
     int b = stream.readUnsignedByte();
-    if (out != null)
+    if (out != null) {
       out.writeByteAsInt(b);
+	}
     return b;
   }
 
   private byte ioReadByte() throws IOException {
     byte b = stream.readByte();
-    if (out != null)
+    if (out != null) {
       out.writeByteAsInt(b);
+	}
     return b;
   }
 
@@ -146,10 +148,12 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
     while (len > 0) {
       int n = stream.read(b, off, len);
       m += n;
-      if (n > 0 && out != null)
+      if (n > 0 && out != null) {
         out.write(b, off, n);
-      if (n >= len)
+	  }
+      if (n >= len) {
         break;
+	  }
       off += n;
       len -= n;
     }
@@ -166,23 +170,15 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   @Override
   public short readShort() throws IOException {
     nBytes += 2;
-    short n = (isBigEndian ? ioReadShort()
-        : (short) ((ioReadByte() & 0xff) 
-                 | (ioReadByte() & 0xff) << 8));
-    /**
-     * @j2sNative
-     *
-     * return (n > 0x7FFF ? n - 0x10000 : n);
-     */
-    {
-      return n;
-    }
+    short n = (isBigEndian ? ioReadShort() : (short) ((ioReadByte() & 0xff) | (ioReadByte() & 0xff) << 8));
+    return n;
   }
 
   private short ioReadShort() throws IOException {
     short b = stream.readShort();
-    if (out != null)
+    if (out != null) {
       out.writeShort(b);
+	}
     return b;
   }
 
@@ -201,23 +197,20 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   
   private int ioReadInt() throws IOException {
     int i = stream.readInt();
-    if (out != null)
+    if (out != null) {
       out.writeInt(i);
+	}
     return i;
   }
 
   @Override
   public int swapBytesI(int n) {
-    return (((n >> 24) & 0xff)
-        | ((n >> 16) & 0xff) << 8
-        | ((n >> 8) & 0xff) << 16 
-        | (n & 0xff) << 24);
+    return (((n >> 24) & 0xff) | ((n >> 16) & 0xff) << 8 | ((n >> 8) & 0xff) << 16 | (n & 0xff) << 24);
   }
 
   @Override
   public short swapBytesS(short n) {
-    return (short) ((((n >> 8) & 0xff)
-        | (n & 0xff) << 8));
+    return (short) ((((n >> 8) & 0xff) | (n & 0xff) << 8));
   }
 
   
@@ -245,8 +238,9 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
 
   private long ioReadLong() throws IOException {
     long b = stream.readLong();
-    if (out != null)
+    if (out != null) {
       out.writeLong(b);
+	}
     return b;
   }
 
@@ -265,20 +259,10 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   @SuppressWarnings("unused")
   @Override
   public double readDouble() throws IOException {
-    /**
-     * 
-     * reading the float equivalent here in JavaScript
-     * 
-     * @j2sNative
-     * 
-     * 
-     */
-    {
-      nBytes += 8;
-      if (true)
-        return (isBigEndian ? ioReadDouble()
-            : Double.longBitsToDouble(readLELong()));
-    }
+    nBytes += 8;
+    if (true) {
+      return (isBigEndian ? ioReadDouble() : Double.longBitsToDouble(readLELong()));
+	}
     // this is the JavaScript-only part
     this.readByteArray(this.t8, 0, 8);
     return bytesToDoubleToFloat(this.t8, 0, this.isBigEndian);
@@ -286,8 +270,9 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   
   private double ioReadDouble() throws IOException {
     double d = stream.readDouble();
-    if (out != null)
+    if (out != null) {
       out.writeLong(Double.doubleToRawLongBits(d));
+	}
     return d;
   }
 
@@ -338,19 +323,6 @@ public class BinaryDocument extends BC implements GenericBinaryDocument {
   }
 
   @Override
-  public void getAllDataMapped(String replace, String string,
-                               Map<String, String> fileData) {
+  public void getAllDataMapped(String replace, String string, Map<String, String> fileData) {
   }
-
-
-/*  random access -- application only:
- * 
-    void seekFile(long offset) {
-    try {
-      file.seek(offset);
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
-    }
-  }
-*/
 }

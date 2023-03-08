@@ -72,16 +72,10 @@ import swingjs.api.JSUtilI;
  * 
  * If an asset is not found in a zip file, then it will be loaded from its fullPath. 
  * 
- * 
- * 
  * @author hansonr
- *
  */
-
 public class Assets {
-
-	public static boolean isJS = /** @j2sNative true || */
-			false;
+	public static boolean isJS = false;
 
 	public static JSUtilI jsutil;
 
@@ -98,7 +92,6 @@ public class Assets {
 
 	/**
 	 * track not-found resources
-	 * 
 	 */
 	private static HashSet<String> nullResources;
 
@@ -147,14 +140,12 @@ public class Assets {
 		}
 
 		public URL getURL(String fullPath) throws MalformedURLException {
-			return (fullPath.indexOf(classPath) < 0 ? null
-					: new URL("jar", null, uri + "!/" + fullPath));//.replaceAll(" ", "%20")));
+			return (fullPath.indexOf(classPath) < 0 ? null : new URL("jar", null, uri + "!/" + fullPath));//.replaceAll(" ", "%20")));
 		}
 
 		@Override
 		public String toString() {
-			return "{" + "\"name\":" + "\"" + name + "\"," + "\"zipPath\":" + "\"" + zipPath + "\"," + "\"classPath\":"
-					+ "\"" + classPath + "\"" + "}";
+			return "{" + "\"name\":" + "\"" + name + "\"," + "\"zipPath\":" + "\"" + zipPath + "\"," + "\"classPath\":" + "\"" + classPath + "\"" + "}";
 		}
 
 	}
@@ -238,7 +229,6 @@ public class Assets {
 
 	/**
 	 * Completely reset the assets data.
-	 * 
 	 */
 	public static void reset() {
 		nullResources = null;
@@ -262,7 +252,6 @@ public class Assets {
 		resort();
 	}
 	
-
 	/**
 	 * Gets the asset, preferably from a zip file asset, but not necessarily.
 	 * 
@@ -322,7 +311,6 @@ public class Assets {
 	public static InputStream getAssetStreamFromZip(String assetPath) {
 		return getAssetStream(assetPath, true);
 	}
-
 
 	/**
 	 * Get the contents of a path from a zip file asset as byte[], optionally loading
@@ -384,8 +372,9 @@ public class Assets {
 			if (url == null && !zipOnly) {
 				url = Assets.class.getClassLoader().getResource(path);
 			}
-			if (url != null)
+			if (url != null) {
 				return url.openStream();
+			}
 		} catch (Throwable t) {
 		}
 		return null;
@@ -417,14 +406,16 @@ public class Assets {
 		URL url = null;
 		try {
 			if (!fullPath.startsWith("/TEMP/")) {
-				if (fullPath.startsWith("/"))
+				if (fullPath.startsWith("/")) {
 					fullPath = fullPath.substring(1);
+				}
 				for (int i = sortedList.length; --i >= 0;) {
 					if (fullPath.startsWith(sortedList[i])) {
 						url = assetsByPath.get(sortedList[i]).getURL(fullPath);
 						ZipEntry ze = findZipEntry(url);
-						if (ze == null)
+						if (ze == null) {
 							break;
+						}
 						if (isJS) {
 							jsutil.setURLBytes(url, jsutil.getZipBytes(ze));
 						}
@@ -432,19 +423,22 @@ public class Assets {
 					}
 				}
 			}
-			if (!zipOnly)
+			if (!zipOnly) {
 				return getAbsoluteURL((fullPath.startsWith("TEMP/") ? "/" + fullPath : fullPath));
+			}
 		} catch (MalformedURLException e) {
 		}
 		return null;
 	}
 
 	public static ZipEntry findZipEntry(URL url) {
-		if (url == null)
+		if (url == null) {
 			return null;
+		}
 		String[] parts = getJarURLParts(url.toString());
-		if (parts == null || parts[0] == null || parts[1].length() == 0)
+		if (parts == null || parts[0] == null || parts[1].length() == 0) {
 			return null;
+		}
 		return findZipEntry(parts[0], parts[1]);
 	}
 
@@ -475,12 +469,14 @@ public class Assets {
 	}
 
 	private Map<String, ZipEntry> _getZipContents(String zipPath) {
-		if (notFound(zipPath))
+		if (notFound(zipPath)) {
 			return null;
+		}
 		URL url = getURLWithCachedBytes(zipPath); // BH carry over bytes if we have them already
 		Map<String, ZipEntry> fileNames = htZipContents.get(url.toString());
-		if (fileNames != null)
+		if (fileNames != null) {
 			return fileNames;
+		}
 		try {
 			// Scan URL zip stream for files.
 			return readZipContents(url.openStream(), url);
@@ -499,11 +495,13 @@ public class Assets {
 	 */
 	public static String[] getJarURLParts(String source) {
 		int n = source.indexOf("!/");
-		if (n < 0)
+		if (n < 0) {
 			return null;
+		}
 		String jarfile = source.substring(0, n).replace("jar:", "");
-		while (jarfile.startsWith("//"))
+		while (jarfile.startsWith("//")) {
 			jarfile = jarfile.substring(1);
+		}
 		return new String[] { jarfile, (n == source.length() - 2 ? null : source.substring(n + 2)) };
 	}
 
@@ -516,8 +514,9 @@ public class Assets {
 	 * @author hansonr
 	 */
 	public static byte[] getURLContents(URL url) {
-		if (url == null)
+		if (url == null) {
 			return null;
+		}
 		try {
 			if (isJS) {
 				// Java 9! return new String(url.openStream().readAllBytes());
@@ -531,7 +530,6 @@ public class Assets {
 	}
 
 	/**
-	 * 
 	 * Convert a file path to a URL, retrieving any cached file data, as from DnD.
 	 * Do not do any actual data transfer. This is a swingjs.JSUtil service.
 	 * 
@@ -540,21 +538,24 @@ public class Assets {
 	 */
 	private static URL getURLWithCachedBytes(String path) {
 		URL url = getAbsoluteURL(path);
-		if (url != null)
+		if (url != null) {
 			addJSCachedBytes(url);
+		}
 		return url;
 	}
 
 	private Map<String, ZipEntry> readZipContents(InputStream is, URL url) throws IOException {
 		HashMap<String, ZipEntry> fileNames = new HashMap<String, ZipEntry>();
-		if (doCacheZipContents)
+		if (doCacheZipContents) {
 			htZipContents.put(url.toString(), fileNames);
+		}
 		ZipInputStream input = new ZipInputStream(is);
 		ZipEntry zipEntry = null;
 		int n = 0;
 		while ((zipEntry = input.getNextEntry()) != null) {
-			if (zipEntry.isDirectory() || zipEntry.getSize() == 0)
+			if (zipEntry.isDirectory() || zipEntry.getSize() == 0) {
 				continue;
+			}
 			n++;
 			String fileName = zipEntry.getName();
 			fileNames.put(fileName, zipEntry); // Java has no use for the ZipEntry, but JavaScript can read it.
@@ -573,7 +574,6 @@ public class Assets {
 		Arrays.sort(sortedList);
 	}
 
-
 	/**
 	 * Only needed for Java
 	 * 
@@ -584,7 +584,6 @@ public class Assets {
 	 * @throws IOException
 	 */
 	private static byte[] getLimitedStreamBytes(InputStream is, long n, OutputStream out) throws IOException {
-
 		// Note: You cannot use InputStream.available() to reliably read
 		// zip data from the web.
 
@@ -594,24 +593,29 @@ public class Assets {
 		byte[] bytes = (out == null ? new byte[n < 0 ? 4096 : (int) n] : null);
 		int len = 0;
 		int totalLen = 0;
-		if (n < 0)
+		if (n < 0) {
 			n = Integer.MAX_VALUE;
+		}
 		while (totalLen < n && (len = is.read(buf, 0, buflen)) > 0) {
 			totalLen += len;
 			if (toOut) {
 				out.write(buf, 0, len);
 			} else {
-				if (totalLen > bytes.length)
+				if (totalLen > bytes.length) {
 					bytes = Arrays.copyOf(bytes, totalLen * 2);
+				}
 				System.arraycopy(buf, 0, bytes, totalLen - len, len);
-				if (n != Integer.MAX_VALUE && totalLen + buflen > bytes.length)
+				if (n != Integer.MAX_VALUE && totalLen + buflen > bytes.length) {
 					buflen = bytes.length - totalLen;
+				}
 			}
 		}
-		if (toOut)
+		if (toOut) {
 			return null;
-		if (totalLen == bytes.length)
+		}
+		if (totalLen == bytes.length) {
 			return bytes;
+		}
 		buf = new byte[totalLen];
 		System.arraycopy(bytes, 0, buf, 0, totalLen);
 		return buf;
@@ -619,7 +623,6 @@ public class Assets {
 
 	/**
 	 * Return all assets in the form that is appropriate for the Info.assets value in SwingJS.
-	 * 
 	 */
 	@Override
 	public String toString() {
@@ -630,5 +633,4 @@ public class Assets {
 		}
 		return s + "]";
 	}
-
 }

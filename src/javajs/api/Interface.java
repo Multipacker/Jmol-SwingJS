@@ -29,7 +29,6 @@
 package javajs.api;
 
 public class Interface {
-
   public static Object getInterface(String name) {
     try {
       Class<?> x = Class.forName(name);
@@ -49,6 +48,4 @@ public class Interface {
 			return null;
 		}
 	}
-
-
 }

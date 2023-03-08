@@ -28,14 +28,9 @@
 
 package javajs.util;
 
-
 class CompoundDocDirEntry {
-
   private final CompoundDocument cd;
 
-  /**
-   * @param compoundDocument
-   */
   CompoundDocDirEntry(CompoundDocument compoundDocument) {
     cd = compoundDocument;
   }
@@ -90,7 +85,6 @@ class CompoundDocDirEntry {
       entryName += (char) unicodeName64[i];
     isStandard = (entryType == 5 || lenStream >= cd.header.minBytesStandardStream);
     isEmpty = (entryType == 0 || lenStream <= 0);
-    //System.out.println(entryName + " type " + entryType);
     return true;
   }
   
