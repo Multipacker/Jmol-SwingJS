@@ -1,5 +1,4 @@
 <project name="Jmol-doc" default="main" basedir=".">
-
   <!--
       DocumentId  $Id: build-doc-i18n.xml 16646 2011-12-28 12:57:39Z nicove $
       Summary     create and update applet-, developers- and user-guide
@@ -11,17 +10,16 @@
   -->
 
   <!-- Our properties section -->
-  <property name="lib.dir" value="jars" />
-  <property name="src.dir" value="${basedir}/doc/source" />
-  <property name="pot.dir" value="${basedir}/doc/source/po" />
-  <property name="src.win.dir" value="${basedir}\doc\source" />
-  <property name="pot.win.dir" value="${basedir}\doc\source/po" />
-  <property name="pot.tmp.dir" value="${basedir}/doc/source/po/tmp" />
-  <property name="all.JmolAppletGuide.languages" value="de" />
+  <property name="lib.dir"                           value="jars" />
+  <property name="src.dir"                           value="${basedir}/doc/source" />
+  <property name="pot.dir"                           value="${basedir}/doc/source/po" />
+  <property name="src.win.dir"                       value="${basedir}\doc\source" />
+  <property name="pot.win.dir"                       value="${basedir}\doc\source/po" />
+  <property name="pot.tmp.dir"                       value="${basedir}/doc/source/po/tmp" />
+  <property name="all.JmolAppletGuide.languages"     value="de" />
   <property name="all.JmolDevelopersGuide.languages" value="de" />
-  <property name="all.JmolGuide.languages" value="de" />
-  <property name="all.guides"
-            value="JmolAppletGuide,JmolDevelopersGuide,JmolGuide" />
+  <property name="all.JmolGuide.languages"           value="de" />
+  <property name="all.guides"                        value="JmolAppletGuide,JmolDevelopersGuide,JmolGuide" />
 
   <!-- <for list ...> construct needs ant-contrib.jar -->
   <taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -40,8 +38,7 @@
 
   <!-- Main target creates .pot files, update existing .po files and creates
        translated XML files by default -->
-  <target name="main" id="main"
-          depends="init,create-pot,update-po"/>
+  <target name="main" id="main" depends="init,create-pot,update-po"/>
 <!--    depends="init,create-pot,update-po,update-xml"/> -->
 
   <target name="init" id="init">
@@ -96,24 +93,20 @@
           </and>
           <then>
             <!-- Compare both .pot files -->
-            <copy file="${pot.dir}/@{current.guide}.pot"
-                  tofile="${pot.tmp.dir}/@{current.guide}.old.pot"/>
+            <copy file="${pot.dir}/@{current.guide}.pot" tofile="${pot.tmp.dir}/@{current.guide}.old.pot"/>
             <antcall target="shrink-pot-file">
               <param name="remove_pot_file" value="${pot.tmp.dir}/@{current.guide}.old.pot"/>
             </antcall>
-            <copy file="${pot.tmp.dir}/@{current.guide}.pot"
-                  tofile="${pot.tmp.dir}/@{current.guide}.new.pot"/>
+            <copy file="${pot.tmp.dir}/@{current.guide}.pot" tofile="${pot.tmp.dir}/@{current.guide}.new.pot"/>
             <antcall target="shrink-pot-file">
               <param name="remove_pot_file" value="${pot.tmp.dir}/@{current.guide}.new.pot"/>
             </antcall>
             <if>
               <not>
-                <filesmatch file1="${pot.tmp.dir}/@{current.guide}.old.pot"
-                            file2="${pot.tmp.dir}/@{current.guide}.new.pot"/>
+                <filesmatch file1="${pot.tmp.dir}/@{current.guide}.old.pot" file2="${pot.tmp.dir}/@{current.guide}.new.pot"/>
               </not>
               <then>
-                <copy file="${pot.tmp.dir}/@{current.guide}.pot"
-                      tofile="${pot.dir}/@{current.guide}.pot"/>
+                <copy file="${pot.tmp.dir}/@{current.guide}.pot" tofile="${pot.dir}/@{current.guide}.pot"/>
               </then>
             </if>
           </then>
@@ -121,8 +114,7 @@
             <if>
               <available file="${pot.tmp.dir}/@{current.language}.pot"/>
               <then>
-                <copy file="${pot.tmp.dir}/@{current.language}.pot"
-                      tofile="${pot.dir}/@{current.language}.pot"/>
+                <copy file="${pot.tmp.dir}/@{current.language}.pot" tofile="${pot.dir}/@{current.language}.pot"/>
               </then>
             </if>
           </else>
@@ -137,8 +129,7 @@
   <target name="update-po" id="update-po">
     <for list="${all.guides}" delimiter="," param="current.guide">
       <sequential>
-        <for list="${all.@{current.guide}.languages}" delimiter=","
-             param="current.language">
+        <for list="${all.@{current.guide}.languages}" delimiter="," param="current.language">
           <sequential>
             <antcall target="update-po-guide-lang">
               <param name="lang_value" value="@{current.language}"/>
@@ -183,8 +174,7 @@
   <target name="update-xml" id="update-xml" depends="clean-translation">
     <for list="${all.guides}" delimiter="," param="current.guide">
       <sequential>
-        <for list="${all.@{current.guide}.languages}" delimiter=","
-             param="current.language">
+        <for list="${all.@{current.guide}.languages}" delimiter="," param="current.language">
           <sequential>
             <antcall target="update-xml-guide-lang">
               <param name="lang_value" value="@{current.language}"/>
@@ -238,13 +228,8 @@
 
   <target name="shrink-pot-file">
     <!-- Remove "POT-Creation-Date -->
-    <replaceregexp file='${remove_pot_file}'
-                   match='"POT-Creation-Date:(.*)"'
-                   replace='' flags='g'/>
+    <replaceregexp file='${remove_pot_file}' match='"POT-Creation-Date:(.*)"' replace='' flags='g'/>
     <!-- Remove source files/lines -->
-    <replaceregexp file='${remove_pot_file}'
-                   match='#:(.*)'
-                   replace='' flags='g'/>
+    <replaceregexp file='${remove_pot_file}' match='#:(.*)' replace='' flags='g'/>
   </target>
-
 </project>

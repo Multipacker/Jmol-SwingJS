@@ -711,20 +711,6 @@ see build.README.txt
   </target>
 
   <target name="javadoc" depends="initdoc" unless="javadoc.uptodate" description="Generation of Javadoc">
-  	<!--
-    <mkdir dir="${javadoc.dir}"/>
-    <javadoc destdir="${javadoc.dir}" sourcepath="src"
-             private="true" encoding="UTF8"
-             packagenames="org.openscience.*,org.jmol.*"
-             excludepackagenames="org.jmol.jcamp.*">
-      <classpath refid="project.class.path" />
-      <link href="http://download.oracle.com/javase/7/docs/api/" />
-      <tag name="j2sIgnore" enabled="false" />
-      <tag name="j2sIgnoreSuperConstructor" enabled="false" />
-      <tag name="j2sOverride" enabled="false" />
-    </javadoc>
-    
-    -->
   </target>
 
   <target name="jmolGuide" id="jmolGuide" depends="initdoc" unless="jmolGuide.uptodate" description="Generation of User's guide">
