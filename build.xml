@@ -60,7 +60,6 @@ see build.README.txt
   </then></if>
   <property name="tests.source.dir" value="source-tests" />
   <property name="lib.dir" value="jars" />
-  <property name="plugin.dir" value="plugin-jars" />
   <property name="appjars.dir" value="build/appjars" />
   <property name="classes.dir" value="build/classes" />
   <property name="test-classes.dir" value="build/test-classes" />
@@ -523,10 +522,6 @@ see build.README.txt
       <fileset dir="${lib.dir}" />
     </copy>
 
-    <copy todir="build/dist/jmol-${version}/${plugin.dir}" >
-      <fileset dir="${plugin.dir}" />
-    </copy>
-
     <copy todir="build/dist/jmol-${version}/manifest" >
       <fileset dir="manifest" />
     </copy>
@@ -563,9 +558,6 @@ see build.README.txt
     <!-- Copy other files to have a complete distribution -->
   	<copy file="build/JmolD.jar" tofile="build/dist/JmolD.jar" />
     <copy file="tools/pom.xml.template" tofile="build/dist/pom.xml.template" />
-    <jar jarfile="build/dist/jmol-${version}-javadoc.jar">
-      <fileset dir="build/javadoc" />
-    </jar>
     <jar jarfile="build/dist/jmol-${version}-sources.jar">
       <fileset dir="src" />
     </jar>
