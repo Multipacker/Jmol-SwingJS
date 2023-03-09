@@ -48,7 +48,6 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.Viewer;
 
 /**
- * 
  * A parser for output from 3DNA web service.
  * 
  * load =1d66/dssr
@@ -72,12 +71,10 @@ import org.jmol.viewer.Viewer;
  * 
  */
 public class DSSR1 extends AnnotationParser {
-
   /**
    * The paths to the unit id data within the structure.
    * 
    * This is one long string; all lowercase, each surrounded by double periods.
-   * 
    */
   
   private final static String DSSR_PATHS = 
@@ -164,18 +161,8 @@ public class DSSR1 extends AnnotationParser {
     String s = "";
     
     try {
-
       fixIndices(map, "kissingLoops", "hairpin");
       fixIndices(map, "coaxStacks", "stem");
-      
-//      lst = (Lst<Object>) map.get("hbonds");
-//      if (lst != null) {
-//        for (int i = lst.size(); --i >= 0;) {
-//          Map<String, Object> smap = (Map<String, Object>) lst.get(i);
-//          smap.put("res_long", removeUnitAtom((String) smap.get("atom1_id"))
-//              + "," + removeUnitAtom((String) smap.get("atom2_id")));
-//        }
-//      }  
 
       if (map.containsKey("counts"))
         s += "_M.dssr.counts = " + map.get("counts").toString() + "\n";
@@ -195,8 +182,7 @@ public class DSSR1 extends AnnotationParser {
    * @param root
    */
   @SuppressWarnings("unchecked")
-  private void fixIndices(Map<String, Object> map, String key,
-                          String root) {
+  private void fixIndices(Map<String, Object> map, String key, String root) {
     String indices = root + "_indices";
     String original = root + "s";
     Lst<Object>lst = (Lst<Object>) map.get(key);
@@ -216,33 +202,13 @@ public class DSSR1 extends AnnotationParser {
     }
   }
 
-//  private static String removeUnitAtom(String unitID) {
-//    int pt1 = 0;
-//    int pt2 = unitID.length();
-//    for (int i = 0, pt = -1; i < 7 && (pt = unitID.indexOf("|", pt + 1)) >= 0;i++) {
-//      switch (i) {
-//      case 4:
-//        pt1 = pt + 1;
-//        break;
-//      case 6:
-//        pt2 = pt;
-//        break;
-//      }
-//    }
-//    unitID = unitID.substring(0, pt1) + "|" + unitID.substring(pt2);
-//    return unitID;
-//  }
-
    @SuppressWarnings("unchecked")
   @Override
   public void getBasePairs(Viewer vwr, int modelIndex) {
     ModelSet ms = vwr.ms;
-    Map<String, Object> info = (Map<String, Object>) ms.getInfo(modelIndex,
-        "dssr");
-    Lst<Map<String, Object>> pairs = (info == null ? null
-        : (Lst<Map<String, Object>>) info.get("pairs"));
-    Lst<Map<String, Object>> singles = (info == null ? null
-        : (Lst<Map<String, Object>>) info.get("ssSegments"));
+    Map<String, Object> info = (Map<String, Object>) ms.getInfo(modelIndex, "dssr");
+    Lst<Map<String, Object>> pairs = (info == null ? null : (Lst<Map<String, Object>>) info.get("pairs"));
+    Lst<Map<String, Object>> singles = (info == null ? null : (Lst<Map<String, Object>>) info.get("ssSegments"));
     if (pairs == null && singles == null) {
       setBioPolymers((BioModel) vwr.ms.am[modelIndex], true);
       return;
@@ -296,28 +262,17 @@ public class DSSR1 extends AnnotationParser {
 
   @Override
   /**
-   * 
    * Retrieve a set of atoms using vwr.extractProperty with 
    * and for other annotations
-   * 
    */
-  public BS getAtomBits(Viewer vwr, String key, Object dbObj,
-                        Map<String, Object> annotationCache, int type,
-                        int modelIndex, BS bsModel) {
+  public BS getAtomBits(Viewer vwr, String key, Object dbObj, Map<String, Object> annotationCache, int type, int modelIndex, BS bsModel) {
     if (dbObj == null)
       return new BS();
-    //boolean isStruc = (type == T.rna3d);
-    //boolean isDomains = (type == T.domains);
-    //boolean isValidation = (type == T.validation);
     boolean doCache = !key.contains("NOCACHE");
     if (!doCache) {
       key = PT.rep(key, "NOCACHE", "").trim();
     }
-//System.out.println("testing DSSR1");
-    BS bs = null;// (doCache ? (BS) annotationCache.get(key) : null);
-//    if (bs != null)
-//      return bs;
-    bs = new BS();
+    BS bs = new BS();
     if (doCache)
       annotationCache.put(key, bs);
     try {
@@ -369,8 +324,7 @@ public class DSSR1 extends AnnotationParser {
         }
       } else {
         // select within(dssr, "pairs where bp='G-C' or bp='C-G'")
-        key = key.substring(0, pt).trim() + "[select * "
-            + key.substring(pt + 1) + "]" + ext;
+        key = key.substring(0, pt).trim() + "[select * " + key.substring(pt + 1) + "]" + ext;
         dbObj = vwr.extractProperty(dbObj, key, -1);
       }
       if (n != Integer.MIN_VALUE && dbObj instanceof Lst) {
@@ -390,8 +344,7 @@ public class DSSR1 extends AnnotationParser {
   
   @SuppressWarnings("unchecked")
   @Override
-  public String getHBonds(ModelSet ms, int modelIndex, Lst<Bond> vHBonds,
-                          boolean doReport) {
+  public String getHBonds(ModelSet ms, int modelIndex, Lst<Bond> vHBonds, boolean doReport) {
     Map<String, Object> info = (Map<String, Object>) ms.getInfo(modelIndex, "dssr");
     Lst<Object> list;
     if (info == null || (list = (Lst<Object>) info.get("hbonds")) == null)
@@ -418,8 +371,7 @@ public class DSSR1 extends AnnotationParser {
         }
         bs.clearAll();
         double energy = 0;
-        vHBonds.addLast(new HBond(ms.at[a1], ms.at[a2], Edge.BOND_H_REGULAR,
-            (short) 1, C.INHERIT_ALL, energy));
+        vHBonds.addLast(new HBond(ms.at[a1], ms.at[a2], Edge.BOND_H_REGULAR, (short) 1, C.INHERIT_ALL, energy));
       }
     } catch (Throwable e) {
     }
@@ -429,11 +381,9 @@ public class DSSR1 extends AnnotationParser {
   @SuppressWarnings("unchecked")
   @Override
   public void setGroup1(ModelSet ms, int modelIndex) {
-    Map<String, Object> info = (Map<String, Object>) ms.getInfo(modelIndex,
-        "dssr");
+    Map<String, Object> info = (Map<String, Object>) ms.getInfo(modelIndex, "dssr");
     Lst<Map<String, Object>> list;
-    if (info == null
-        || (list = (Lst<Map<String, Object>>) info.get("nts")) == null)
+    if (info == null || (list = (Lst<Map<String, Object>>) info.get("nts")) == null)
       return;
     Model m = ms.am[modelIndex];
     BS bsAtoms = m.bsAtoms;
@@ -474,7 +424,6 @@ public class DSSR1 extends AnnotationParser {
     } catch (Throwable e) {
     }
   }
-
 
   @SuppressWarnings("unchecked")
   @Override
@@ -584,6 +533,4 @@ public class DSSR1 extends AnnotationParser {
 //       11    11     7
 //       12    12     8
 //  ]
-
-  
 }
