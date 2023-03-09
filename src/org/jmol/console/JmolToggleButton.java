@@ -8,7 +8,6 @@ import javax.swing.JToggleButton;
 import org.jmol.api.JmolAbstractButton;
 
 public class JmolToggleButton extends JToggleButton implements JmolAbstractButton {
-
   public JmolToggleButton(ImageIcon ii) {
     super(ii);
   }
@@ -22,6 +21,4 @@ public class JmolToggleButton extends JToggleButton implements JmolAbstractButto
   public String getKey() {
     return null;
   }
-  
-
 }

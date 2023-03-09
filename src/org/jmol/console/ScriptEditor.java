@@ -64,7 +64,6 @@ import org.openscience.jmol.app.jmolpanel.PreferencesDialog;
 import javajs.util.PT;
 
 public final class ScriptEditor extends JDialog implements JmolScriptEditorInterface, ActionListener, WindowListener {
-
   protected EditorTextPane editor;
   private JPanel buttonPanel;
   private JButton openButton;
@@ -137,7 +136,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     attError = new SimpleAttributeSet();
     StyleConstants.setForeground(attError, Color.red);
     StyleConstants.setBold(attError, true);
-
   }
   
   void layoutWindow(Container container) {
@@ -168,14 +166,11 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     saveButton.setEnabled(false);
     saveAsButton = setButton(PT.rep(GT.$("&Save As..."), "&", ""));
     saveAsButton.setEnabled(false);
-    // container.setLayout(new BorderLayout());
-    // container.add(editorPane, BorderLayout.CENTER);
     JPanel buttonPanelWrapper = new JPanel();
     buttonPanelWrapper.setLayout(new BorderLayout());
     buttonPanelWrapper.add(buttonPanel, BorderLayout.CENTER);
 
-    JSplitPane spane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, editorPane,
-        buttonPanelWrapper);
+    JSplitPane spane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, editorPane, buttonPanelWrapper);
     editorPane.setMinimumSize(new Dimension(300, 300));
     editorPane.setPreferredSize(new Dimension(5000, 5000));
     buttonPanelWrapper.setMinimumSize(new Dimension(60, 60));
@@ -184,10 +179,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     spane.setDividerSize(0);
     spane.setResizeWeight(0.95);
     container.add(spane);
-    // container.setLayout(new BorderLayout());
-    // container.add(editorPane,BorderLayout.CENTER);
-    // container.add(buttonPanelWrapper,BorderLayout.SOUTH);
-
   }
 
   private JButton setButton(String s) {
@@ -222,8 +213,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     checkButton.setEnabled(state == STATE_EDITING);
     runButton.setEnabled(state == STATE_EDITING);
     pauseButton.setEnabled(state == STATE_RUNNING);
-    //saveButton.setEnabled(state == STATE_EDIT);
-    //saveAsButton.setEnabled(state == STATE_EDIT);
     haltButton.setEnabled(state == STATE_RUNNING || state == STATE_PAUSED);
     clearButton.setEnabled(state == STATE_EDITING);
     if (stateButton != null)
@@ -239,14 +228,9 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     if (err == null) {
       editor.editorDoc.clearHighlight();
       editor.setCaretPosition(editor.editorDoc.getLength());
-      //vwr.alert(msg);
     } else {
-      editor.editorDoc.doHighlight(lastIndices >> 16, lastIndices & 0xFFFF,
-          attError);
-//      if (hasFocus())
-//        vwr.alert(err);
+      editor.editorDoc.doHighlight(lastIndices >> 16, lastIndices & 0xFFFF, attError);
     }
-
   }
   
   @Override
@@ -260,7 +244,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
   public String getText() {
     return editor.getText();
   }
-
   
   public void output(String message) {
     setSaveEnabled(null);
@@ -302,7 +285,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     setTitle(title + parsedContext.contextPath);
     if (filename == null && context.functionName != null)
       filename = "function " + context.functionName; 
-    //pcLast = context.pc;
     parsedData = editor.editorDoc.outputEcho(context.script);
     setState();
   }
@@ -441,8 +423,7 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     int len = editor.getText().length();
     if (pos == len)
       pos = 0;
-    String s = (isPaused ? "!step" + JC.SCRIPT_EXT 
-        : editor.getText()  + JC.SCRIPT_ISEDITOR + JC.SCRIPT_STEP + JC.SCRIPT_START +  pos);
+    String s = (isPaused ? "!step" + JC.SCRIPT_EXT : editor.getText()  + JC.SCRIPT_ISEDITOR + JC.SCRIPT_STEP + JC.SCRIPT_START +  pos);
     System.out.println(s);
     jmolConsole.execute(s);
     state = STATE_RUNNING;
@@ -450,7 +431,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
   }
 
   protected void doResume() {
-    //editor.clearContent();
     jmolConsole.execute("!resume" + JC.SCRIPT_EXT);
     setState();
   }
@@ -497,9 +477,7 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
   private String zipFileName;
 
   public void updateFontSize() {
-    int scale = (Viewer.isJS || noPrefs ? vwr.getConsoleFontScale()
-        : PT.parseInt("" + (String) vwr.getProperty("DATA_API", "getPreference",
-            "consoleFontScale")));
+    int scale = (Viewer.isJS || noPrefs ? vwr.getConsoleFontScale() : PT.parseInt("" + (String) vwr.getProperty("DATA_API", "getPreference", "consoleFontScale")));
     scale = (scale < 0 ? 1 : scale) % 5;
     fontSize = scale * 4 + 12;
     if (editor != null)
@@ -602,12 +580,8 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
           }
           break;
         case KeyEvent.VK_F5:
-//          if (stepButton.isEnabled())
-//            doStep();
           return;
         case KeyEvent.VK_F8:
-//          if (resumeButton.isEnabled())
-//            doResume();
           return;
         }
       }
@@ -616,7 +590,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
   }
 
   class EditorDocument extends DefaultStyledDocument {
-
     EditorTextPane EditorTextPane;
 
     EditorDocument() {
@@ -629,8 +602,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
       this.EditorTextPane = EditorTextPane;
     }
 
-    
-    
     void doHighlight(int from, int to, SimpleAttributeSet attr) {
       clearHighlight();
       if (from >= to)
@@ -638,7 +609,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
       setCharacterAttributes(from, to - from, attr, true);
       editor.select(from, to);
       editor.setSelectedTextColor(attr == attError ? Color.RED : Color.black);
-
     }
 
     void clearHighlight() {
@@ -652,8 +622,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
       public void undoableEditHappened(UndoableEditEvent e) {
         // Remember the edit and update the menus
         undo.addEdit(e.getEdit());
-        // undoAction.updateUndoState();
-        // redoAction.updateRedoState();
       }
     }  
 
@@ -800,7 +768,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
     }
     setState();
  }
-
   
   private void notifyFont(int fontSize) {
     editor.setFont(new Font("dialog", Font.PLAIN, fontSize));
@@ -820,7 +787,6 @@ public final class ScriptEditor extends JDialog implements JmolScriptEditorInter
       editor.editorDoc.clearHighlight();
       editor.editorDoc.doHighlight(indices >> 16, indices & 0xFFFF, att);
     } catch (Exception e) {
-      
     }
   }
 }

@@ -5,7 +5,6 @@ import javax.swing.JLabel;
 import org.jmol.api.JmolAbstractButton;
 
 public class JmolLabel extends JLabel implements JmolAbstractButton {
-
   public JmolLabel(String text, int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
@@ -29,5 +28,4 @@ public class JmolLabel extends JLabel implements JmolAbstractButton {
   @Override
   public void addConsoleListener(Object console) {
   }
-
 }

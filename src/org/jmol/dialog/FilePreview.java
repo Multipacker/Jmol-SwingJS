@@ -47,7 +47,6 @@ import org.jmol.viewer.Viewer;
  * File previsualisation before opening
  */
 public class FilePreview extends JPanel implements PropertyChangeListener {
-
   JCheckBox active, append, cartoons;
   JFileChooser chooser;
   private static boolean pdbCartoonChecked = true;
@@ -63,8 +62,7 @@ public class FilePreview extends JPanel implements PropertyChangeListener {
    * @param allowAppend
    * @param vwrOptions
    */
-  public FilePreview(Viewer vwr, JFileChooser fileChooser, 
-      boolean allowAppend, Map<String, Object> vwrOptions) {
+  public FilePreview(Viewer vwr, JFileChooser fileChooser, boolean allowAppend, Map<String, Object> vwrOptions) {
     super();
     this.vwr = vwr;
     chooser = fileChooser;
@@ -154,9 +152,7 @@ public class FilePreview extends JPanel implements PropertyChangeListener {
       script = "zap";
     } else {
       String fileName = file.getAbsolutePath();
-      //System.out.println("updatePreview "+ fileName + " " + chooser.getSelectedFile());
       String url = vwr.getLocalUrl(fileName);
-      //System.out.println("updatePreview + " + fileName + " " + url);
       if (url != null)
         fileName = url;
       //doesn't update from use input?
@@ -165,10 +161,8 @@ public class FilePreview extends JPanel implements PropertyChangeListener {
       if (fileName.indexOf(".spt") >= 0) {
         script = "script " + script;
       } else {
-        script = PT.rep((String) display.vwr
-            .getP("defaultdropscript"), "\"%FILE\"", script + " 1");
-        script = PT.rep(script, "%ALLOWCARTOONS", ""
-            + (isCartoonsSelected() && !isAppendSelected()));
+        script = PT.rep((String) display.vwr.getP("defaultdropscript"), "\"%FILE\"", script + " 1");
+        script = PT.rep(script, "%ALLOWCARTOONS", "" + (isCartoonsSelected() && !isAppendSelected()));
         System.out.println(script);
       }
     }

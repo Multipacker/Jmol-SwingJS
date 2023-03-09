@@ -23,16 +23,13 @@
  */
 package org.jmol.console;
 
-
 import java.util.Map;
 
 import javax.swing.JMenuItem;
 
 import org.jmol.api.JmolAbstractButton;
 
-
 public class KeyJMenuItem extends JMenuItem implements JmolAbstractButton {
-
   private String key;
   @Override
   public String getKey() {
@@ -47,8 +44,4 @@ public class KeyJMenuItem extends JMenuItem implements JmolAbstractButton {
   @Override
   public void addConsoleListener(Object console) {
   }
-
-
 }
-
-

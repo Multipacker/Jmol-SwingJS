@@ -35,7 +35,6 @@ import javax.swing.JFileChooser;
  * JFileChooser with possibility to fix size and location
  */
 public class FileChooser extends JFileChooser {
-
   private Point dialogLocation = null;
   private Dimension dialogSize = null;
   private JDialog dialog = null;
@@ -77,5 +76,4 @@ public class FileChooser extends JFileChooser {
   public JDialog getDialog() {
     return dialog;
   }
-
 }

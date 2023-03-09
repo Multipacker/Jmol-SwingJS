@@ -23,7 +23,6 @@
  */
 package org.jmol.console;
 
-
 import java.util.Map;
 
 import javax.swing.JRadioButtonMenuItem;
@@ -32,7 +31,6 @@ import org.jmol.api.JmolAbstractButton;
 
 
 public class KeyJRadioButtonMenuItem extends JRadioButtonMenuItem implements JmolAbstractButton {
-  
   // currently application-only
   
   private String key;
@@ -49,7 +47,4 @@ public class KeyJRadioButtonMenuItem extends JRadioButtonMenuItem implements Jmo
   @Override
   public void addConsoleListener(Object console) {
   }
-
-
 }
-

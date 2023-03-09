@@ -23,7 +23,6 @@
  */
 package org.jmol.console;
 
-
 import javajs.util.PT;
 
 import javax.swing.JDialog;
@@ -53,8 +52,6 @@ import org.jmol.awt.Platform;
 import org.jmol.viewer.Viewer;
 
 public class ImageDialog extends JDialog implements GenericImageDialog, WindowListener, ActionListener {
-
-
   private JMenuBar menubar;
 
   protected Image image;
@@ -177,12 +174,10 @@ public class ImageDialog extends JDialog implements GenericImageDialog, WindowLi
     pack();
   }  
   
-
   class ImageCanvas extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
       System.out.println(image.getClass().getName());
-//System.out.println(((BufferedImage)image).getRGB(0,  0));
       g.setColor(Color.white);
       g.fillRect(0,  0,  image.getWidth(null), image.getHeight(null));
       g.drawImage(image, 0, 0, null);
@@ -196,21 +191,25 @@ public class ImageDialog extends JDialog implements GenericImageDialog, WindowLi
   @Override
   public void windowOpened(WindowEvent e) {
   }
+
   @Override
   public void windowClosing(WindowEvent e) {
     closeMe();
   }
+
   @Override
   public void windowIconified(WindowEvent e) {
   }
+
   @Override
   public void windowDeiconified(WindowEvent e) {
   }
+
   @Override
   public void windowActivated(WindowEvent e) {
   }
+
   @Override
   public void windowDeactivated(WindowEvent e) {
   }
-
 }

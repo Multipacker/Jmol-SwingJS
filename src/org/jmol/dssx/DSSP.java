@@ -50,7 +50,6 @@ import org.jmol.viewer.Viewer;
 //import javajs.util.List;
 
 public class DSSP {
-
   ////////////////////// DSSP /////////////////////
   //
   //    W. Kabsch and C. Sander, Biopolymers, vol 22, 1983, pp 2577-2637
@@ -212,7 +211,6 @@ public class DSSP {
   private boolean isDSSP2;
 
   /**
-   * 
    * @param objBioPolymers
    * @param bioPolymerCount
    * @param objVHBonds
@@ -223,11 +221,8 @@ public class DSSP {
    * @return helix-5, helix-4, helix-3, and SUMMARY lines
    */
 
-  
   @SuppressWarnings("unchecked")
-  public String calculateDssp(Object[] objBioPolymers, int bioPolymerCount,
-                              Object objVHBonds, boolean doReport,
-                              boolean dsspIgnoreHydrogens, boolean setStructure, int version) {
+  public String calculateDssp(Object[] objBioPolymers, int bioPolymerCount, Object objVHBonds, boolean doReport, boolean dsspIgnoreHydrogens, boolean setStructure, int version) {
     bioPolymers = (BioPolymer[]) objBioPolymers;
     this.bioPolymerCount = bioPolymerCount;
     vHBonds = (Lst<Bond>) objVHBonds;
@@ -256,8 +251,7 @@ public class DSSP {
       sb.append("\nAll bioshapes have been deleted and must be regenerated.\n");
 
     if (m.altLocCount > 0)
-      sb
-          .append("\nNote: This model contains alternative locations. Use  'CONFIGURATION 1' to be consistent with CMBI DSSP.\n");
+      sb.append("\nNote: This model contains alternative locations. Use  'CONFIGURATION 1' to be consistent with CMBI DSSP.\n");
 
     // for each AminoPolymer, we need:
     // (1) a label reading "...EEE....HHHH...GGG...BTTTB...IIIII..."
@@ -271,18 +265,13 @@ public class DSSP {
 
     for (int i = bsAmino.nextSetBit(0); i >= 0; i = bsAmino.nextSetBit(i + 1)) {
       AminoPolymer ap = (AminoPolymer) bioPolymers[i];
-      if (!haveWarned
-          && ((AminoMonomer) ap.monomers[0]).getExplicitNH() != null) {
+      if (!haveWarned && ((AminoMonomer) ap.monomers[0]).getExplicitNH() != null) {
         if (dsspIgnoreHydrogens)
-          sb
-              .append(GT.o(GT
-                  .$(
+          sb.append(GT.o(GT.$(
                       "NOTE: Backbone amide hydrogen positions are present and will be ignored. Their positions will be approximated, as in standard DSSP analysis.\nUse {0} to not use this approximation.\n\n"),
                       "SET dsspCalculateHydrogenAlways FALSE"));
         else
-          sb
-              .append(GT.o(GT
-                  .$(
+          sb.append(GT.o(GT.$(
                       "NOTE: Backbone amide hydrogen positions are present and will be used. Results may differ significantly from standard DSSP analysis.\nUse {0} to ignore these hydrogen positions.\n\n"),
                       "SET dsspCalculateHydrogenAlways TRUE"));
         haveWarned = true;
@@ -338,12 +327,10 @@ public class DSSP {
         if (labels[i] != null) {
           AminoPolymer ap = (AminoPolymer) bioPolymers[i];
           sbSummary.append(dumpSummary(ap, labels[i]));
-          sb.append(reports[i]).append(
-              dumpTags(ap, "$.1: " + String.valueOf(labels[i]), bsBad, 2));
+          sb.append(reports[i]).append(dumpTags(ap, "$.1: " + String.valueOf(labels[i]), bsBad, 2));
         }
       if (bsBad.nextSetBit(0) >= 0)
-        sb
-            .append("\nNOTE: '!' indicates a residue that is missing a backbone carbonyl oxygen atom.\n");
+        sb.append("\nNOTE: '!' indicates a residue that is missing a backbone carbonyl oxygen atom.\n");
       sb.append("\n").append("SUMMARY:" + sbSummary);
     }
 
@@ -351,7 +338,6 @@ public class DSSP {
   }
 
   /**
-   * 
    * (p. 2579):
    * 
    * Hydrogen bonds in proteins have little wave-function overlap and are well
@@ -395,8 +381,7 @@ public class DSSP {
       if (min[i] != null)
         for (int j = 0; j < bioPolymerCount; j++)
           if (min[j] != null)
-            bioPolymers[i].calcRasmolHydrogenBonds(bioPolymers[j], null, null,
-                null, 2, min[i], false, dsspIgnoreHydrogens);
+            bioPolymers[i].calcRasmolHydrogenBonds(bioPolymers[j], null, null, null, 2, min[i], false, dsspIgnoreHydrogens);
 
     return min;
   }
@@ -479,20 +464,16 @@ public class DSSP {
       Bridge bridge = new Bridge(atom1, atom2, htLadders);
       bridges.addLast(bridge);
       if (vHBonds != null) {
-        int type = (isAntiparallel ? Edge.BOND_H_MINUS_3
-            : Edge.BOND_H_PLUS_2);
-        addHbond(ap1.monomers[a + offsets[ipt]], ap2.monomers[b
-            + offsets[++ipt]], b1[2], type, htTemp);
-        addHbond(ap2.monomers[b + offsets[++ipt]], ap1.monomers[a
-            + offsets[++ipt]], b2[2], type, htTemp);
+        int type = (isAntiparallel ? Edge.BOND_H_MINUS_3 : Edge.BOND_H_PLUS_2);
+        addHbond(ap1.monomers[a + offsets[ipt]], ap2.monomers[b + offsets[++ipt]], b1[2], type, htTemp);
+        addHbond(ap2.monomers[b + offsets[++ipt]], ap1.monomers[a + offsets[++ipt]], b2[2], type, htTemp);
       }
       return bridge;
     }
     return null;
   }
 
-  private void addHbond(Monomer donor, Monomer acceptor, int iEnergy, int type,
-                        Map<String, Boolean> htTemp) {
+  private void addHbond(Monomer donor, Monomer acceptor, int iEnergy, int type, Map<String, Boolean> htTemp) {
     Atom nitrogen = ((AminoMonomer) donor).getNitrogenAtom();
     Atom oxygen = ((AminoMonomer) acceptor).getCarbonylOxygenAtom();
     if (htTemp != null) {
@@ -501,18 +482,13 @@ public class DSSP {
         return;
       htTemp.put(key, Boolean.TRUE);
     }
-    vHBonds.addLast(new HBond(nitrogen, oxygen, type, (short) 1, C.INHERIT_ALL,
-        iEnergy / 1000d));
+    vHBonds.addLast(new HBond(nitrogen, oxygen, type, (short) 1, C.INHERIT_ALL, iEnergy / 1000d));
   }
 
   /**
-   * 
-   * "sheet =: a set of one or more ladders connected by shared residues" (p.
-   * 2582)
-   * 
+   * "sheet =: a set of one or more ladders connected by shared residues" (p. 2582)
    */
   private void getSheetStructures() {
-
     // check to be sure all bridges are part of bridgeList
 
     if (bridgesA.size() == 0 && bridgesP.size() == 0)
@@ -546,8 +522,7 @@ public class DSSP {
         int index = ap.monomers[iStart].leadAtomIndex;
         if (bsEEE.get(index)) {
           int iEnd = iStart + 1;
-          while (iEnd < ap.monomerCount
-              && bsEEE.get(ap.monomers[iEnd].leadAtomIndex))
+          while (iEnd < ap.monomerCount && bsEEE.get(ap.monomers[iEnd].leadAtomIndex))
             iEnd++;
           bsSheet.setBits(iStart, iEnd);
           iStart = iEnd;
@@ -581,8 +556,7 @@ public class DSSP {
    * @param isAntiparallel
    * 
    */
-  private void createLadders(Lst<Bridge> bridges,
-                             boolean isAntiparallel) {
+  private void createLadders(Lst<Bridge> bridges, boolean isAntiparallel) {
     int dir = (isAntiparallel ? -1 : 1);
     int n = bridges.size();
     for (int i = 0; i < n; i++)
@@ -601,15 +575,12 @@ public class DSSP {
    * @param n2
    * @return TRUE if bridge is part of a ladder
    */
-  private boolean checkBridge(Bridge bridge,
-                              boolean isAntiparallel, int n1, int n2) {
-    Bridge b = htBridges.get(bridge.a.getOffsetResidueAtom("\0", n1) + "-"
-        + bridge.b.getOffsetResidueAtom("\0", n2));
+  private boolean checkBridge(Bridge bridge, boolean isAntiparallel, int n1, int n2) {
+    Bridge b = htBridges.get(bridge.a.getOffsetResidueAtom("\0", n1) + "-" + bridge.b.getOffsetResidueAtom("\0", n2));
     return (b != null && bridge.addBridge(b, htLadders));
   }
 
-  private void checkBulge(Bridge bridge, 
-                          boolean isAntiparallel, int dir) {
+  private void checkBulge(Bridge bridge, boolean isAntiparallel, int dir) {
     int dir1 = (isAntiparallel ? -1 : 1);
     for (int i = 0; i < 3; i++)
       for (int j = (i == 0 ? 1 : 0); j < 6; j++) {
@@ -653,8 +624,7 @@ public class DSSP {
   }
 
   private String dumpTags(AminoPolymer ap, String lines, BS bsBad, int mode) {
-    String prefix = ap.monomers[0].getLeadAtom().getChainID() + "."
-        + (ap.bioPolymerIndexInModel + 1);
+    String prefix = ap.monomers[0].getLeadAtom().getChainID() + "." + (ap.bioPolymerIndexInModel + 1);
     lines = PT.rep(lines, "$", prefix);
     int iFirst = ap.monomers[0].getResno();
     String pre = "\n" + prefix;
@@ -670,8 +640,7 @@ public class DSSP {
       sb0.append(i % 100 == 0 ? "" + ((i / 100) % 100) : " ");
       sb1.append(i % 10 == 0 ? "" + ((i / 10) % 10) : " ");
       sb2.appendI(i % 10);
-      sb3.appendC(bsBad.get(ap.monomers[ii].leadAtomIndex) ? '!'
-          : ap.monomers[ii].getGroup1());
+      sb3.appendC(bsBad.get(ap.monomers[ii].leadAtomIndex) ? '!' : ap.monomers[ii].getGroup1());
     }
     if ((mode & 1) == 1)
       sb.appendSB(sb0).appendSB(sb1).appendSB(sb2);
@@ -684,8 +653,7 @@ public class DSSP {
     return sb.toString().replace('\0', '.');
   }
 
-  private int[] isHbonded(int indexDonor, int indexAcceptor, int pDonor,
-                          int pAcceptor, int[][][][] min) {
+  private int[] isHbonded(int indexDonor, int indexAcceptor, int pDonor, int pAcceptor, int[][][][] min) {
     if (indexDonor < 0 || indexAcceptor < 0)
       return null;
     int[][][] min1 = min[pDonor];
@@ -733,20 +701,14 @@ public class DSSP {
     String line3, line4, line5;
 
     if (isDSSP2) {
-      line5 = findHelixes2(0, iPolymer, 5, min, STR.HELIXPI,
-          Edge.BOND_H_PLUS_5, bsTurn, true);
-      line4 = findHelixes2(2, iPolymer, 4, min, STR.HELIXALPHA,
-          Edge.BOND_H_PLUS_4, bsTurn, false);
-      line3 = findHelixes2(4, iPolymer, 3, min, STR.HELIX310,
-          Edge.BOND_H_PLUS_3, bsTurn, false);
+      line5 = findHelixes2(0, iPolymer, 5, min, STR.HELIXPI,    Edge.BOND_H_PLUS_5, bsTurn, true);
+      line4 = findHelixes2(2, iPolymer, 4, min, STR.HELIXALPHA, Edge.BOND_H_PLUS_4, bsTurn, false);
+      line3 = findHelixes2(4, iPolymer, 3, min, STR.HELIX310,   Edge.BOND_H_PLUS_3, bsTurn, false);
 
     } else {
-      line4 = findHelixes2(2, iPolymer, 4, min, STR.HELIXALPHA,
-          Edge.BOND_H_PLUS_4, bsTurn, true);
-      line3 = findHelixes2(4, iPolymer, 3, min, STR.HELIX310,
-          Edge.BOND_H_PLUS_3, bsTurn, false);
-      line5 = findHelixes2(0, iPolymer, 5, min, STR.HELIXPI,
-          Edge.BOND_H_PLUS_5, bsTurn, false);
+      line4 = findHelixes2(2, iPolymer, 4, min, STR.HELIXALPHA, Edge.BOND_H_PLUS_4, bsTurn, true);
+      line3 = findHelixes2(4, iPolymer, 3, min, STR.HELIX310,   Edge.BOND_H_PLUS_3, bsTurn, false);
+      line5 = findHelixes2(0, iPolymer, 5, min, STR.HELIXPI,    Edge.BOND_H_PLUS_5, bsTurn, false);
     }
 
     //   String line5 = findHelixes2(iPolymer, 5, min, STR.HELIXPI,
@@ -759,17 +721,13 @@ public class DSSP {
 
     if (doReport) {
       setTag(labels[iPolymer], bsTurn, 'T');
-      return dumpTags(ap, "$.5: " + line5 + "\n" + "$.4: " + line4 + "\n"
-          + "$.3: " + line3, bsBad, 1);
+      return dumpTags(ap, "$.5: " + line5 + "\n" + "$.4: " + line4 + "\n" + "$.3: " + line3, bsBad, 1);
     }
 
     return "";
   }
 
-  private String findHelixes2(int mmtfType, int iPolymer, int pitch, int[][][] min,
-                              STR subtype, int type,
-                              BS bsTurn, boolean isFirst) {
-
+  private String findHelixes2(int mmtfType, int iPolymer, int pitch, int[][][] min, STR subtype, int type, BS bsTurn, boolean isFirst) {
     // The idea here is to run down the polymer setting bit sets
     // that identify start, stop, N, and X codes: >, <, 3, 4, 5, and X
     // In addition, we create a bit set that will identify G H or I.
@@ -790,9 +748,7 @@ public class DSSP {
     for (int i = pitch; i < n; ++i) {
       int i0 = i - pitch;
       int bpt = 0;
-      if (min[i][0][0] == iPolymer && min[i][0][1] == i0
-          || min[i][bpt = 1][0] == iPolymer && min[i][1][1] == i0) {
-
+      if (min[i][0][0] == iPolymer && min[i][0][1] == i0 || min[i][bpt = 1][0] == iPolymer && min[i][1][1] == i0) {
         // the basic indicators are >33< or >444< or >5555<
 
         // we use bit sets here for efficiency
@@ -875,5 +831,4 @@ public class DSSP {
     for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1))
       tags[i] = ch;
   }
-
 }

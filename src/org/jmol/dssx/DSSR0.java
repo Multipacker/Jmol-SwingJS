@@ -23,9 +23,7 @@
  */
 package org.jmol.dssx;
 
-
 /**
- * 
  * The original non-JSON parser for output from 3DNA web service.
  * 
  * load =1d66/dssr

@@ -54,27 +54,20 @@ import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Keymap;
-//import javax.swing.text.SimpleAttributeSet;
-//import javax.swing.text.StyleConstants;
 
 public class AppletConsole extends JmolConsole {
-
-  //private final SimpleAttributeSet attributesCommand = new SimpleAttributeSet();
-
   public AppletConsole() {
     input = new ControlEnterTextArea();
     output = new GenericTextPane();
   }
   
   private class GenericTextPane extends JTextPane implements GenericConsoleTextArea {
-    
     private final Document outputDocument;
     
     GenericTextPane() {
       super();
       outputDocument = getDocument();
     }
-
  
     @Override
     public void append(String message) {
@@ -86,7 +79,6 @@ public class AppletConsole extends JmolConsole {
       setCaretPosition(outputDocument.getLength());
     }
   }
-  
 
   @Override
   public void start(Viewer vwr) {
@@ -102,16 +94,10 @@ public class AppletConsole extends JmolConsole {
     ta.setWrapStyleWord(true);
     ta.setDragEnabled(true);
     Keymap map = ta.getKeymap();
-    //    KeyStroke shiftCR = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
-    //                                               InputEvent.SHIFT_MASK);
-    KeyStroke shiftA = KeyStroke.getKeyStroke(KeyEvent.VK_A,
-        InputEvent.SHIFT_MASK);
+    KeyStroke shiftA = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.SHIFT_MASK);
     map.removeKeyStrokeBinding(shiftA);
     ((JTextPane) output).setEditable(false);
     ((JTextPane) output).setDragEnabled(true);
-    //    output.setLineWrap(true);
-    //    output.setWrapStyleWord(true);
-    //StyleConstants.setBold(attributesCommand, true);
     addWindowListener();
     displayConsole();
   }
@@ -121,14 +107,8 @@ public class AppletConsole extends JmolConsole {
     return  new JmolLabel(getLabel("label1"), SwingConstants.CENTER);
   }
   
-  //public void finalize() {
-  //System.out.println("Console " + this + " finalize");
-  //}
-
-  
   @Override
   protected void layoutWindow(String enabledButtons) {
-    //Logger.debug("Console constructor");
     JScrollPane jscrollInput = new JScrollPane((JTextArea)input);
     jscrollInput.setMinimumSize(new Dimension(2, 100));
 
@@ -136,8 +116,7 @@ public class AppletConsole extends JmolConsole {
     jscrollOutput.setMinimumSize(new Dimension(2, 100));
     Container c = getPane();
     c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
-    JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jscrollOutput,
-        jscrollInput);
+    JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jscrollOutput, jscrollInput);
     jsp.setResizeWeight(.9);
     jsp.setDividerLocation(200);
 
@@ -264,6 +243,4 @@ public class AppletConsole extends JmolConsole {
       }
     }
   }
-  
-
 }

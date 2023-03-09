@@ -34,7 +34,6 @@ import org.jmol.util.Escape;
  * A class for cataloging ladder bridges in a DSSP calculation
  * 
  * @author hansonr
- * 
  */
 class Bridge {
   Atom a, b;
@@ -51,8 +50,7 @@ class Bridge {
   }
   
   boolean addBridge(Bridge bridge,  Map<int[][], Boolean> htLadders) {
-    if (bridge.isAntiparallel != isAntiparallel
-        || !canAdd(bridge) || !bridge.canAdd(this))
+    if (bridge.isAntiparallel != isAntiparallel || !canAdd(bridge) || !bridge.canAdd(this))
       return false;
     extendLadder(bridge.ladder[0][0], bridge.ladder[1][0]);
     extendLadder(bridge.ladder[0][1], bridge.ladder[1][1]);
@@ -94,5 +92,4 @@ class Bridge {
   public String toString() {
     return (isAntiparallel ? "a " : "p ") + a + " - " + b + "\t" + Escape.e(ladder);
   }
-
 }

@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import org.jmol.api.JmolAbstractButton;
 
 public class JmolButton extends JButton implements JmolAbstractButton {
-
   public JmolButton(String text) {
     super(text);
   }
@@ -26,6 +25,4 @@ public class JmolButton extends JButton implements JmolAbstractButton {
   public String getKey() {
     return null;
   }
-  
-
 }

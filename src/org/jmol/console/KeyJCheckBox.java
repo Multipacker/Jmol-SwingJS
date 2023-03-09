@@ -23,7 +23,6 @@
  */
 package org.jmol.console;
 
-
 import java.util.Map;
 
 import javax.swing.JCheckBox;
@@ -31,7 +30,6 @@ import javax.swing.JCheckBox;
 import org.jmol.api.JmolAbstractButton;
 
 public class KeyJCheckBox extends JCheckBox implements JmolAbstractButton {
-
   // application only
   
   private String key;
@@ -40,8 +38,7 @@ public class KeyJCheckBox extends JCheckBox implements JmolAbstractButton {
       return key;
     }
 
-  public KeyJCheckBox(String key, String label, Map<String, Object> menuMap,
-      boolean isChecked) {
+  public KeyJCheckBox(String key, String label, Map<String, Object> menuMap, boolean isChecked) {
     super(GenericConsole.getLabelWithoutMnemonic(label), isChecked);
     GenericConsole.map(this, this.key = key, label, menuMap);
   }
@@ -49,6 +46,5 @@ public class KeyJCheckBox extends JCheckBox implements JmolAbstractButton {
   @Override
   public void addConsoleListener(Object console) {
   }
-
 }
 

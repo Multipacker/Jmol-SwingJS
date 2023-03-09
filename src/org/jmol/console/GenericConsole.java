@@ -42,7 +42,6 @@ import org.jmol.viewer.Viewer;
 import javajs.util.PT;
 
 public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCallbackListener {
-  
   protected GenericConsoleTextArea input;
   protected GenericConsoleTextArea output;
 
@@ -56,7 +55,6 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
       setupLabels(l);
       labels = l;
     }
-
   }
 
   protected static Map<String, String> labels;
@@ -108,10 +106,8 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
     labels.put("Clear Input", GT.$("Clear Input"));
     labels.put("History", GT.$("History"));
     labels.put("Load", GT.$("Load"));
-    labels.put("label1", GT
-        .$("press CTRL-ENTER for new line or paste model data and press Load"));
-    labels.put("default",
-        GT.$("Messages will appear here. Enter commands in the box below. Click the console Help menu item for on-line help, which will appear in a new browser window."));
+    labels.put("label1", GT.$("press CTRL-ENTER for new line or paste model data and press Load"));
+    labels.put("default", GT.$("Messages will appear here. Enter commands in the box below. Click the console Help menu item for on-line help, which will appear in a new browser window."));
   }
 
   protected void setLabels() {
@@ -151,8 +147,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
   public String completeCommand(String thisCmd) {
     if (thisCmd.length() == 0)
       return null;
-    String strCommand = (nTab <= 0 || incompleteCmd == null ? thisCmd
-        : incompleteCmd);
+    String strCommand = (nTab <= 0 || incompleteCmd == null ? thisCmd : incompleteCmd);
     incompleteCmd = strCommand;
     String[] splitCmd = GenericConsole.splitCommandLine(thisCmd);
     if (splitCmd == null)
@@ -179,17 +174,13 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
       Map<String, Object> map = null;
       if (!asCommand) {
         notThis = s;
-        if (inBrace || splitCmd[2].startsWith("$") 
-            //|| T.isIDcmd(cmdtok) 
-            || isSelect) {
+        if (inBrace || splitCmd[2].startsWith("$") || isSelect) {
           map = new Hashtable<String, Object>();
           vwr.getObjectMap(map, inBrace || isSelect ? '{' : splitCmd[2].startsWith("$") ? '$' : '0');
         }
       }
-      cmd = T.completeCommand(map, s.equalsIgnoreCase("set "), asCommand, asCommand ? splitCmd[1]
-          : splitCmd[2], nTab);
-      cmd = splitCmd[0]
-          + (cmd == null ? notThis : asCommand ? cmd : splitCmd[1] + cmd);
+      cmd = T.completeCommand(map, s.equalsIgnoreCase("set "), asCommand, asCommand ? splitCmd[1] : splitCmd[2], nTab);
+      cmd = splitCmd[0] + (cmd == null ? notThis : asCommand ? cmd : splitCmd[1] + cmd);
     }
     return (cmd == null || cmd.equals(strCommand) ? null : cmd);
   }
@@ -241,8 +232,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
       vwr.getProperty("DATA_API", "getAppConsole", Boolean.FALSE);
   }
 
-  public static void setAbstractButtonLabels(Map<String, Object> menuMap,
-                               Map<String, String> labels) {
+  public static void setAbstractButtonLabels(Map<String, Object> menuMap, Map<String, String> labels) {
     for (String key: menuMap.keySet()) {
       JmolAbstractButton m = (JmolAbstractButton) menuMap.get(key);
       String label = labels.get(key);
@@ -266,8 +256,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
     if (index == -1) {
       return label;
     }
-    return label.substring(0, index) +
-      ((index < label.length() - 1) ? label.substring(index + 1) : "");
+    return label.substring(0, index) + ((index < label.length() - 1) ? label.substring(index + 1) : "");
   }
 
   static char getMnemonic(String label) {
@@ -281,8 +270,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
     return label.charAt(index + 1);
   }
 
-  public static void map(Object button, String key, String label,
-                         Map<String, Object> menuMap) {
+  public static void map(Object button, String key, String label, Map<String, Object> menuMap) {
     char mnemonic = getMnemonic(label);
     if (mnemonic != ' ')
       ((JmolAbstractButton) button).setMnemonic(mnemonic);
@@ -331,8 +319,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
   @Override
   @SuppressWarnings("incomplete-switch")
   public void notifyCallback(CBK type, Object[] data) {
-    String strInfo = (data == null || data[1] == null ? null : data[1]
-        .toString());
+    String strInfo = (data == null || data[1] == null ? null : data[1].toString());
     switch (type) {
     case ECHO:
       sendConsoleEcho(strInfo);
@@ -342,8 +329,7 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
       if (mystatus.indexOf("Picked") >= 0 || mystatus.indexOf("Sequence") >= 0) // picking mode
         sendConsoleMessage(strInfo);
       else if (mystatus.indexOf("Completed") >= 0)
-        sendConsoleEcho(strInfo.substring(strInfo.lastIndexOf(",") + 2,
-            strInfo.length() - 1));
+        sendConsoleEcho(strInfo.substring(strInfo.lastIndexOf(",") + 2, strInfo.length() - 1));
       break;
     case MESSAGE:
       sendConsoleMessage(data == null ? null : strInfo);
@@ -367,12 +353,6 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
       outputMsg(null);
       strEcho = defaultMessage;
     } else if (strEcho.equals("\0")) {
-      /**
-       * @j2sNative
-       * 
-       * Clazz.Console.clear();
-       */
-      {}
       strEcho = null;
     }
     outputMsg(strEcho);
@@ -417,10 +397,6 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
 
   // key listener actions
   
-  /**
-   * @param up 
-   * @param pageUp  
-   */
   protected void recallCommand(boolean up, boolean pageUp) {
     String cmd = vwr.getSetHistory(up ? -1 : 1);
     if (cmd != null) {
@@ -437,7 +413,6 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
   }
 
   /**
-   * 
    * @param kcode
    * @param kid
    * @param isControlDown
@@ -560,6 +535,4 @@ public abstract class GenericConsole implements JmolAppConsoleInterface, JmolCal
     sout[3] = (nBrace > 0 ? "{" : null);
     return sout;
   }
-
-
 }

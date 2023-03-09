@@ -23,7 +23,6 @@
  */
 package org.jmol.console;
 
-
 import org.jmol.api.JmolAbstractButton;
 import org.jmol.api.JmolScriptEditorInterface;
 import org.jmol.awt.Platform;
@@ -42,13 +41,11 @@ import java.io.FilenameFilter;
 import javajs.util.AU;
 import javajs.util.Lst;
 
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
 public abstract class JmolConsole extends GenericConsole implements ActionListener, WindowListener {
-
   protected JFrame vwrFrame;
   protected Container externalContainer;
 
@@ -61,8 +58,7 @@ public abstract class JmolConsole extends GenericConsole implements ActionListen
   }
 
   protected Container getPane() {
-    return (externalContainer instanceof JFrame ? ((JFrame) externalContainer)
-        .getContentPane() : externalContainer);
+    return (externalContainer instanceof JFrame ? ((JFrame) externalContainer).getContentPane() : externalContainer);
   }
 
   @Override
@@ -101,13 +97,8 @@ public abstract class JmolConsole extends GenericConsole implements ActionListen
   @Override
   public JmolScriptEditorInterface getScriptEditor() {
     // is called by vwr during application startup, despite what Eclipse says.
-    return (scriptEditor == null ? 
-        (scriptEditor = new ScriptEditor(vwr, vwrFrame, this)) : scriptEditor);
+    return (scriptEditor == null ?  (scriptEditor = new ScriptEditor(vwr, vwrFrame, this)) : scriptEditor);
   }
-  
-  //public void finalize() {
-  //System.out.println("Console " + this + " finalize");
-  //}
   
   @Override
   protected String nextFileName(String stub, int nTab) {
@@ -177,11 +168,6 @@ public abstract class JmolConsole extends GenericConsole implements ActionListen
       w.addWindowListener(this);
   }
 
-
-  /**
-   * @param we 
-   * 
-   */
   @Override
   public void windowActivated(WindowEvent we) {
     updateFontSize();
@@ -197,38 +183,21 @@ public abstract class JmolConsole extends GenericConsole implements ActionListen
     destroyConsole();
   }
 
-  /**
-   * @param we 
-   * 
-   */
   @Override
   public void windowDeactivated(WindowEvent we) {
   }
 
-  /**
-   * @param we 
-   * 
-   */
   @Override
   public void windowDeiconified(WindowEvent we) {
   }
 
-  /**
-   * @param we 
-   * 
-   */
   @Override
   public void windowIconified(WindowEvent we) {
   }
 
-  /**
-   * @param we 
-   * 
-   */
   @Override
   public void windowOpened(WindowEvent we) {
   }
-
 
   @Override
   public Object newJMenu(String key) {
@@ -242,9 +211,5 @@ public abstract class JmolConsole extends GenericConsole implements ActionListen
 
   public void updateFontSize() {
     // TODO
-    
   }
-
-
-
 }

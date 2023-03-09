@@ -23,7 +23,6 @@
  */
 package org.jmol.console;
 
-
 import java.util.Map;
 
 import javax.swing.JMenu;
@@ -33,7 +32,6 @@ import org.jmol.api.JmolAbstractButton;
 import org.openscience.jmol.app.jmolpanel.JmolPanel;
 
 public class KeyJMenu extends JMenu implements JmolAbstractButton {
-
   private String key;
   
   @Override
@@ -70,7 +68,4 @@ public class KeyJMenu extends JMenu implements JmolAbstractButton {
     }
     itemKeys = null;
   }
-
-
 }
-
