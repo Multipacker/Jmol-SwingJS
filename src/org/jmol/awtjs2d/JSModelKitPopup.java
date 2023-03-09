@@ -29,29 +29,24 @@ import org.jmol.awtjs.swing.JPopupMenu;
 import org.jmol.modelkit.ModelKitPopup;
 
 public class JSModelKitPopup extends ModelKitPopup {
-
   public JSModelKitPopup() {
     helper = new JSPopupHelper(this);
   }
 
   @Override
   public void menuShowPopup(SC popup, int x, int y) {
-
     try {
       ((JPopupMenu) popup).show(isTainted ? (Component) vwr.html5Applet : null, x, y);
     } catch (Exception e) {
-      // ignore
     }
     isTainted = false;
   }
   
   @Override
   public void menuHidePopup(SC popup) {
-
     try {
       ((JPopupMenu) popup).setVisible(false);
     } catch (Exception e) {
-      // ignore
     }
   }
   
@@ -60,10 +55,8 @@ public class JSModelKitPopup extends ModelKitPopup {
     return "org/jmol/modelkit/images/" + fileName;
   }
 
-  
   @Override
   public void menuCheckBoxCallback(SC source) {
     doMenuCheckBoxCallback(source);
   }
-
 }

@@ -34,18 +34,13 @@ import javajs.util.T3d;
 class Leaf extends Element {
   T3d[] tuples;
     
-  /**
-   * @param bspt 
-   * @param leaf 
-   * @param countToKeep 
-   * 
-   */
   Leaf(Bspt bspt, Leaf leaf, int countToKeep) {
     this.bspt = bspt;
     count = 0;
     tuples = new P3d[Bspt.leafCountMax];
-    if (leaf == null)
+    if (leaf == null) {
       return;
+	}
     for (int i = countToKeep; i < Bspt.leafCountMax; ++i) {
       tuples[count++] = leaf.tuples[i];
       leaf.tuples[i] = null;
@@ -79,22 +74,4 @@ class Leaf extends Element {
     Node node = new Node(bspt, level, this);
     return node.addTuple(level, tuple);
   }
-    
- 
-//  @Override
-//  void dump(int level, SB sb) {
-//    for (int i = 0; i < count; ++i) {
-//      T3 t = tuples[i];
-//      for (int j = 0; j < level; ++j)
-//        sb.append(".");
-//      sb.append(Escape.eP(t)).append("Leaf ").appendI(i).append(": ").append(((Atom) t).getInfo());
-//    }
-//  }
-
-//  @Override
-//  public String toString() {
-//    return "leaf:" + count + "\n";
-//  }
- 
-
 }

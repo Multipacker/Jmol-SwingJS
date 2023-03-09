@@ -43,7 +43,6 @@ import org.jmol.util.Font;
 
 import javajs.util.CU;
 
-
 import org.jmol.api.GenericGraphics;
 
 /**
@@ -51,9 +50,7 @@ import org.jmol.api.GenericGraphics;
  * 
  * @author Bob Hanson hansonr@stolaf.edu
  */
-
 public class JsG2D implements GenericGraphics {
-
 	private int windowWidth;
 	private int windowHeight;
 
@@ -81,20 +78,8 @@ public class JsG2D implements GenericGraphics {
 	}
 
 	@Override
-	public void drawGrayScaleImage(Object g, Object image, int destX0, int destY0,
-			int destX1, int destY1, int srcX0, int srcY0, int srcX1, int srcY1) {
-
-		float iw, ih;
-		/**
-		 * @j2sNative
-		 * 
-		 * iw = image.w;
-		 * ih = image.h;
-		 * 
-		 */ 
-		{
-			ih = iw = 0;
-		}
+	public void drawGrayScaleImage(Object g, Object image, int destX0, int destY0, int destX1, int destY1, int srcX0, int srcY0, int srcX1, int srcY1) {
+		float iw = 0, ih = 0;
 
 		float dw = (destX1 - destX0 + 1);
 		float dh  = (destY1 - destY0 + 1);
@@ -105,25 +90,7 @@ public class JsG2D implements GenericGraphics {
 		float y = -srcY0* dh / sh;
 		float h = ih * dh / sh;
 
-		/**
-		 * @j2sNative
-		 * 
-		 * image.width = w;
-		 * image.height = h;
-		 * var div = image.div;
-		 * var layer = image.layer;
-		 * layer.style.left = destX0 + "px";
-		 * layer.style.top = destY0 + "px";
-		 * layer.style.width = dw + "px";
-		 * layer.style.height = dh+ "px";
-		 * div.style.left= x + "px";
-		 * div.style.top = y + "px";
-		 * div.style.width = w + "px";
-		 * div.style.height = h + "px";
-		 */
-		{
 			System.out.println(x + y + h + w);
-		}
 	}
 
 	@Override
@@ -131,31 +98,10 @@ public class JsG2D implements GenericGraphics {
 	  // g is a canvas context
 		@SuppressWarnings("unused")
 		boolean inPath = this.inPath;
-		/**
-		 * @j2sNative
-		 * 
-		 *            if (!inPath) g.beginPath(); 
-		 *            g.moveTo(x0, y0); 
-		 *            g.lineTo(x1, y1); 
-		 *            if (!inPath) g.stroke();
-		 * 
-		 */
-		{}
 	}
 
 	@Override
 	public void drawCircle(Object g, int x, int y, int diameter) {
-		/**
-		 * @j2sNative
-		 * 
-		 *    var r = diameter/2;
-		 * 		g.beginPath();
-		 *    g.arc(x + r, y + r, r, 0, 2 * Math.PI, false);
-		 *    g.stroke();
-		 */
-		{	
-		}
-		
 	}
 
 	@Override
@@ -163,58 +109,15 @@ public class JsG2D implements GenericGraphics {
 		doPoly(g, ayPoints, axPoints, nPoints, false);
 	}
 
-	/**
-	 * @param g 
-	 * @param axPoints  
-	 * @param ayPoints 
-	 * @param nPoints 
-	 * @param doFill 
-	 */
-	private void doPoly(Object g, int[] axPoints, int[] ayPoints, int nPoints,
-			boolean doFill) {
-		/**
-		 * @j2sNative
-		 * 
-		 * g.beginPath();
-		 * g.moveTo(axPoints[0], ayPoints[0]);
-		 * 
-		 * for (var i = 1; i < nPoints; i++)
-		 *   g.lineTo(axPoints[i], ayPoints[i]);
-     * if (doFill)
-     *   g.fill();
-     * else
-     *   g.stroke();
-		 * 
-		 */
-		{
-		}
+	private void doPoly(Object g, int[] axPoints, int[] ayPoints, int nPoints, boolean doFill) {
 	}
 
 	@Override
-	public void drawRect(Object g, int x, int y, int width,
-			int height) {
-		/**
-		 * @j2sNative
-		 * 
-		 * g.beginPath();
-     * g.rect(x ,y, width, height);
-     * g.stroke();
-		 * 
-		 */
-		{
-		}
+	public void drawRect(Object g, int x, int y, int width, int height) {
 	}
 
 	@Override
 	public void drawString(Object g, String s, int x, int y) {
-		/**
-		 * @j2sNative
-		 * 
-		 * g.fillText(s,x,y);
-		 */
-		{
-			
-		}
 	}
 
 	@Override
@@ -226,41 +129,12 @@ public class JsG2D implements GenericGraphics {
 	
 	@Override
 	public void fillBackground(Object g, GenericColor bgcolor) {
-		if (bgcolor == null) {
-			/**
-			 *
-			 *  reduce antialiasing, thank you, http://www.rgraph.net/docs/howto-get-crisp-lines-with-no-antialias.html
-			 *  
-			 * @j2sNative
-			 * 
-			 * if (!this.isShifted) {
-			 *   g.translate(-0.5, -0.5);
-			 *   this.isShifted = true;
-			 * }  
-			 * g.clearRect(0,0, this.windowWidth, this.windowHeight);
-			 * return;
-			 * 
-			 */
-			{				
-			}
-		}
 		setGraphicsColor(g, bgcolor);
 		fillRect(g, 0, 0, windowWidth, windowHeight);
 	}
 
 	@Override
 	public void fillCircle(Object g, int x, int y, int diameter) {
-		/**
-		 * @j2sNative
-		 * 
-		 *    var r = diameter/2;
-		 * 		g.beginPath();
-		 *    g.arc(x + r, y + r, r, 0, 2 * Math.PI, false);
-		 *    g.fill();
-		 */
-		{	
-		}
-	
 	}
 
 	@Override
@@ -270,27 +144,12 @@ public class JsG2D implements GenericGraphics {
 
 	@Override
 	public void fillRect(Object g, int x, int y, int width, int height) {
-		/**
-		 * @j2sNative
-		 * 
-		 * g.fillRect(x, y, width, height);
-		 * 
-		 */
-		{
-		}
 	}
 
 	@Override
 	public void setGraphicsColor(Object g, GenericColor c) {
 		String s = CU.toCSSString(c);
-		/**
-		 * @j2sNative
-		 * 
-		 * g.fillStyle = g.strokeStyle = s;
-		 */
-		{
-			System.out.println(s);
-		}
+		System.out.println(s);
 	}
 
 	@Override
@@ -298,28 +157,11 @@ public class JsG2D implements GenericGraphics {
 		String s = font.getInfo();
 		int pt = s.indexOf(" ");
 		s = s.substring(0, pt) + "px" + s.substring(pt);
-		/**
-		 * @j2sNative
-		 * 
-		 * g.font = s;
-		 */
-		{
-		}
 		return  font;
 	}
 
 	@Override
 	public void setStrokeBold(Object g, boolean tf) {
-		/**
-		 * @j2sNative
-		 *
-		 * g.lineWidth = (tf ? 2 : 1);
-		 * 
-		 */
-		{
-
-		}
-
 	}
 
 	@Override
@@ -331,7 +173,6 @@ public class JsG2D implements GenericGraphics {
 	@Override
 	public void translateScale(Object g, double x, double y, double scale) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -344,29 +185,9 @@ public class JsG2D implements GenericGraphics {
 	@Override
 	public void doStroke(Object g, boolean isBegin) {
 		inPath = isBegin;
-		/**
-		 *  
-		 * @j2sNative
-		 * 
-		 * if (isBegin) {
-		 * 	 g.beginPath();
-		 * } else {
-		 *   g.stroke();
-		 * }
-		 * 
-		 */
-		{}
 	}
 
 	@Override
 	public void lineTo(Object g, int x2, int y2) {
-		/**
-		 * @j2sNative
-		 * 
-		 * g.lineTo(x2, y2);
-		 * 
-		 */
-		{}
 	}
-
 }

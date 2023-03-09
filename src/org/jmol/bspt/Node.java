@@ -51,12 +51,6 @@ class Node extends Element {
   double minRight, maxRight;
   Element eleRight;
   
-  /**
-   * @param bspt 
-   * @param level 
-   * @param leafLeft 
-   * 
-   */
   Node(Bspt bspt, int level, Leaf leafLeft) {
     this.bspt = bspt;
     if (level == bspt.treeDepth) {
@@ -122,21 +116,6 @@ class Node extends Element {
     }
     return this;
   }
-  
-//  @Override
-//  void dump(int level, SB sb) {
-//    sb.append("\nnode LEFT" + level);
-//    eleLeft.dump(level + 1, sb);
-//    for (int i = 0; i < level; ++i)
-//    sb.append("->");
-//    sb.append(" RIGHT" + level);
-//    eleRight.dump(level + 1, sb);
-//    }
-    
-//    @Override
-//    public String toString() {
-//      return eleLeft.toString() + dim + ":" + "\n" + eleRight.toString();
-//    }
   
   static double getDimensionValue(T3d pt, int dim) {
     if (pt == null)

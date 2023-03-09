@@ -29,11 +29,8 @@ import org.jmol.api.SC;
 import org.jmol.awtjs.swing.Component;
 
 public class JSJmolPopup extends JmolPopup {
-  
-
   /**
    * The main popup window for the applet -- as JavaScript
-   * 
    */
   public JSJmolPopup() {
     helper = new JSPopupHelper(this);
@@ -50,8 +47,7 @@ public class JSJmolPopup extends JmolPopup {
   }
 
   @Override
-  protected String getUnknownCheckBoxScriptToRun(SC item, String name,
-                                         String what, boolean TF) {
+  protected String getUnknownCheckBoxScriptToRun(SC item, String name, String what, boolean TF) {
     // ModelKit popup only
     return null;
   }
@@ -66,8 +62,4 @@ public class JSJmolPopup extends JmolPopup {
   public void menuFocusCallback(String name, String actionCommand, boolean b) {
     // TODO
   }
-
-
-
-
 }

@@ -35,7 +35,6 @@ import swingjs.api.JSUtilI;
  * (Not fully implemented) 
  * 
  * @author Bob Hanson
- *
  */
 public class Platform implements GenericPlatform {
   Object canvas;
@@ -50,53 +49,24 @@ public class Platform implements GenericPlatform {
   public static swingjs.api.JSUtilI jsutil;
 
   static {
-      try
-      {
+      try {
         jsutil = ((JSUtilI) Class.forName("swingjs.JSUtil").newInstance());
-      } catch (InstantiationException | IllegalAccessException
-              | ClassNotFoundException e)
-      {
+      } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
         e.printStackTrace();
       }
   }
-
   
 	@Override
   public void setViewer(PlatformViewer vwr, Object canvas) {
-	  /**
-	   * @j2sNative
-	   * 
-     *     this.vwr = vwr;
-     *     if (canvas == null) {
-     *       canvas = document.createElement('canvas');
-     *       this.context = canvas.getContext("2d");
-     *     } else {
-	   *       this.context = canvas.getContext("2d");
-	   *       canvas.imgdata = this.context.getImageData(0, 0, canvas.width, canvas.height);
-	   *       canvas.buf8 = canvas.imgdata.data;
-	   *     }
-	   */
-	  {
 	    this.vwr = null;
 	    context = null;
       canvas = null;
-	  }
     this.canvas = canvas;
 	}
 
   @Override
   public Object getJsObjectInfo(Object[] jsObject, String method, Object[] args) {
-    /**
-     * we must use Object[] here to hide [HTMLUnknownElement] and [Attribute] from Java2Script
-     * @j2sNative
-     * 
-     * return (method == null ? null : method == "localName" ? jsObject[0]["nodeName"] : args == null ? jsObject[0][method] : jsObject[0][method](args[0]));
-     * 
-     * 
-     */
-    {
       return null;
-    }
   }
 
   @Override
@@ -123,11 +93,9 @@ public class Platform implements GenericPlatform {
 	}
 
   @Override
-  public GenericMenuInterface getMenuPopup(String menuStructure,
-                                         char type) {
+  public GenericMenuInterface getMenuPopup(String menuStructure, char type) {
     String c = (type == 'j' ? "awtjs2d.JSJmolPopup" : "awtjs2d.JSModelKitPopup");
-    GenericMenuInterface jmolpopup = (GenericMenuInterface) Interface
-        .getOption(c, (Viewer) vwr, "popup");
+    GenericMenuInterface jmolpopup = (GenericMenuInterface) Interface.getOption(c, (Viewer) vwr, "popup");
     try {
       if (jmolpopup != null)
         jmolpopup.jpiInitialize(vwr, menuStructure);
@@ -145,26 +113,12 @@ public class Platform implements GenericPlatform {
 	}
 
 	@Override
-  public String prompt(String label, String data, String[] list,
-			boolean asButtons) {
+  public String prompt(String label, String data, String[] list, boolean asButtons) {
 		return Display.prompt(label, data, list, asButtons);
 	}
 
-//	/**
-//	 * legacy apps will use this
-//	 * 
-//	 * @param context
-//	 * @param size
-//	 */
-//	@Override
-//  public void renderScreenImage(Object context, Object size) {
-//		Image.renderScreenImage(vwr, context, size);
-//	}
-
   @Override
-  public void drawImage(Object context, Object canvas, int x, int y, int width,
-                        int height, boolean isDTI) {
-    
+  public void drawImage(Object context, Object canvas, int x, int y, int width, int height, boolean isDTI) {
     // from Viewer.drawImage
     Image.drawImage(context, canvas, x, y, width, height, isDTI);
   }
@@ -180,22 +134,6 @@ public class Platform implements GenericPlatform {
 
     JmolToJSmolInterface jmol = null;
 
-    /**
-     * Jmol.repaint(applet,asNewThread)
-     * 
-     * should invoke
-     * 
-     * setTimeout(applet._applet.update(applet._canvas)) // may be 0,0
-     * 
-     * when it is ready to do so.
-     * 
-     * @j2sNative
-     * 
-     *   jmol = (self.Jmol && Jmol.repaint ? Jmol : null);
-     * 
-     */
-    {
-    }
     if (jmol != null)
       jmol.repaint(((Viewer) vwr).html5Applet, true);
 
@@ -218,20 +156,11 @@ public class Platform implements GenericPlatform {
 	 * (from g3d.Platform32) or just an associative array with those (image writing
 	 */
 	@Override
-  public Object allocateRgbImage(int windowWidth, int windowHeight,
-			int[] pBuffer, int windowSize, boolean backgroundTransparent, boolean isImageWrite) {
+  public Object allocateRgbImage(int windowWidth, int windowHeight, int[] pBuffer, int windowSize, boolean backgroundTransparent, boolean isImageWrite) {
 	  if (pBuffer == null) {
       pBuffer = grabPixels(null, 0, 0, null);
-      /**
-       * @j2sNative
-       * 
-       * windowWidth = this.canvas.width;
-       * windowHeight = this.canvas.height;
-       */
-      {}
     }
-		return Image.allocateRgbImage(windowWidth, windowHeight, pBuffer,
-				windowSize, backgroundTransparent, (isImageWrite ? null : canvas));
+		return Image.allocateRgbImage(windowWidth, windowHeight, pBuffer, windowSize, backgroundTransparent, (isImageWrite ? null : canvas));
 	}
 
   @Override
@@ -249,40 +178,10 @@ public class Platform implements GenericPlatform {
     Object context2d = null;
     boolean isWebGL = (canvas == null);
     
-    //TODO - clean this up with Jmol
-    /**
-     * 
-     * (might be just an object with buf32 defined -- WRITE IMAGE)
-     * 
-     * @j2sNative
-     * 
-     *            if(isWebGL) { this.canvas = canvas =
-     *            Jmol.loadImage(this,"webgl",""
-     *            +System.currentTimeMillis(),this
-     *            .vwr.html5Applet._canvas.toDataURL(),null,null); width =
-     *            canvas.imageWidth; height = canvas.imageHeight;
-     *            canvas.imageWidth = 0; }
-     * 
-     * 
-     *            if (canvas.image && (width != canvas.width || height !=
-     *            canvas.height)) Jmol.setCanvasImage(canvas, width, height);
-     *            if (canvas.buf32) return canvas.buf32; context2d =
-     *            canvas.getContext('2d');
-     */
-    {
       // placeholder for Eclipse referencing
       Jmol().loadImage(this, null, null, null, null);
       Jmol().setCanvasImage(canvas, width, height);
-    }
     int[] buf = Image.grabPixels(context2d, width, height);
-    /**
-     * @j2sNative
-     * 
-     *            canvas.buf32 = buf;
-     * 
-     */
-    {
-    }
     if (isWebGL) // WebGL reports 0 for background
       for (int i = buf.length; --i >= 0;)
         if (buf[i] == 0)
@@ -291,14 +190,12 @@ public class Platform implements GenericPlatform {
   }
 
 	@Override
-  public int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen,
-			Object canvas, int width, int height, int bgcolor) {
+  public int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen, Object canvas, int width, int height, int bgcolor) {
 	  return grabPixels(canvas, width, height, null);
 	}
 
 	@Override
-  public int[] getTextPixels(String text, Font font3d, Object context,
-			Object image, int width, int height, int ascent) {
+  public int[] getTextPixels(String text, Font font3d, Object context, Object image, int width, int height, int ascent) {
 		return Image.getTextPixels(text, font3d, context, width, height, ascent);
 	}
 
@@ -309,14 +206,7 @@ public class Platform implements GenericPlatform {
 
 	@Override
   public Object getGraphics(Object canvas) {
-    /**
-     * @j2sNative
-     * 
-     * return (canvas == null ? this.context : canvas.getContext("2d"));
-     */
-	  {
 	    return null;
-	  }
 	}
 
   @Override
@@ -352,10 +242,8 @@ public class Platform implements GenericPlatform {
     return false;
   }
   /**
-   * 
    * @param name_path_bytes
    * @return image object or null if asynchronous
-   * 
    */
   @Override
   public Object createImage(Object name_path_bytes) {
@@ -365,24 +253,8 @@ public class Platform implements GenericPlatform {
     Viewer vwr = (Viewer) this.vwr;
     ScriptContext sc = (bytes == null ? vwr.getEvalContextAndHoldQueue(vwr.eval) : null); 
     Object f = null;
-	  /**
-	   * 
-	   * this is important specifically for retrieving images from
-	   * files, as in set echo ID myimage "image.gif"
-	   * 
-	   * return will be immediate, before the image is created, so here there is
-	   * no "wait." Instead, we give it a callback 
-	   * 
-	   * @j2sNative
-	   * 
-	   * f = function(canvas, pathOrError) { vwr.loadImageData$O$S$S$O(canvas, pathOrError, echoName, sc) };
-	   * 
-	   * 
-	   */	  
-	  {
 	    // this call is never made - it is just here as an Eclipse proxy for the above callback
 	    vwr.loadImageData(bytes, path, echoName, sc);
-	  }
 	  return Jmol().loadImage(this, echoName, path, bytes, f);
   }
 	// /// FONT
@@ -408,65 +280,13 @@ public class Platform implements GenericPlatform {
 	}
 
 	@Override
-  public Object newFont(String fontFace, boolean isBold, boolean isItalic,
-			float fontSize) {
+  public Object newFont(String fontFace, boolean isBold, boolean isItalic, float fontSize) {
 		return JSFont.newFont(fontFace, isBold, isItalic, fontSize, "px");
 	}
-
-//  @Override
-//  public String getDateFormat(boolean isoiec8824) {
-//    /**
-//     * 
-//     * Mon Jan 07 2013 19:54:39 GMT-0600 (Central Standard Time)
-//     * or YYYYMMDDHHmmssOHH'mm'
-//     * 
-//     * @j2sNative
-//     * 
-//     * if (isoiec8824) {
-//     *   var d = new Date();
-//     *   var x = d.toString().split(" ");
-//     *   var MM = "0" + d.getMonth(); MM = MM.substring(MM.length - 2);
-//     *   var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
-//     *   return x[3] + MM + dd + x[4].replace(/\:/g,"") + x[5].substring(3,6) + "'" + x[5].substring(6,8) + "'"   
-//     * }
-//     * return ("" + (new Date())).split(" (")[0];
-//     */
-//    {
-//      return null;
-//    }
-//  }
 	
   @Override
   public String getDateFormat(String isoType) {
-    /**
-     * 
-     * Mon Jan 07 2013 19:54:39 GMT-0600 (Central Standard Time)
-     * or YYYYMMDDHHmmssOHH'mm'
-     * 
-     * @j2sNative
-     * 
-     * if (isoType == null) {
-     * } else if (isoType.indexOf("8824") >= 0) {
-     *   var d = new Date();
-     *   var x = d.toString().split(" ");
-     *   var MM = "0" + (1 + d.getMonth()); MM = MM.substring(MM.length - 2);
-     *   var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
-     *   return x[3] + MM + dd + x[4].replace(/\:/g,"") + x[5].substring(3,6) + "'" + x[5].substring(6,8) + "'"   
-     * } else if (isoType.indexOf("8601") >= 0){
-     *   var d = new Date();
-     *   var x = d.toString().split(" ");
-     *   // Firefox now doing this?
-     *   if (x.length == 1)
-     *     return x;
-     *   var MM = "0" + (1 + d.getMonth()); MM = MM.substring(MM.length - 2);
-     *   var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
-     *   return x[3] + '-' + MM + '-' + dd + 'T' + x[4]   
-     * }
-     * return ("" + (new Date())).split(" (")[0];
-     */
-    {
       return null;
-    }
   }
 
   @Override
@@ -480,10 +300,8 @@ public class Platform implements GenericPlatform {
     return null; 
   }
 
-
   @Override
-  public Object getURLContents(URL url, byte[] outputBytes, String post,
-      boolean asString) {
+  public Object getURLContents(URL url, byte[] outputBytes, String post, boolean asString) {
     return getURLContentsStatic(url, outputBytes, post, asString);
   }
 
@@ -495,8 +313,7 @@ public class Platform implements GenericPlatform {
    * @param asString
    * @return String or byte[] or javajs.util.SB 
    */
-  public static Object getURLContentsStatic(URL url, byte[] outputBytes, String post,
-      boolean asString) {
+  public static Object getURLContentsStatic(URL url, byte[] outputBytes, String post, boolean asString) {
     Object ret = JSFile.getURLContents(url, outputBytes, post);
     // check for error
     try {
@@ -517,21 +334,12 @@ public class Platform implements GenericPlatform {
   }
 
   @Override
-  public GenericImageDialog getImageDialog(String title,
-                                        Map<String, GenericImageDialog> imageMap) {
+  public GenericImageDialog getImageDialog(String title, Map<String, GenericImageDialog> imageMap) {
     return Image.getImageDialog((Viewer) vwr, title, imageMap);
   }
 
   public static JmolToJSmolInterface Jmol() {
-    /**
-     * @j2sNative
-     *
-     * return Jmol;
-     * 
-     */
-    {
       return null;
-    }
   }
 
   @Override
@@ -548,20 +356,11 @@ public class Platform implements GenericPlatform {
 
   @Override
   public JmolInChI getInChI() {
-    return (inchi == null
-        ? (inchi = (JmolInChI) Interface.getInterface("org.jmol.inchi.InChIJS",
-            (Viewer) vwr, "platform"))
-        : inchi);
+    return (inchi == null ? (inchi = (JmolInChI) Interface.getInterface("org.jmol.inchi.InChIJS", (Viewer) vwr, "platform")) : inchi);
   }
   
   @Override
   public int confirm(String msg, String msgNo) {
-    boolean ok = /** @j2sNative confirm(msg) || */false;
-    if (ok)
-      return JOptionPane.OK_OPTION;
-    if (msgNo != null)
-      ok =  /** @j2sNative confirm(msgNo) || */false;
-    return (ok ? JOptionPane.NO_OPTION : JOptionPane.CANCEL_OPTION);
+    return JOptionPane.CANCEL_OPTION;
   }
-
 }

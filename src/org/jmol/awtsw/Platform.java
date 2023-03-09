@@ -3,7 +3,6 @@ package org.jmol.awtsw;
 import org.jmol.util.Font;
 
 public class Platform extends org.jmol.awt.Platform {
-
   @Override
   public boolean isSingleThreaded() {
     return true;
@@ -12,9 +11,7 @@ public class Platform extends org.jmol.awt.Platform {
   ////// Image 
 
   @Override
-  public Object allocateRgbImage(int windowWidth, int windowHeight,
-                                 int[] pBuffer, int windowSize,
-                                 boolean backgroundTransparent, boolean isImageWrite) {
+  public Object allocateRgbImage(int windowWidth, int windowHeight, int[] pBuffer, int windowSize, boolean backgroundTransparent, boolean isImageWrite) {
     return Image.allocateRgbImage(windowWidth, windowHeight, pBuffer, windowSize, backgroundTransparent);
   }
 
@@ -22,7 +19,6 @@ public class Platform extends org.jmol.awt.Platform {
    * could be byte[] (from ZIP file) or String (local file name) or URL
    * @param data 
    * @return image object
-   * 
    */
   @Override
   public Object createImage(Object data) {
@@ -53,14 +49,12 @@ public class Platform extends org.jmol.awt.Platform {
   }
 
   @Override
-  public int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen,
-                                 Object imageobj, int width, int height, int bgcolor) {
+  public int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen, Object imageobj, int width, int height, int bgcolor) {
     return Image.drawImageToBuffer(gOffscreen, imageOffscreen, imageobj, width, height, bgcolor);
   }
 
   @Override
-  public int[] getTextPixels(String text, Font font3d, Object gObj,
-                             Object image, int width, int height, int ascent) {
+  public int[] getTextPixels(String text, Font font3d, Object gObj, Object image, int width, int height, int ascent) {
     return Image.getTextPixels(text, font3d, gObj, image, width, height, ascent);
   }
 
@@ -73,6 +67,4 @@ public class Platform extends org.jmol.awt.Platform {
   public Object getGraphics(Object image) {
     return Image.getGraphics(image);
   }
-
-      
 }

@@ -100,9 +100,11 @@ public class CubeIterator {
    */
   public boolean hasMoreElements() {
     while (leaf != null) {
-      for ( ; leafIndex < leaf.count; ++leafIndex)
-        if (isWithinRadius(leaf.tuples[leafIndex]))
+      for ( ; leafIndex < leaf.count; ++leafIndex) {
+        if (isWithinRadius(leaf.tuples[leafIndex])) {
           return true;
+		}
+	  }
       findLeftLeaf();
     }
     return false;
@@ -178,10 +180,9 @@ public class CubeIterator {
    */
   private boolean isWithinRadius(T3d t) {
     dx = t.x - cx;
-    return ((!tHemisphere || dx >= 0)        
+    return ((!tHemisphere || dx >= 0)
         && (dx = Math.abs(dx)) <= radius
         && (dy = Math.abs(t.y - cy)) <= radius
         && (dz = Math.abs(t.z - cz)) <= radius);
   }
-
 }

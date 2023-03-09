@@ -22,9 +22,6 @@
  */
 package org.jmol.bspt;
 
-
-
-
 import javajs.util.AU;
 import javajs.util.P3d;
 import javajs.util.P3d;
@@ -40,7 +37,6 @@ import javajs.util.BS;
 */
 
 public final class Bspf {
-
   int dimMax;
   public Bspt[] bspts;
   public boolean isValid = false;
@@ -51,8 +47,7 @@ public final class Bspf {
   }
 
   public boolean isInitializedIndex(int bsptIndex) {
-    return bspts.length > bsptIndex && bspts[bsptIndex] != null
-        && bsptsValid[bsptIndex];
+    return bspts.length > bsptIndex && bspts[bsptIndex] != null && bsptsValid[bsptIndex];
   }
   
   CubeIterator[] cubeIterators;
@@ -77,19 +72,13 @@ public final class Bspf {
   }
 
   public void stats() {
-    for (int i = 0; i < bspts.length; ++i)
-      if (bspts[i] != null)
+    for (int i = 0; i < bspts.length; ++i) {
+      if (bspts[i] != null) {
         bspts[i].stats();
+	  }
+	}
   }
 
-  
-//  public void dump() {
-//    for (int i = 0; i < bspts.length; ++i) {
-//      Logger.info(">>>>\nDumping bspt #" + i + "\n>>>>");
-//      bspts[i].dump();
-//    }
-//    Logger.info("<<<<");
-//  }
   
   /**
    * @param bsptIndex
@@ -98,13 +87,15 @@ public final class Bspf {
    * 
    */
   public CubeIterator getCubeIterator(int bsptIndex) {
-    if (bsptIndex < 0)
+    if (bsptIndex < 0) {
       return getNewCubeIterator(-1 - bsptIndex);
-    if (bsptIndex >= cubeIterators.length)
-      cubeIterators = (CubeIterator[]) AU.arrayCopyObject(cubeIterators,
-          bsptIndex + 1);
-    if (cubeIterators[bsptIndex] == null && bspts[bsptIndex] != null)
+	}
+    if (bsptIndex >= cubeIterators.length) {
+      cubeIterators = (CubeIterator[]) AU.arrayCopyObject(cubeIterators, bsptIndex + 1);
+	}
+    if (cubeIterators[bsptIndex] == null && bspts[bsptIndex] != null) {
       cubeIterators[bsptIndex] = getNewCubeIterator(bsptIndex);
+	}
     cubeIterators[bsptIndex].set(bspts[bsptIndex]);
     return cubeIterators[bsptIndex];
   }
@@ -114,11 +105,12 @@ public final class Bspf {
   }
 
   public synchronized void initialize(int modelIndex, P3d[] atoms, BS modelAtomBitSet) {
-    if (bspts[modelIndex] != null)
+    if (bspts[modelIndex] != null) {
       bspts[modelIndex].reset();
-    for (int i = modelAtomBitSet.nextSetBit(0); i >= 0; i = modelAtomBitSet.nextSetBit(i + 1))
+	}
+    for (int i = modelAtomBitSet.nextSetBit(0); i >= 0; i = modelAtomBitSet.nextSetBit(i + 1)) {
       addTuple(modelIndex, atoms[i]);
+	}
     bsptsValid[modelIndex] = true;
   }
-
 }

@@ -58,15 +58,11 @@ import javajs.util.AU;
  * methods required by Jmol-SwingJS that access java.awt.Image
  * 
  * private to org.jmol.awtsw; based on org.jmol.awt
- * 
  */
 class Image {
+  private final static DirectColorModel rgbColorModel = new DirectColorModel( 24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00000000);
 
-  private final static DirectColorModel rgbColorModel = new DirectColorModel(
-      24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00000000);
-
-  private final static int[] sampleModelBitMasks = { 0x00FF0000, 0x0000FF00,
-      0x000000FF };
+  private final static int[] sampleModelBitMasks = { 0x00FF0000, 0x0000FF00, 0x000000FF };
 
   /**
    * @param windowWidth
@@ -76,13 +72,10 @@ class Image {
    * @param backgroundTransparent
    * @return an Image
    */
-  static Object allocateRgbImage(int windowWidth, int windowHeight,
-                                 int[] pBuffer, int windowSize,
-                                 boolean backgroundTransparent) {
+  static Object allocateRgbImage(int windowWidth, int windowHeight, int[] pBuffer, int windowSize, boolean backgroundTransparent) {
     return new BufferedImage(rgbColorModel, 
         Raster.createWritableRaster(
-        new SinglePixelPackedSampleModel(DataBuffer.TYPE_INT, windowWidth,
-            windowHeight, sampleModelBitMasks), 
+        new SinglePixelPackedSampleModel(DataBuffer.TYPE_INT, windowWidth, windowHeight, sampleModelBitMasks), 
         new DataBufferInt(pBuffer, windowSize), 
         null
         ), 
@@ -120,13 +113,7 @@ class Image {
     return null;
   }
 
-  /**
-   * @param vwr 
-   * @param image
-   * @throws InterruptedException
-   */
-  static void waitForDisplay(PlatformViewer vwr, Object image)
-      throws InterruptedException {
+  static void waitForDisplay(PlatformViewer vwr, Object image) throws InterruptedException {
     Object display = ((Viewer) vwr).display;
     // this is important primarily for retrieving images from 
     // files, as in set echo ID myimage "image.gif"
@@ -146,12 +133,9 @@ class Image {
     return ((java.awt.Image) image).getHeight(null);
   }
 
-  static int[] grabPixels(Object imageobj, int width, int height, 
-                          int[] pixels) {
+  static int[] grabPixels(Object imageobj, int width, int height, int[] pixels) {
     java.awt.image.BufferedImage image = (java.awt.image.BufferedImage) imageobj;
-    PixelGrabber pixelGrabber = (pixels == null ? new PixelGrabber(image, 0,
-        0, width, height, true) : new PixelGrabber(image, 0, 0, width, height, pixels, 0,
-            width));
+    PixelGrabber pixelGrabber = (pixels == null ? new PixelGrabber(image, 0, 0, width, height, true) : new PixelGrabber(image, 0, 0, width, height, pixels, 0, width));
     try {
       pixelGrabber.grabPixels();
     } catch (InterruptedException e) {
@@ -160,20 +144,16 @@ class Image {
     return (int[]) pixelGrabber.getPixels();
   }
 
-  static int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen,
-                                 Object imageobj, int width, int height,
-                                 int bgcolor) {
+  static int[] drawImageToBuffer(Object gOffscreen, Object imageOffscreen, Object imageobj, int width, int height, int bgcolor) {
     Graphics g = (Graphics) gOffscreen;
     java.awt.Image image = (java.awt.Image) imageobj;
     int width0 = image.getWidth(null);
     int height0 = image.getHeight(null);
     if (g instanceof Graphics2D) {
-      ((Graphics2D) g).setComposite(AlphaComposite.getInstance(
-          AlphaComposite.SRC_IN, 1.0f));
+      ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1.0f));
       g.setColor(bgcolor == 0 ? new Color(0, 0, 0, 0) : new Color(bgcolor));
       g.fillRect(0, 0, width, height);
-      ((Graphics2D) g).setComposite(AlphaComposite.getInstance(
-          AlphaComposite.SRC_OVER, 1.0f));
+      ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
       g.drawImage(image, 0, 0, width, height, 0, 0, width0, height0, null);
     } else {
       g.clearRect(0, 0, width, height);
@@ -182,9 +162,7 @@ class Image {
     return grabPixels(imageOffscreen, width, height, null);
   }
 
-  public static int[] getTextPixels(String text, org.jmol.util.Font font3d, Object gObj,
-                                    Object image, int width, int height,
-                                    int ascent) {
+  public static int[] getTextPixels(String text, org.jmol.util.Font font3d, Object gObj, Object image, int width, int height, int ascent) {
     Graphics g = (Graphics) gObj;
     g.setColor(Color.black);
     g.fillRect(0, 0, width, height);
@@ -201,7 +179,6 @@ class Image {
   static Object newBufferedImage(int w, int h) {
     return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
   }
-
 
   /**
    * @param image
@@ -225,14 +202,11 @@ class Image {
     ((java.awt.Graphics) graphicForText).dispose();
   }
 
-  public static GenericImageDialog getImageDialog(PlatformViewer vwr,
-                                               String title,
-                                               Map<String, GenericImageDialog> imageMap) {
+  public static GenericImageDialog getImageDialog(PlatformViewer vwr, String title, Map<String, GenericImageDialog> imageMap) {
     return new ImageDialog((Viewer) vwr, title, imageMap);
     }
 
   /**
-   * 
    * @param g
    * @param img
    * @param x
@@ -242,13 +216,11 @@ class Image {
    * @param height
    *        unused in Jmol proper
    */
-  static void drawImage(Object g, Object img, int x, int y, int width,
-                        int height) {
+  static void drawImage(Object g, Object img, int x, int y, int width, int height) {
     ((Graphics) g).drawImage((java.awt.Image) img, x, y, null);
   }
 
   /**
-   * 
    * @param g
    * @param img
    * @param x
@@ -258,9 +230,7 @@ class Image {
    * @param height
    *        unused in Jmol proper
    */
-  static void drawImageDTI(Object g, Object img, int x, int y, int width,
-                        int height) {
+  static void drawImageDTI(Object g, Object img, int x, int y, int width, int height) {
     ((Graphics) g).drawImage((java.awt.Image) img, x, y, x == 0 ? width >> 1 : width, height, 0, y, width, height, null);
   }
-
 }

@@ -23,7 +23,6 @@
  */
 package org.jmol.awtjs2d;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
@@ -115,8 +114,7 @@ import org.jmol.popup.PopupHelper;
   }
 
   @Override
-  public void menuInsertSubMenu(SC menu, SC subMenu,
-                                int index) {
+  public void menuInsertSubMenu(SC menu, SC subMenu, int index) {
     ((Component)subMenu).setParent(menu);
   }
 
@@ -167,5 +165,4 @@ import org.jmol.popup.PopupHelper;
     menuClearListeners(popupMenu);
     popup = null;
   }
-  
 }

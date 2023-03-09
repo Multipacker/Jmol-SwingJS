@@ -14,16 +14,12 @@ import org.jmol.viewer.Viewer;
 
 import javajs.util.PT;
 
-
 /**
  * a subclass of File allowing extension to JavaScript
  * 
  * private to org.jmol.awt
- * 
  */
-
 class JSFile extends File implements GenericFileInterface {
-
   JSFile(String name) {
     super(name);
   }
@@ -35,7 +31,6 @@ class JSFile extends File implements GenericFileInterface {
       File file = getParentFile();
       f = new JSFile(file.getAbsolutePath());
     } catch (AccessControlException e) {
-      //
     }
     return f;
   }
@@ -49,14 +44,11 @@ class JSFile extends File implements GenericFileInterface {
     }
   }
 
-  static Object getURLContents(URL url, byte[] outputBytes,
-                                          String post) {
+  static Object getURLContents(URL url, byte[] outputBytes, String post) {
     URLConnection conn = null;
     try {
       conn = url.openConnection();
       String type = null;
-      //conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      //Map<String, List<String>> x = conn.getRequestProperties();
       if (outputBytes != null) {
         type = "application/octet-stream;";
       } else if (post != null) {
@@ -111,10 +103,7 @@ class JSFile extends File implements GenericFileInterface {
     // looking for /xxx/xxxx/file://...
     for (int i = 0; i < urlPrefixPairs.length; i += 2)
       if (path.indexOf(urlPrefixPairs[i]) > 0)
-        return urlPrefixPairs[i + 1]
-            + PT.trim(path.substring(path.indexOf(urlPrefixPairs[i])
-                + urlPrefixPairs[i].length()), "/");
+        return urlPrefixPairs[i + 1] + PT.trim(path.substring(path.indexOf(urlPrefixPairs[i]) + urlPrefixPairs[i].length()), "/");
     return null;
   }
-
 }

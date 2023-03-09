@@ -22,13 +22,8 @@
  */
 package org.jmol.bspt;
 
-
-
 import javajs.util.T3d;
 import javajs.util.T3d;
-
-
-//import org.jmol.util.Logger;
 
 /**
  *<p>
@@ -75,7 +70,6 @@ import javajs.util.T3d;
  */
 
 public final class Bspt {
-
   final static int leafCountMax = 2;
   // this corresponds to the max height of the tree
   final static int MAX_TREE_DEPTH = 100;
@@ -115,27 +109,9 @@ public final class Bspt {
    * prints some simple stats to stdout
    */
   public void stats() {
-    //    if (Logger.debugging) {
-    //      Logger.debug(
-    //          "bspt treeDepth=" + treeDepth +
-    //          " count=" + eleRoot.count);
-    //    }
   }
-
-//  public void dump() {
-//    SB sb = new SB();
-//    eleRoot.dump(0, sb);
-//    Logger.info(sb.toString());
-//  }
-//
-  //    @Override
-  //    public String toString() {
-  //     return eleRoot.toString();
-  //    }
 
   public CubeIterator allocateCubeIterator() {
     return new CubeIterator(this);
   }
-
-
 }

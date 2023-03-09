@@ -33,7 +33,6 @@ import javajs.util.P3d;
 import javajs.util.T3d;
 
 public class PointIterator {
-
   /**
    * carry out various functions of the within() script function
    * 
@@ -52,8 +51,7 @@ public class PointIterator {
    *        null, "", int[], Lst<T3>, or P3
    * @return T.nada, T.string, T.array, T.list, T.point
    */
-  public static int withinDistPoints(double distance, P3d pt, P3d[] ap3, P3d[] ap31,
-                                     BS bsSelected, Object[] ret) {
+  public static int withinDistPoints(double distance, P3d pt, P3d[] ap3, P3d[] ap31, BS bsSelected, Object[] ret) {
     Lst<T3d> pts = new Lst<T3d>();
     Bspt bspt = new Bspt(3, 0);
     CubeIterator iter;
@@ -63,8 +61,9 @@ public class PointIterator {
       Point3fi p;
       for (int i = pt3.length; --i >= 0;) {
         P3d p3 = ap3[i];
-        if (p3 == null)
+        if (p3 == null) {
           return T.nada;
+		}
         if (bsSelected == null) {
           p = new Point3fi();
           p.setT(p3);
@@ -80,8 +79,7 @@ public class PointIterator {
       if (bsSelected != null) {
         // {*}.within(0.1, [points])
         bsp = BS.newN(ap31.length);
-        for (int i = bsSelected.nextSetBit(0); i >= 0; i = bsSelected
-            .nextSetBit(i + 1)) {
+        for (int i = bsSelected.nextSetBit(0); i >= 0; i = bsSelected.nextSetBit(i + 1)) {
           iter.initialize(ap31[i], distance, false);
           double d2 = distance * distance;
           while (iter.hasMoreElements()) {
@@ -101,12 +99,14 @@ public class PointIterator {
         int n = 0;
         while (iter.hasMoreElements()) {
           Point3fi pt2 = (Point3fi) iter.nextElement();
-          if (bsp.get(pt2.i) && pt2.distanceSquared(p) <= d2 && (++n > 1))
+          if (bsp.get(pt2.i) && pt2.distanceSquared(p) <= d2 && (++n > 1)) {
             bsp.clear(pt2.i);
+		  }
         }
       }
-      for (int i = bsp.nextSetBit(0); i >= 0; i = bsp.nextSetBit(i + 1))
+      for (int i = bsp.nextSetBit(0); i >= 0; i = bsp.nextSetBit(i + 1)) {
         pts.addLast(P3d.newP(pt3[i]));
+	  }
       ret[0] = pts;
       return T.list;
     }
@@ -144,15 +144,17 @@ public class PointIterator {
       ret[0] = ptsOut;
       return T.array;
     }
-    for (int i = ap3.length; --i >= 0;)
+    for (int i = ap3.length; --i >= 0;) {
       bspt.addTuple(ap3[i]);
+	}
     iter = bspt.allocateCubeIterator();
     iter.initialize(pt, distance, false);
     double d2 = distance * distance;
     while (iter.hasMoreElements()) {
       T3d pt2 = iter.nextElement();
-      if (pt2.distanceSquared(pt) <= d2)
+      if (pt2.distanceSquared(pt) <= d2) {
         pts.addLast(pt2);
+	  }
     }
     iter.release();
     ret[0] = pts;

@@ -39,15 +39,10 @@ import javajs.util.V3d;
 
 /**
  * JavaScript interface from JmolJSmol.js via handleOldJvm10Event (for now)
- * 
- * 
  */
-
 public class Mouse implements GenericMouseInterface {
-
   private Viewer vwr;
   private EventManager manager;
-  //private double privateKey;
 
   /**
    * @param privateKey -- not used in JavaScript  
@@ -99,8 +94,7 @@ public class Mouse implements GenericMouseInterface {
     case MouseEvent.MOUSE_RELEASED:
       released(time, x, y, modifiers);
       // simulate a mouseClicked event for us
-      if (x == xWhenPressed && y == yWhenPressed
-          && modifiers == modifiersWhenPressed10) {
+      if (x == xWhenPressed && y == yWhenPressed && modifiers == modifiersWhenPressed10) {
         // the underlying code will turn this into dbl clicks for us
         clicked(time, x, y, modifiers, 1);
       }
@@ -112,17 +106,14 @@ public class Mouse implements GenericMouseInterface {
   }
 
   /**
-   * 
    * called by JSmol as processTwoPointGesture(canvas.touches);
    * 
    * @param touches
    *     [[finger1 touches],[finger2 touches]]
    *     where finger touches are [[x0,y0],[x1,y1],[x2,y2],...] 
-   *    
    */
   @Override
   public void processTwoPointGesture(double[][][] touches) {
-    
     if (touches[0].length < 2)
       return;
     double[][] t1 = touches[0];
@@ -184,8 +175,7 @@ public class Mouse implements GenericMouseInterface {
   }
 
   public void mousePressed(MouseEvent e) {
-    pressed(e.getWhen(), e.getX(), e.getY(), e.getModifiers(), e
-        .isPopupTrigger());
+    pressed(e.getWhen(), e.getX(), e.getY(), e.getModifiers(), e.isPopupTrigger());
   }
 
   public void mouseReleased(MouseEvent e) {
@@ -306,7 +296,6 @@ public class Mouse implements GenericMouseInterface {
     }
    }
 
-
   private String keyBuffer = "";
 
   private void clearKeyBuffer() {
@@ -314,8 +303,7 @@ public class Mouse implements GenericMouseInterface {
       return;
     keyBuffer = "";
     if (vwr.getBooleanProperty("showKeyStrokes"))
-      vwr
-          .evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo \"\"", true, true);
+      vwr.evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo \"\"", true, true);
   }
 
   private void addKeyBuffer(char ch) {
@@ -330,17 +318,13 @@ public class Mouse implements GenericMouseInterface {
       keyBuffer += ch;
     }
     if (vwr.getBooleanProperty("showKeyStrokes"))
-      vwr
-          .evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo "
-              + PT.esc("\1" + keyBuffer), true, true);
+      vwr.evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo " + PT.esc("\1" + keyBuffer), true, true);
   }
 
   private void sendKeyBuffer() {
     String kb = keyBuffer;
     if (vwr.getBooleanProperty("showKeyStrokes"))
-      vwr
-          .evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo "
-              + PT.esc(keyBuffer), true, true);
+      vwr.evalStringQuietSync("!set echo _KEYSTROKES; set echo bottom left;echo " + PT.esc(keyBuffer), true, true);
     clearKeyBuffer();
     vwr.evalStringQuietSync(kb, false, true);
   }
@@ -352,14 +336,6 @@ public class Mouse implements GenericMouseInterface {
     manager.mouseEnterExit(time, x, y, isExit);
   }
 
-  /**
-   * 
-   * @param time
-   * @param x
-   * @param y
-   * @param modifiers
-   * @param clickCount
-   */
   private void clicked(long time, int x, int y, int modifiers, int clickCount) {
     clearKeyBuffer();
     // clickedCount is not reliable on some platforms
@@ -382,20 +358,10 @@ public class Mouse implements GenericMouseInterface {
   private void wheeled(long time, int rotation, int modifiers) {
     clearKeyBuffer();
     wheeling = true;
-    manager.mouseAction(Event.WHEELED, time, 0, rotation, 0, 
-        modifiers & ~Event.BUTTON_MASK | Event.MOUSE_WHEEL);
+    manager.mouseAction(Event.WHEELED, time, 0, rotation, 0, modifiers & ~Event.BUTTON_MASK | Event.MOUSE_WHEEL);
   }
 
-  /**
-   * 
-   * @param time
-   * @param x
-   * @param y
-   * @param modifiers
-   * @param isPopupTrigger
-   */
-  private void pressed(long time, int x, int y, int modifiers,
-                    boolean isPopupTrigger) {
+  private void pressed(long time, int x, int y, int modifiers, boolean isPopupTrigger) {
     clearKeyBuffer();
     isMouseDown = true;
     modifiersDown = modifiers;
@@ -420,10 +386,8 @@ public class Mouse implements GenericMouseInterface {
 
   private static int applyLeftMouse(int modifiers) {
     // if neither BUTTON2 or BUTTON3 then it must be BUTTON1
-    return ((modifiers & Event.BUTTON_MASK) == 0) ? (modifiers | Event.MOUSE_LEFT)
-        : modifiers;
+    return ((modifiers & Event.BUTTON_MASK) == 0) ? (modifiers | Event.MOUSE_LEFT) : modifiers;
   }
 
   private int xWhenPressed, yWhenPressed, modifiersWhenPressed10;
-
 }

@@ -35,8 +35,5 @@ abstract class Element {
   Bspt bspt;
   int count;
   abstract Element addTuple(int level, T3d tuple);
-  
-  //abstract void dump(int level, SB sb);
-  
 }
 
