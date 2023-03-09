@@ -25,10 +25,7 @@
 
 package org.jmol.export;
 
-
-
 import java.util.Map;
-
 
 import javajs.util.BS;
 
@@ -56,9 +53,7 @@ import org.jmol.viewer.Viewer;
  *  getting the needed constants.
  * 
  */
-
 public class _PovrayExporter extends __RayTracerExporter {
-  
   public _PovrayExporter() {
     commentChar = "// ";
   }
@@ -117,23 +112,18 @@ public class _PovrayExporter extends __RayTracerExporter {
       output("  up < 0, " + screenHeight + ", 0 >\n");
     }
     output("  sky < 0, -1, 0 >\n");
-    output("  location < " + (screenWidth / 2d + offsetX) + ", " + (screenHeight / 2d + offsetY)
-        + ", 0>\n");
-    output("  look_at < " + (screenWidth / 2d + f * offsetX) + ", " + (screenHeight / 2d + f * offsetY)
-        + ", 1000 >\n");
+    output("  location < " + (screenWidth / 2d + offsetX) + ", " + (screenHeight / 2d + offsetY) + ", 0>\n");
+    output("  look_at < " + (screenWidth / 2d + f * offsetX) + ", " + (screenHeight / 2d + f * offsetY) + ", 1000 >\n");
     output("}\n");
     output("\n");
 
-    output("background { color rgb <" + rgbFractionalFromColix(backgroundColix)
-        + "> }\n");
+    output("background { color rgb <" + rgbFractionalFromColix(backgroundColix) + "> }\n");
     output("\n");
 
     // light source
 
     double distance = Math.max(screenWidth, screenHeight);
-    output("light_source { <" + lightSource.x * distance + "," + lightSource.y
-        * distance + ", " + (-1 * lightSource.z * distance) + "> "
-        + " rgb <0.6,0.6,0.6> }\n");
+    output("light_source { <" + lightSource.x * distance + "," + lightSource.y * distance + ", " + (-1 * lightSource.z * distance) + "> " + " rgb <0.6,0.6,0.6> }\n");
     output("\n");
     output("\n");
 

@@ -37,8 +37,6 @@ import java.util.Hashtable;
 
 import java.util.Map;
 
-
-
 import javajs.util.BS;
 import org.jmol.util.C;
 import org.jmol.util.GData;
@@ -53,8 +51,6 @@ import javajs.util.V3d;
 import org.jmol.viewer.Viewer;
 
 public class _IdtfExporter extends __CartesianExporter {
-
-  
   public _IdtfExporter() {
     commentChar = "% ";
   }
@@ -264,22 +260,6 @@ public class _IdtfExporter extends __CartesianExporter {
     // next is an approximation only 
     output("FILE_FORMAT \"IDTF\"\nFORMAT_VERSION 100\n");
 
-    /*
-    double angle = getFieldOfView();
-    output("NODE \"VIEW\" {\n");
-    output("NODE_NAME \"DefaultView\"\n");
-    output("PARENT_LIST {\nPARENT_COUNT 1\n"); 
-    output("PARENT 0 {\n");
-    output(getParentItem("", m));
-    output("}}\n"); 
-    output("RESOURCE_NAME \"View0\"\n"); 
-    output("VIEW_DATA {\n"); 
-    output("VIEW_ATTRIBUTE_SCREEN_UNIT \"PIXEL\"\n"); 
-    output("VIEW_TYPE \"PERSPECTIVE\"\n"); 
-    output("VIEW_PROJECTION " + (angle * 180 / Math.PI) + "\n"); 
-    output("}}\n");
-    */
-
     m.setIdentity();
     m.setToM3(tm.matrixRotate);
     m.rotate2(referenceCenter, tempP1);
@@ -294,7 +274,6 @@ public class _IdtfExporter extends __CartesianExporter {
     output("PARENT 0 {\n");
     output(getParentItem("", m));
     output("}}}\n");
-    
   }
 
   @Override
@@ -356,41 +335,6 @@ public class _IdtfExporter extends __CartesianExporter {
         + vwr.getWrappedStateScript()
         +"\n\\end{comment}";
 }
-
-// was:
-//
-//  return "% Created by: Jmol " + Viewer.getJmolVersion()
-//      + "\n% Creation date: " + getExportDate() 
-//      + "\n% File created: "  + fileName + " (" + out.getByteCount() + " bytes)\n\n" 
-//      + "\n\\documentclass[12pt,letter]{article}" 
-//      + "\n\\usepackage{hyperref}" 
-//      + "\n\\usepackage[3D]{movie15}" 
-//      + "\n\\usepackage{verbatim}"
-//      + "\n\\pagestyle{empty}" 
-//      + "\n\\begin{document}" 
-//      + "\n \\begin{center}" 
-//      + "\n  \\includemovie[" 
-//      + "\n   label=" + name + "," 
-//      + "\n    autoplay," 
-//      + "\n    repeat=1," 
-//      + "\n    toolbar=false," 
-//      + "\n3Droo=" + cameraDistance + "," 
-//      + "\n3Dcoo= 0.0 0.0 0.0," 
-//      + "\n3Dc2c=0.0 0.0 1.0,"
-//      + "\n3Daac=" + aperatureAngle + ","
-//      + "\n% 3Droll=0.0," 
-//      + "\n3Dbg=" + rgbFractionalFromColix(backgroundColix) + "," 
-//      + "\n3Dlights=Headlamp," 
-//      + "\ninline=true," 
-//      + "\n  ]{0.9\\textwidth}{0.9\\textwidth}{" + name + ".u3d}" 
-//      + "\n%  \\\\" 
-//      + "\n%\\movieref[3Dcalculate]{" + name + "}{Click here!}" 
-//      + "\n\\end{center}" 
-//      + "\n\\end{document}"
-//      +"\n\\begin{comment}"
-//      + vwr.getWrappedStateScript()
-//      +"\n\\end{comment}";
-  
 
   private String getParentItem(String name, M4d m) {
     SB sb= new SB();
@@ -464,64 +408,8 @@ public class _IdtfExporter extends __CartesianExporter {
     output("\t}\n");
     output("}\n\n");
 
-/*
-    // MOTION code -- here for reference; not used
-
-    output("\nRESOURCE_LIST \"MOTION\" {");
-    output("\n  RESOURCE_COUNT 1");
-    output("\n  RESOURCE 0 {");
-    output("\n    RESOURCE_NAME \"Motion0\"");
-    output("\n    MOTION_TRACK_COUNT 1");
-    output("\n    MOTION_TRACK_LIST {");
-    output("\n      MOTION_TRACK 0 {");
-    output("\n        MOTION_TRACK_NAME \"M00\"");
-    output("\n        MOTION_TRACK_SAMPLE_COUNT 1");
-    output("\n        KEY_FRAME_LIST {");
-    output("\n          KEY_FRAME 0 {");
-    output("\n            KEY_FRAME_TIME 0");
-    output("\n            KEY_FRAME_DISPLACEMENT 0 0 0");
-    output("\n            KEY_FRAME_ROTATION " + toString0123(q));
-    output("\n            KEY_FRAME_SCALE 1 1 1");
-    output("\n          }");
-    output("\n          KEY_FRAME 1 {");
-    output("\n            KEY_FRAME_TIME 1");
-    output("\n            KEY_FRAME_DISPLACEMENT " + dxyz);
-    output("\n            KEY_FRAME_ROTATION " + toString0123(q));
-    output("\n            KEY_FRAME_SCALE 1 1 1");
-    output("\n          }");
-    output("\n         }");
-    output("\n      }");
-    output("\n    }");
-    output("\n  }");
-    output("\n}\n");
-    output("\nMODIFIER \"ANIMATION\" {");
-    output("\n  MODIFIER_NAME \"Jmol\"");
-    output("\n  PARAMETERS {");
-    output("\n    ATTRIBUTE_ANIMATION_PLAYING \"TRUE\"");
-    output("\n    ATTRIBUTE_ROOT_BONE_LOCKED \"TRUE\"");
-    output("\n    ATTRIBUTE_SINGLE_TRACK \"TRUE\"");
-    output("\n    ATTRIBUTE_AUTO_BLEND \"FALSE\"");
-    output("\n    TIME_SCALE 1.0");
-    output("\n    BLEND_TIME 0.0");
-    output("\n    MOTION_COUNT 1");
-    output("\n    MOTION_INFO_LIST {");
-    output("\n      MOTION_INFO 0 {");
-    output("\n        MOTION_NAME \"Motion0\"");
-    output("\n        ATTRIBUTE_LOOP \"FALSE\"");
-    output("\n        ATTRIBUTE_SYNC \"FALSE\"");
-    output("\n        TIME_OFFSET 0.0");
-    output("\n        TIME_SCALE 1.0");
-    output("\n      }");
-    output("\n    }");
-    output("\n  }");
-    output("\n}\n");
-*/
     output(modifiers.toString());    
   }
-
-  //private static String toString0123(Quaternion q) {
-  //    return q.q0 + " " + q.q1  + " " + q.q2 + " " + q.q3;
- // }
 
   private Map<String, Lst<String>> htNodes = new Hashtable<String, Lst<String>>();
   
@@ -638,8 +526,7 @@ public class _IdtfExporter extends __CartesianExporter {
     return sb.toString();
   }
 
-  private void getMeshHeader(String type, int nFaces, int vertexCount, int normalCount,
-                             int colorCount, SB sb) {
+  private void getMeshHeader(String type, int nFaces, int vertexCount, int normalCount, int colorCount, SB sb) {
     sb.append("RESOURCE_LIST \"MODEL\" {\n")
         .append("RESOURCE_COUNT 1\n")
         .append("RESOURCE 0 {\n")
@@ -661,9 +548,7 @@ public class _IdtfExporter extends __CartesianExporter {
   }
 
   @Override
-  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2,
-                                   short colix, byte endcaps, double radius,
-                                   P3d ptX, P3d ptY, boolean checkRadius) {
+  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2, short colix, byte endcaps, double radius, P3d ptX, P3d ptY, boolean checkRadius) {
     if (ptX != null) {
       if (endcaps == GData.ENDCAPS_FLAT) {
         outputEllipse(ptCenter, pt1, ptX, ptY, colix);
@@ -715,8 +600,7 @@ public class _IdtfExporter extends __CartesianExporter {
   }
 
   @Override
-  protected void outputCircle(P3d pt1, P3d pt2, double radius,
-                              short colix, boolean doFill) {
+  protected void outputCircle(P3d pt1, P3d pt2, double radius, short colix, boolean doFill) {
     if (doFill) {
       outputCircle(pt1, pt2, colix, radius);
       return;
@@ -737,8 +621,7 @@ public class _IdtfExporter extends __CartesianExporter {
     */
   }
 
-  private boolean outputEllipse(P3d ptCenter, P3d ptZ, P3d ptX, P3d ptY,
-                        short colix) {
+  private boolean outputEllipse(P3d ptCenter, P3d ptZ, P3d ptX, P3d ptY, short colix) {
     if (!haveCircle) {
       models.append(getCircleResource());
       haveCircle = true;
@@ -831,11 +714,9 @@ public class _IdtfExporter extends __CartesianExporter {
   
   @Override
   protected void outputFace(int[] face, int[] map, int faceVertexMax) {
-    sbTemp.append(" " + map[face[0]] + " " + map[face[1]] + " "
-        + map[face[2]]);
+    sbTemp.append(" " + map[face[0]] + " " + map[face[1]] + " " + map[face[2]]);
     if (faceVertexMax == 4 && face.length == 4) {
-      sbTemp.append(" " + map[face[0]] + " " + map[face[2]] + " "
-          + map[face[3]]);
+      sbTemp.append(" " + map[face[0]] + " " + map[face[2]] + " " + map[face[3]]);
     }
   }
 
@@ -920,13 +801,11 @@ public class _IdtfExporter extends __CartesianExporter {
       nColors = colorList.size();
       for (int i = 0; i < nColors; i++) {
         short c = colorList.get(i).shortValue();
-        sbColors.append(rgbFractionalFromColix(c)).append(" ").append(
-            translucencyFractionalFromColix(c)).append(" ");
+        sbColors.append(rgbFractionalFromColix(c)).append(" ").append(translucencyFractionalFromColix(c)).append(" ");
       }
     }
     String key = "mesh" + (++iObj);
-    addMeshData(key, nTriangles, nCoord, nNormals, nColors, sbFaceCoordIndices,
-        sbFaceNormalIndices, sbColorIndexes, sbCoords, sbNormals, sbColors);
+    addMeshData(key, nTriangles, nCoord, nNormals, nColors, sbFaceCoordIndices, sbFaceNormalIndices, sbColorIndexes, sbCoords, sbNormals, sbColors);
     Lst<String> v = new  Lst<String>();
     htNodes.put(key, v);
     addShader(key, colix);
@@ -951,22 +830,18 @@ public class _IdtfExporter extends __CartesianExporter {
       models.append("0 ");
     models.append("}\n");
     if (nColors > 0)
-      models.append("MESH_FACE_DIFFUSE_COLOR_LIST { ")
-            .appendSB(sbColorIndices).append(" }\n");
+      models.append("MESH_FACE_DIFFUSE_COLOR_LIST { ").appendSB(sbColorIndices).append(" }\n");
     models.append("MODEL_POSITION_LIST { ")
       .appendSB(sbCoords).append(" }\n")
       .append("MODEL_NORMAL_LIST { ")
       .appendSB(sbNormals).append(" }\n");
     if (nColors > 0)
-      models.append("MODEL_DIFFUSE_COLOR_LIST { ")
-            .appendSB(sbColors)
-            .append(" }\n");
+      models.append("MODEL_DIFFUSE_COLOR_LIST { ").appendSB(sbColors).append(" }\n");
     models.append("}}}\n");
   }
 
   @Override
-  protected void outputCone(P3d ptBase, P3d ptTip, double radius,
-                            short colix) {
+  protected void outputCone(P3d ptBase, P3d ptTip, double radius, short colix) {
     if (!haveCone) {
       models.append(getConeResource());
       haveCone = true;
@@ -1040,13 +915,11 @@ public class _IdtfExporter extends __CartesianExporter {
     v.addLast(getParentItem("Jmol", cylinderMatrix));
   }
 
-  private int[][] triangleFace = AU.newInt2(1);
-  {
+  private int[][] triangleFace = AU.newInt2(1); {
     triangleFace[0] = new int[] { 0, 1, 2 };
   }
   
-  private String getTriangleResource(String key, T3d pt1,
-                                     T3d pt2, T3d pt3) {
+  private String getTriangleResource(String key, T3d pt1, T3d pt2, T3d pt3) {
     T3d[] vertexes = new T3d[] { pt1, pt2, pt3 };
     tempV1.sub2(pt3, pt1);
     tempV2.sub2(pt2, pt1);

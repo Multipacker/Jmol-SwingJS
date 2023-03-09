@@ -136,7 +136,6 @@ import javajs.util.BS;
  ****************************************************************/
 
 public final class EnvelopeCalculation implements JmolEnvCalc {
-
   private BS geodesicMap;
   private BS mapT;
 
@@ -150,13 +149,6 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
   public EnvelopeCalculation() {
   }
 
-  /**
-   * 
-   * @param vwr
-   * @param ac
-   * @param mads
-   * @return this
-   */
   @Override
   public EnvelopeCalculation set(AtomDataServer vwr, int ac, short[] mads) {
     this.vwr = vwr;
@@ -277,16 +269,6 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
   private boolean isSurface;
   private boolean multiModel;
 
-  /**
-   * @param rd
-   * @param maxRadius
-   * @param bsSelected
-   * @param bsIgnore
-   * @param disregardNeighbors
-   * @param onlySelectedDots
-   * @param isSurface
-   * @param multiModel
-   */
   @Override
   public void calculate(RadiusData rd, double maxRadius, BS bsSelected,
                         BS bsIgnore, boolean disregardNeighbors,
@@ -351,9 +333,7 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
   @Override
   public P3d[] getPoints() {
     if (dotsConvexMaps == null) {
-      calculate(new RadiusData(null, JC.ENC_CALC_MAX_DIST, EnumType.ABSOLUTE,
-          null), Double.MAX_VALUE, bsMySelected, null, false, false, false,
-          false);
+      calculate(new RadiusData(null, JC.ENC_CALC_MAX_DIST, EnumType.ABSOLUTE, null), Double.MAX_VALUE, bsMySelected, null, false, false, false, false);
     }
     if (currentPoints != null)
       return currentPoints;
@@ -374,8 +354,7 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
         while (--iDot >= 0)
           if (dotsConvexMaps[i].get(iDot)) {
             P3d pt = new P3d();
-            pt.scaleAdd2(atomData.atomRadius[i],
-                Geodesic.getVertexVector(iDot), atomData.xyz[i]);
+            pt.scaleAdd2(atomData.atomRadius[i], Geodesic.getVertexVector(iDot), atomData.xyz[i]);
             points[nPoints++] = pt;
           }
       }
@@ -396,14 +375,8 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
     }
   }
 
-  /*
-    BitSet getSurfaceAtoms() {
-      return bsSurface;
-    }
-  */
   public double getAppropriateRadius(int atomIndex) {
-    return (mads != null ? (atomIndex >= mads.length ? 0
-        : mads[atomIndex] / 1000d) : atomData.atomRadius[atomIndex]);
+    return (mads != null ? (atomIndex >= mads.length ? 0 : mads[atomIndex] / 1000d) : atomData.atomRadius[atomIndex]);
   }
 
   private int indexI;
@@ -577,8 +550,7 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
     while (iter.hasNext()) {
       int indexN = iter.next();
       double neighborRadius = atomData.atomRadius[indexN];
-      if (centerI.distance(atomData.xyz[indexN]) > radiusI + radiusP
-          + radiusP + neighborRadius)
+      if (centerI.distance(atomData.xyz[indexN]) > radiusI + radiusP + radiusP + neighborRadius)
         continue;
       if (neighborCount == neighborIndices.length) {
         neighborIndices = AU.doubleLengthI(neighborIndices);
@@ -596,24 +568,14 @@ public final class EnvelopeCalculation implements JmolEnvCalc {
     return iter;
   }
 
-  /**
-   * 
-   * @param firstAtomDeleted
-   * @param nAtomsDeleted
-   */
   public void deleteAtoms(int firstAtomDeleted, int nAtomsDeleted) {
-    dotsConvexMaps = (BS[]) AU.deleteElements(dotsConvexMaps, firstAtomDeleted,
-        nAtomsDeleted);
+    dotsConvexMaps = (BS[]) AU.deleteElements(dotsConvexMaps, firstAtomDeleted, nAtomsDeleted);
     dotsConvexMax = dotsConvexMaps.length;
     if (mads != null)
       mads = (short[]) AU.deleteElements(mads, firstAtomDeleted, nAtomsDeleted);
-    atomData.atomRadius = (double[]) AU.deleteElements(atomData.atomRadius,
-        firstAtomDeleted, nAtomsDeleted);
-    atomData.xyz = (P3d[]) AU.deleteElements(atomData.xyz,
-        firstAtomDeleted, nAtomsDeleted);
+    atomData.atomRadius = (double[]) AU.deleteElements(atomData.atomRadius, firstAtomDeleted, nAtomsDeleted);
+    atomData.xyz = (P3d[]) AU.deleteElements(atomData.xyz, firstAtomDeleted, nAtomsDeleted);
     atomData.ac -= nAtomsDeleted;
     ac = atomData.ac;
-
   }
-
 }

@@ -25,7 +25,6 @@
 
 package org.jmol.export;
 
-
 import java.util.Map;
 
 import javajs.util.M3d;
@@ -39,12 +38,8 @@ import org.jmol.viewer.Viewer;
 
 /*
  * for PovRay and Tachyon Exporters, which use screen coordinates
- * 
- * 
  */
-
 abstract class __RayTracerExporter extends ___Exporter {
-
   protected boolean isSlabEnabled;
   protected int minScreenDimension;
   protected boolean wasPerspective;
@@ -55,8 +50,7 @@ abstract class __RayTracerExporter extends ___Exporter {
   }
 
   @Override
-  protected boolean initOutput(Viewer vwr, double privateKey, GData g3d,
-                               Map<String, Object> params) {
+  protected boolean initOutput(Viewer vwr, double privateKey, GData g3d, Map<String, Object> params) {
     wasPerspective = vwr.tm.perspectiveDepth;
     if (super.initOutput(vwr, privateKey, g3d, params)) {
       vwr.tm.perspectiveDepth = false;
@@ -80,27 +74,21 @@ abstract class __RayTracerExporter extends ___Exporter {
     output(tempP1);
   }
 
-  abstract protected void outputCircle(int x, int y, int z, double radius, short colix,
-                                       boolean doFill);
+  abstract protected void outputCircle(int x, int y, int z, double radius, short colix, boolean doFill);
 
-  abstract protected void outputCylinder(P3d screenA, P3d screenB, double radius,
-                                         short colix, boolean withCaps);
+  abstract protected void outputCylinder(P3d screenA, P3d screenB, double radius, short colix, boolean withCaps);
              
-  abstract protected void outputCylinderConical(P3d screenA,
-                                                P3d screenB, double radius1,
-                                                double radius2, short colix);
+  abstract protected void outputCylinderConical(P3d screenA, P3d screenB, double radius1, double radius2, short colix);
 
   abstract protected void outputEllipsoid(P3d center, double radius, double[] coef, short colix);
   
-  abstract protected void outputSphere(double x, double y, double z, double radius,
-                                    short colix);
+  abstract protected void outputSphere(double x, double y, double z, double radius, short colix);
   
   abstract protected void outputTextPixel(int x, int y, int z, int argb);
   
   abstract protected void outputTriangle(T3d ptA, T3d ptB, T3d ptC, short colix);
 
-  abstract protected void outputCone(P3d screenBase, P3d screenTip, double radius,
-                                     short colix, boolean isBarb);
+  abstract protected void outputCone(P3d screenBase, P3d screenTip, double radius, short colix, boolean isBarb);
 
   protected P3d getScreenNormal(T3d pt, T3d normal, double factor) {
     if (Double.isNaN(normal.x)) {
@@ -128,16 +116,14 @@ abstract class __RayTracerExporter extends ___Exporter {
   }
 
   @Override
-  void drawCircle(int x, int y, int z,
-                         int diameter, short colix, boolean doFill) {
+  void drawCircle(int x, int y, int z, int diameter, short colix, boolean doFill) {
     //draw circle
     double radius = diameter / 2d;
     outputCircle(x, y, z, radius, colix, doFill);
   }
 
   @Override
-  boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY,
-                      short colix, boolean doFill) {
+  boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY, short colix, boolean doFill) {
     // IDTF only for now
     return false;
   }
@@ -154,15 +140,12 @@ abstract class __RayTracerExporter extends ___Exporter {
   }
     
   @Override
-  void fillConeScreen(short colix, byte endcap, int screenDiameter, P3d screenBase,
-                P3d screenTip, boolean isBarb) {
+  void fillConeScreen(short colix, byte endcap, int screenDiameter, P3d screenBase, P3d screenTip, boolean isBarb) {
     outputCone(screenBase, screenTip, screenDiameter / 2d, colix, isBarb);
   }
 
   @Override
-  void drawCylinder(P3d screenA, P3d screenB, short colix1,
-                           short colix2, byte endcaps, int madBond,
-                           int bondOrder) {
+  void drawCylinder(P3d screenA, P3d screenB, short colix1, short colix2, byte endcaps, int madBond, int bondOrder) {
     // from drawBond and fillCylinder here
     if (colix1 == colix2) {
       fillConicalCylinder(screenA, screenB, madBond, colix1, endcaps);
@@ -186,17 +169,7 @@ abstract class __RayTracerExporter extends ___Exporter {
 
   }
 
-  /**
-   * 
-   * @param screenA
-   * @param screenB
-   * @param madBond
-   * @param colix
-   * @param endcaps
-   */
-  protected void fillConicalCylinder(P3d screenA, P3d screenB,
-                                    int madBond, short colix, 
-                                    byte endcaps) {
+  protected void fillConicalCylinder(P3d screenA, P3d screenB, int madBond, short colix, byte endcaps) {
     double radius1 = vwr.tm.scaleToScreen((int) screenA.z, madBond) / 2d;
     if (radius1 == 0)
       return;
@@ -215,8 +188,7 @@ abstract class __RayTracerExporter extends ___Exporter {
   }
 
   @Override
-  void fillCylinderScreenMad(short colix, byte endcaps, int diameter, 
-                               P3d screenA, P3d screenB) {
+  void fillCylinderScreenMad(short colix, byte endcaps, int diameter, P3d screenA, P3d screenB) {
     if (diameter == 0)
       return;
     if (diameter < 1)
@@ -231,12 +203,10 @@ abstract class __RayTracerExporter extends ___Exporter {
       return;
     outputSphere(screenA.x, screenA.y, screenA.z, radius, colix);
     outputSphere(screenB.x, screenB.y, screenB.z, radius, colix);
-
   }
 
   @Override
-  void fillCylinderScreen(short colix, byte endcaps, int screenDiameter, P3d screenA, 
-                                 P3d screenB, P3d ptA, P3d ptB, double radius) {
+  void fillCylinderScreen(short colix, byte endcaps, int screenDiameter, P3d screenA, P3d screenB, P3d ptA, P3d ptB, double radius) {
           // vectors, polyhedra
     fillCylinderScreenMad(colix, endcaps, screenDiameter, screenA, screenB);
   }
@@ -252,9 +222,7 @@ abstract class __RayTracerExporter extends ___Exporter {
   }
 
   @Override
-  void fillEllipsoid(P3d center, P3d[] points, short colix, int x,
-                       int y, int z, int diameter, M3d toEllipsoidal,
-                       double[] coef, M4d deriv, P3d[] octantPoints) {
+  void fillEllipsoid(P3d center, P3d[] points, short colix, int x, int y, int z, int diameter, M3d toEllipsoidal, double[] coef, M4d deriv, P3d[] octantPoints) {
     double radius = diameter / 2d;
     if (radius == 0)
       return;
@@ -262,5 +230,4 @@ abstract class __RayTracerExporter extends ___Exporter {
       radius = 1;
     outputEllipsoid(center, radius, coef, colix); 
   }
-
 }

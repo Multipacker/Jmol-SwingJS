@@ -146,8 +146,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @see org.jmol.export.__CartesianExporter#outputCircle(javax.vecmath.Point3f, javax.vecmath.Point3f, double, short, boolean)
    */
   @Override
-  protected void outputCircle(P3d pt1, P3d pt2, double radius,
-                              short colix, boolean doFill) {
+  protected void outputCircle(P3d pt1, P3d pt2, double radius, short colix, boolean doFill) {
     debugPrint("outputCircle");
     if (surfacesOnly) {
       debugPrint("  Not done owing to surfacesOnly");
@@ -162,8 +161,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @see org.jmol.export.__CartesianExporter#outputCone(javax.vecmath.Point3f, javax.vecmath.Point3f, double, short)
    */
   @Override
-  protected void outputCone(P3d ptBase, P3d ptTip, double radius,
-                            short colix) {
+  protected void outputCone(P3d ptBase, P3d ptTip, double radius, short colix) {
     debugPrint("outputCone");
     if (surfacesOnly) {
       debugPrint("  Not done owing to surfacesOnly");
@@ -177,18 +175,13 @@ public class _ObjExporter extends __CartesianExporter {
    * @see org.jmol.export.__CartesianExporter#outputCylinder(javax.vecmath.Point3f, javax.vecmath.Point3f, javax.vecmath.Point3f, short, byte, double, javax.vecmath.Point3f, javax.vecmath.Point3f)
    */
   @Override
-  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2,
-                                   short colix, byte endcaps, double radius,
-                                   P3d ptX, P3d ptY, boolean checkRadius) {
+  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2, short colix, byte endcaps, double radius, P3d ptX, P3d ptY, boolean checkRadius) {
     // Ignore ptX and pyY as they are passed null from __CartesianExporter.draw
     if (debug) {
-      debugPrint("outputCylinder: colix="
-          + String.format("%04x", Short.valueOf(colix)));
+      debugPrint("outputCylinder: colix=" + String.format("%04x", Short.valueOf(colix)));
       debugPrint("  ptCenter=" + ptCenter);
       debugPrint("  pt1=" + pt1);
-      debugPrint("  endcaps=" + endcaps + " NONE=" + GData.ENDCAPS_NONE
-          + " FLAT=" + GData.ENDCAPS_FLAT + " SPHERICAL="
-          + GData.ENDCAPS_SPHERICAL);
+      debugPrint("  endcaps=" + endcaps + " NONE=" + GData.ENDCAPS_NONE + " FLAT=" + GData.ENDCAPS_FLAT + " SPHERICAL=" + GData.ENDCAPS_SPHERICAL);
       debugPrint("  radius=" + radius);
       debugPrint("  pt2=" + pt2);
       debugPrint("  ptX=" + ptX);
@@ -225,8 +218,7 @@ public class _ObjExporter extends __CartesianExporter {
   @Override
   protected void outputEllipsoid(P3d center, P3d[] points, short colix) {
     if (debug) {
-      debugPrint("outputEllipsoid: colix="
-          + String.format("%04x", Short.valueOf(colix)));
+      debugPrint("outputEllipsoid: colix=" + String.format("%04x", Short.valueOf(colix)));
       debugPrint("  center=" + center);
       debugPrint("  points[0]=" + points[0]);
       debugPrint("  points[1]=" + points[1]);
@@ -237,8 +229,7 @@ public class _ObjExporter extends __CartesianExporter {
       return;
     }
 
-    A4d a = Qd.getQuaternionFrame(center, points[1], points[3])
-        .toA4d();
+    A4d a = Qd.getQuaternionFrame(center, points[1], points[3]).toA4d();
     double sx = points[1].distance(center);
     double sy = points[3].distance(center);
     double sz = points[5].distance(center);
@@ -254,8 +245,7 @@ public class _ObjExporter extends __CartesianExporter {
     // Note radius is called f in the _CartesianExporter superclass
     // Atom extends Point3fi extends Point3f, so this may be passed an Atom
     if (debug) {
-      debugPrint("outputSphere: colix="
-          + String.format("%04x", Short.valueOf(colix)));
+      debugPrint("outputSphere: colix=" + String.format("%04x", Short.valueOf(colix)));
       debugPrint("  center.getClass().getName()=" + center.getClass().getName());
       debugPrint("  center=" + center);
       debugPrint("  center.x=" + center.x);
@@ -288,8 +278,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @see org.jmol.export.__CartesianExporter#outputTriangle(javax.vecmath.Point3f, javax.vecmath.Point3f, javax.vecmath.Point3f, short)
    */
   @Override
-  protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3,
-                                short colix) {
+  protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3, short colix) {
     if (surfacesOnly) {
       return;
     }
@@ -354,14 +343,11 @@ public class _ObjExporter extends __CartesianExporter {
     boolean isAll = (bsPolygons == null);
     int[][] faces = AU.newInt2(isAll ? nPolygons : bsPolygons.cardinality());
     int i0 = (isAll ? nPolygons - 1 : bsPolygons.nextSetBit(0));
-    for (int i = i0, ipt = 0; i >= 0; i = isAll ? i - 1 : bsPolygons
-        .nextSetBit(i + 1)) {
+    for (int i = i0, ipt = 0; i >= 0; i = isAll ? i - 1 : bsPolygons.nextSetBit(i + 1)) {
       int[] polygon = meshSurface.pis[i];
-      faces[ipt++] = (meshSurface.haveQuads ? polygon : new int[] {
-          polygon[0], polygon[1], polygon[2] });
+      faces[ipt++] = (meshSurface.haveQuads ? polygon : new int[] { polygon[0], polygon[1], polygon[2] });
     }
-    MeshSurface data = MeshSurface.newMesh(false, meshSurface.vs, meshSurface.vc, faces,
-        meshSurface.normals, 0);
+    MeshSurface data = MeshSurface.newMesh(false, meshSurface.vs, meshSurface.vc, faces, meshSurface.normals, 0);
     data.vcs = meshSurface.vcs;
     // Do the texture
     String name = "Surface" + surfaceNum++;
@@ -402,8 +388,7 @@ public class _ObjExporter extends __CartesianExporter {
 //        error = " [Empty]";
 //      }
       
-      textureFiles.addLast(file.getByteCount() + " (" + width + "x" + height + ") "
-          + name);
+      textureFiles.addLast(file.getByteCount() + " (" + width + "x" + height + ") " + name);
       // Add the texture file to the material
       String shortName = file.getName();
       outputMtl(" map_Kd " + shortName + "\n");
@@ -521,8 +506,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param colix
    * @param radius
    */
-  private void outputCircle1(P3d ptCenter, P3d ptPerp, short colix,
-                             double radius) {
+  private void outputCircle1(P3d ptCenter, P3d ptPerp, short colix, double radius) {
     MeshSurface data = MeshData.getCircleData();
     M4d matrix = new M4d();
     addTexture(colix, null);
@@ -543,8 +527,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param radius
    * @param colix
    */
-  private void outputCone1(P3d ptBase, P3d ptTip, double radius,
-                           short colix) {
+  private void outputCone1(P3d ptBase, P3d ptTip, double radius, short colix) {
     MeshSurface data = MeshData.getConeData();
     M4d matrix = new M4d();
     addTexture(colix, null);
@@ -567,8 +550,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param colix
    * @return Always returns true.
    */
-  private boolean outputEllipse1(P3d ptCenter, P3d ptZ, P3d ptX,
-                                 P3d ptY, short colix) {
+  private boolean outputEllipse1(P3d ptCenter, P3d ptZ, P3d ptX, P3d ptY, short colix) {
     MeshSurface data = MeshData.getCircleData();
     M4d matrix = new M4d();
     addTexture(colix, null);
@@ -592,8 +574,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param a
    * @param colix
    */
-  private void outputEllipsoid1(T3d center, double rx, double ry, double rz,
-                                A4d a, short colix) {
+  private void outputEllipsoid1(T3d center, double rx, double ry, double rz, A4d a, short colix) {
     MeshSurface data = MeshSurface.getSphereData(3);
     addTexture(colix, null);  
     String name;
@@ -622,9 +603,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param ptX
    * @param ptY
    */
-  private void outputCylinder1(P3d ptCenter, P3d pt1, P3d pt2,
-                               short colix, byte endcaps, double radius,
-                               P3d ptX, P3d ptY) {
+  private void outputCylinder1(P3d ptCenter, P3d pt1, P3d pt2, short colix, byte endcaps, double radius, P3d ptX, P3d ptY) {
     MeshSurface data = MeshData.getCylinderData(false);
     M4d matrix = new M4d();
     addTexture(colix, null);
@@ -655,8 +634,7 @@ public class _ObjExporter extends __CartesianExporter {
    * @param colix
    *          The colix.
    */
-  private void outputTriangle1(T3d pt1, T3d pt2, T3d pt3,
-                               short colix) {
+  private void outputTriangle1(T3d pt1, T3d pt2, T3d pt3, short colix) {
     MeshSurface data = MeshData.getTriangleData(pt1, pt2, pt3);
     addTexture(colix, null);
     String name = "Triangle" + triangleNum++;
@@ -719,8 +697,7 @@ public class _ObjExporter extends __CartesianExporter {
    *          coordinates. If null no UV coordinates are used.
    * @param bsValid TODO
    */
-  private void addMesh(String name, MeshSurface data, M4d matrix, M4d matrix1,
-                       short colix, int[] dim, BS bsValid) {
+  private void addMesh(String name, MeshSurface data, M4d matrix, M4d matrix1, short colix, int[] dim, BS bsValid) {
     // Use to only get surfaces in the output
     if (surfacesOnly) {
       if (name == null || !name.startsWith("Surface")) {
@@ -843,8 +820,7 @@ public class _ObjExporter extends __CartesianExporter {
   private void outputFace1(int[] face, int[] map, int[] map2) {
     output("f");
     for (int i : face)
-      output(" " + ((map == null ? i : map[i]) + currentVertexOrigin) + "//"
-          + ((map2 == null ? i : map2[i]) + currentNormalOrigin));
+      output(" " + ((map == null ? i : map[i]) + currentVertexOrigin) + "//" + ((map2 == null ? i : map2[i]) + currentNormalOrigin));
     output("\n");
   }
 
@@ -863,9 +839,7 @@ public class _ObjExporter extends __CartesianExporter {
   private void outputFace2(int[] face, int vt, int[] map, int[] map2) {
     output("f");
     for (int i : face) {
-      output(" " + ((map == null ? i : map[i]) + currentVertexOrigin) + "/"
-          + (currentTextureOrigin + vt) + "/"
-          + ((map2 == null ? i : map2[i]) + currentNormalOrigin));
+      output(" " + ((map == null ? i : map[i]) + currentVertexOrigin) + "/" + (currentTextureOrigin + vt) + "/" + ((map2 == null ? i : map2[i]) + currentNormalOrigin));
     }
     output("\n");
   }
@@ -900,8 +874,7 @@ public class _ObjExporter extends __CartesianExporter {
     // files.  Create the file even if it will be empty so we can denote that
     // in the console output.
     // Check input 
-    short[] colixes = (data.pcs == null ? data.vcs
-        : data.pcs);
+    short[] colixes = (data.pcs == null ? data.vcs : data.pcs);
     if (colixes == null || colixes.length == 0) {
       debugPrint("createTextureFile: Array problem");
       debugPrint("  colixes=" + colixes + " data=" + data);
@@ -978,8 +951,7 @@ public class _ObjExporter extends __CartesianExporter {
       String fname = fileName;
       if (rgbbuf != null) {
         params.put("rgbbuf", rgbbuf);
-        params
-            .put("fileName", objFileRootName + "_" + name + "." + textureType);
+        params.put("fileName", objFileRootName + "_" + name + "." + textureType);
         params.put("type", textureType);
         params.put("width", Integer.valueOf(w));
         params.put("height", Integer.valueOf(h));
@@ -992,32 +964,4 @@ public class _ObjExporter extends __CartesianExporter {
       return null;
     }
   }
-
-//  private Object createImage(Map<String, Object> params) throws Exception {
-    /*  TGA test -- not worth it 
-    // write simple TGA file
-    // see http://www.organicbit.com/closecombat/formats/tga.html
-    // no point in this, and it is much larger than png
-    OutputStream os = new FileOutputStream(fileName);
-    width *= 3;
-    height *= 3;
-    byte[] header = new byte[18];
-    header[2] = 2; // rbg image
-    header[7] = 32;
-    header[12] = (byte) (width & 0xFF);
-    header[13] = (byte) ((width >> 8) & 0xFF);
-    header[14] = (byte) (height & 0xFF);
-    header[15] = (byte) ((height >> 8) & 0xFF);
-    header[16] = 24;
-    os.write(header);
-    byte[][] bytes = (byte[][]) image;
-    for (int i = 0; i < bytes.length; i++)
-      os.write(bytes[i]);
-    os.flush();
-    os.close();
-    */
-//  }
-
-
 }
-  

@@ -26,7 +26,6 @@
 package org.jmol.i18n;
 
 public class Language {
-
   /**
    * This is the place to put the list of supported languages. It is accessed
    * by JmolPopup to create the menu list. Note that the names are in GT.$
@@ -153,5 +152,4 @@ public class Language {
           return list[i].code;
     return null;
   }
-
 }

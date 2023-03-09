@@ -25,10 +25,7 @@
 
 package org.jmol.export;
 
-
-
 import java.util.Map;
-
 
 import javajs.util.BS;
 
@@ -36,9 +33,7 @@ import javajs.util.Lst;
 import javajs.util.P3d;
 import javajs.util.T3d;
 
-
 public class _MayaExporter extends __CartesianExporter {
-  
   public _MayaExporter() {
     commentChar = "// ";
   }
@@ -63,7 +58,6 @@ public class _MayaExporter extends __CartesianExporter {
   protected void outputHeader() {
     output("//  Maya ASCII 8.5 scene\n");
     output("//  Name: ball_stripped.ma\n");
-    //    output("//  CreatedBy: Jmol");
     output("//  Last modified: Thu, Jul 5, 2007 10:25:55 PM\n");
     output("//  Codeset: UTF-8\n");
     output("requires maya \"8.5\";\n");
@@ -86,8 +80,7 @@ public class _MayaExporter extends __CartesianExporter {
 
   private void addConnect() {
     output(" connectAttr \"make" + name + ".os\" \"" + id + ".cr\";\n");
-    output("connectAttr \"" + id
-        + ".iog\" \":initialShadingGroup.dsm\" -na;\n");
+    output("connectAttr \"" + id + ".iog\" \":initialShadingGroup.dsm\" -na;\n");
   }
 
   private void setAttr(String attr, double val) {
@@ -99,13 +92,11 @@ public class _MayaExporter extends __CartesianExporter {
   }
 
   private void setAttr(String attr, T3d pt) {
-    output(" setAttr \"." + attr + "\" -type \"double3\" " + pt.x + " "
-        + pt.y + " " + pt.z + ";\n");
+    output(" setAttr \"." + attr + "\" -type \"double3\" " + pt.x + " " + pt.y + " " + pt.z + ";\n");
   }
 
   @Override
-  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2, short colix,
-                      byte endcaps, double radius, P3d ptX, P3d ptY, boolean checkRadius) {
+  protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2, short colix, byte endcaps, double radius, P3d ptX, P3d ptY, boolean checkRadius) {
     if (ptX != null)
       return false;
     nCyl++;
@@ -125,8 +116,7 @@ public class _MayaExporter extends __CartesianExporter {
     double rY = (double) Math.atan2(tempV1.x, tempV1.z) * degreesPerRadian;
     tempV2.set(rX, rY, 0);
     setAttr("r", tempV2);
-    output(" createNode nurbsSurface -n \"" + id + "\" -p \"" + name
-        + "\";\n");
+    output(" createNode nurbsSurface -n \"" + id + "\" -p \"" + name + "\";\n");
     addAttr();
     output("createNode makeNurbCylinder -n \"make" + name + "\";\n");
     output(" setAttr \".ax\" -type \"double3\" 0 1 0;\n");
@@ -146,8 +136,7 @@ public class _MayaExporter extends __CartesianExporter {
 
     output("createNode transform -n \"" + name + "\";\n");
     setAttr("t", pt);
-    output("createNode nurbsSurface -n \"" + id + "\" -p \"" + name
-        + "\";\n");
+    output("createNode nurbsSurface -n \"" + id + "\" -p \"" + name + "\";\n");
     addAttr();
     output("createNode makeNurbSphere -n \"make" + name + "\";\n");
     output(" setAttr \".ax\" -type \"double3\" 0 1 0;\n");
@@ -178,42 +167,32 @@ public class _MayaExporter extends __CartesianExporter {
   }
 
   @Override
-  protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3,
-                                short colix) {
+  protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3, short colix) {
     // TODO
-    
   }
 
   @Override
-  protected void outputCircle(P3d pt1, P3d pt2, double radius,
-                              short colix, boolean doFill) {
+  protected void outputCircle(P3d pt1, P3d pt2, double radius, short colix, boolean doFill) {
     // TODO
-    
   }
 
   @Override
-  protected void outputCone(P3d ptBase, P3d ptTip, double radius,
-                            short colix) {
+  protected void outputCone(P3d ptBase, P3d ptTip, double radius, short colix) {
     // TODO
-    
   }
 
   @Override
   protected void outputEllipsoid(P3d center, P3d[] points, short colix) {
     // TODO
-    
   }
 
   @Override
   protected void outputFace(int[] is, int[] coordMap, int faceVertexMax) {
     // TODO
-    
   }
 
   @Override
   protected void output(T3d pt) {
     // TODO
-    
   }
-
 }

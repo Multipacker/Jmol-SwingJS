@@ -35,14 +35,11 @@ import org.jmol.util.Logger;
 import org.jmol.viewer.Viewer;
 
 /**
- * 
  * The language list is now in org.jmol.i18n.Language -- Bob Hanson, 12/16/12
  * 
  * implementing translations in JavaScript
  */
-
 public class GT implements Translator {
-
   private static boolean ignoreApplicationBundle = false;
   private static GT getTextWrapper;
   private static Language[] languageList;
@@ -56,7 +53,6 @@ public class GT implements Translator {
   static Viewer vwr;
 
   public GT() {
-   //  
   }
   
   /** used in custom menu translation only **/
@@ -67,13 +63,7 @@ public class GT implements Translator {
   }
   
   public GT(Viewer vwr, String langCode) {
-    /**
-     * @j2sIgnore
-     * 
-     */
-    {
       allowDebug = true;      
-    }
     
     resources = null;
     resourceCount = 0;
@@ -115,9 +105,7 @@ public class GT implements Translator {
      * if they want to know. 
      * 
      */
-    if ((language = getSupported(la_co_va)) == null
-        && (language = getSupported(la_co)) == null
-        && (language = getSupported(la)) == null) {
+    if ((language = getSupported(la_co_va)) == null && (language = getSupported(la_co)) == null && (language = getSupported(la)) == null) {
       language = "en";
       System.out.println(language + " not supported -- using en");
       return;
@@ -142,7 +130,6 @@ public class GT implements Translator {
     /*
      * Time to determine exactly what .po files we actually have.
      * No need to check a file twice.
-     * 
      */
 
     la_co = getSupported(la_co);
@@ -187,10 +174,8 @@ public class GT implements Translator {
   }
 
   /**
-   * 
    * @param TF
    * @return  initial setting of GT.doTranslate
-   * 
    */
   public static boolean setDoTranslate(boolean TF) {
     boolean b = getDoTranslate();
@@ -223,15 +208,13 @@ public class GT implements Translator {
     char ch;
     for (int i = msg.length(); --i >= 0;)
       if ((ch = msg.charAt(i)) > 0x7F) {
-        msg = msg.substring(0, i) + "&#" + ((int) ch) + ";"
-            + msg.substring(i + 1);
+        msg = msg.substring(0, i) + "&#" + ((int) ch) + ";" + msg.substring(i + 1);
       }
     return msg;
   }
 
   private static GT getTextWrapper() {
-    return (getTextWrapper == null ? getTextWrapper = new GT(null, null)
-        : getTextWrapper);
+    return (getTextWrapper == null ? getTextWrapper = new GT(null, null) : getTextWrapper);
   }
 
   synchronized private void createLanguageList() {
@@ -298,7 +281,6 @@ public class GT implements Translator {
       }
       if (resourceCount > 0 && trans == null && allowDebug && Logger.debugging)
         Logger.debug("No trans, using default: " + s);
-
     }
     if (trans == null) {
       if (s.startsWith("["))
@@ -308,5 +290,4 @@ public class GT implements Translator {
     }
     return s;
   }
-
 }

@@ -16,7 +16,6 @@ import javajs.util.PT;
 import javajs.util.Rdr;
 
 class Resource {
-
   private ResourceBundle resource;
   private Map<String, String> resourceMap;
   
@@ -39,10 +38,7 @@ class Resource {
       /** @j2sNative */
       {
         try {
-          BufferedReader br = FileManager.getBufferedReaderForResource(vwr,
-              new PO(), "org/jmol/translation/",
-              (className.indexOf("Applet") >= 0 ? "JmolApplet/" : "Jmol/")
-                  + name + ".po");
+          BufferedReader br = FileManager.getBufferedReaderForResource(vwr, new PO(), "org/jmol/translation/", (className.indexOf("Applet") >= 0 ? "JmolApplet/" : "Jmol/") + name + ".po");
           String[] data = new String[1];
           Rdr.readAllAsString(br, Integer.MAX_VALUE, false, data, 0);
           poData = data[0];
@@ -60,8 +56,7 @@ class Resource {
 
   String getString(String string) {
     try {
-      return (resource == null ? resourceMap.get(string) : resource
-          .getString(string));
+      return (resource == null ? resourceMap.get(string) : resource.getString(string));
     } catch (Exception e) {
       return null;
     }
@@ -69,35 +64,25 @@ class Resource {
 
   static String getLanguage() {
     String language = null;
-    /**
-     * @j2sNative
-     * 
-     *            language = Jmol.featureDetection.getDefaultLanguage().replace(/-/g,'_');
-     * 
-     */
-    {
-      Locale locale = Locale.getDefault();
-      if (locale != null) {
-        language = locale.getLanguage();
-        if (locale.getCountry() != null) {
-          language += "_" + locale.getCountry();
-          if (locale.getVariant() != null && locale.getVariant().length() > 0)
-            language += "_" + locale.getVariant();
-        }
+    Locale locale = Locale.getDefault();
+    if (locale != null) {
+      language = locale.getLanguage();
+      if (locale.getCountry() != null) {
+        language += "_" + locale.getCountry();
+        if (locale.getVariant() != null && locale.getVariant().length() > 0)
+          language += "_" + locale.getVariant();
       }
     }
     return language;
   }
 
   /**
-   * 
    * applet only -- Simple reading of .po file; necessary for
    * JavaScript; works in Java as well and avoids all those 
    * signed applets.
    * 
    * @param data
    * @return JmolResource
-   * 
    */
   static Resource getResourceFromPO(String data) {
     /*
@@ -142,9 +127,6 @@ class Resource {
   static String fix(String line) {
     if (line.indexOf("\\\"") >= 0)
       line = PT.rep(line, "\\\"", "\"");
-    return PT.rep(
-        line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")), "\\n",
-        "\n");
+    return PT.rep(line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")), "\\n", "\n");
   }
-
 }

@@ -53,7 +53,6 @@ import org.jmol.viewer.StateManager;
 import org.jmol.viewer.TransformManager;
 import org.jmol.viewer.Viewer;
 
-
 /*
  * Jmol Export Drivers
  * 
@@ -132,7 +131,6 @@ import org.jmol.viewer.Viewer;
  */
 
 public abstract class ___Exporter {
-
   // The following fields and methods are required for instantiation or provide
   // generally useful functionality:
 
@@ -162,8 +160,6 @@ public abstract class ___Exporter {
   protected double scalePixelsPerAngstrom;
   protected double exportScale = 1; // currently VRML and X3D only
 
-
-
   // Most exporters (Maya, X3D, VRML, IDTF) 
   // can manipulate actual 3D data.
   // exportType == Graphics3D.EXPORT_CARTESIAN indicates that and is used:
@@ -191,13 +187,11 @@ public abstract class ___Exporter {
   public ___Exporter() {
   }
 
-  boolean initializeOutput(Viewer vwr, double privateKey, GData gdata,
-                           Map<String, Object> params) {
+  boolean initializeOutput(Viewer vwr, double privateKey, GData gdata, Map<String, Object> params) {
     return initOutput(vwr, privateKey, gdata, params);
   }
 
-  protected boolean initOutput(Viewer vwr, double privateKey, GData g3d,
-                             Map<String, Object> params) {
+  protected boolean initOutput(Viewer vwr, double privateKey, GData g3d, Map<String, Object> params) {
     this.vwr = vwr;
     tm = vwr.tm;
     isWebGL = params.get("type").equals("JS");
@@ -341,9 +335,7 @@ public abstract class ___Exporter {
     int red = (argb >> 16) & 0xFF;
     int green = (argb >> 8) & 0xFF;
     int blue = argb & 0xFF;
-    tempC.set(red == 0 ? 0 : (red + 1)/ 256d, 
-        green == 0 ? 0 : (green + 1) / 256d, 
-        blue == 0 ? 0 : (blue + 1) / 256d);
+    tempC.set(red == 0 ? 0 : (red + 1)/ 256d, green == 0 ? 0 : (green + 1) / 256d, blue == 0 ? 0 : (blue + 1) / 256d);
     return getTriadC(tempC);
   }
 
@@ -382,8 +374,7 @@ public abstract class ___Exporter {
    * @param htColixes
    * @return Vector and HashTable
    */
-  protected Lst<Short> getColorList(int i00, short[] colixes, int nVertices,
-                                BS bsSelected, Map<Short, Integer> htColixes) {
+  protected Lst<Short> getColorList(int i00, short[] colixes, int nVertices, BS bsSelected, Map<Short, Integer> htColixes) {
     int nColix = 0;
     Lst<Short> list = new  Lst<Short>();
     boolean isAll = (bsSelected == null);
@@ -464,11 +455,9 @@ public abstract class ___Exporter {
 
   abstract void drawAtom(Atom atom, double radius);
 
-  abstract void drawCircle(int x, int y, int z,
-                                   int diameter, short colix, boolean doFill);  //draw circle 
+  abstract void drawCircle(int x, int y, int z, int diameter, short colix, boolean doFill);  //draw circle 
 
-  abstract boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY,
-                             short colix, boolean doFill);
+  abstract boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY, short colix, boolean doFill);
 
   void drawSurface(MeshSurface meshSurface, short colix) {
     int nVertices = meshSurface.vc;
@@ -498,14 +487,11 @@ public abstract class ___Exporter {
     if (!isWebGL) {
       htColixes = new Hashtable<Short, Integer>();
       if (polygonColixes != null)
-        colorList = getColorList(0, polygonColixes, nPolygons, bsPolygons,
-            htColixes);
+        colorList = getColorList(0, polygonColixes, nPolygons, bsPolygons, htColixes);
       else if (colixes != null)
         colorList = getColorList(0, colixes, nVertices, null, htColixes);
     }
-    outputSurface(vertices, normals, colixes, indices, polygonColixes,
-        nVertices, nPolygons, nTriangles, bsPolygons, faceVertexMax, colix,
-        colorList, htColixes, meshSurface.offset);
+    outputSurface(vertices, normals, colixes, indices, polygonColixes, nVertices, nPolygons, nTriangles, bsPolygons, faceVertexMax, colix, colorList, htColixes, meshSurface.offset);
   }
 
   /**
@@ -542,17 +528,13 @@ public abstract class ___Exporter {
   abstract void drawTextPixel(int argb, int x, int y, int z);
 
   //rockets and dipoles
-  abstract void fillConeScreen(short colix, byte endcap, int screenDiameter, 
-                         P3d screenBase, P3d screenTip, boolean isBarb);
+  abstract void fillConeScreen(short colix, byte endcap, int screenDiameter, P3d screenBase, P3d screenTip, boolean isBarb);
   
-  abstract void drawCylinder(P3d atom1, P3d atom2, short colix1, short colix2,
-                             byte endcaps, int madBond, int bondOrder);
+  abstract void drawCylinder(P3d atom1, P3d atom2, short colix1, short colix2, byte endcaps, int madBond, int bondOrder);
 
-  abstract void fillCylinderScreenMad(short colix, byte endcaps, int diameter, 
-                                        P3d screenA, P3d screenB);
+  abstract void fillCylinderScreenMad(short colix, byte endcaps, int diameter, P3d screenA, P3d screenB);
 
-  abstract void fillCylinderScreen(short colix, byte endcaps, int screenDiameter, 
-                                   P3d screenA, P3d screenB, P3d ptA, P3d ptB, double radius);
+  abstract void fillCylinderScreen(short colix, byte endcaps, int screenDiameter, P3d screenA, P3d screenB, P3d ptA, P3d ptB, double radius);
 
   abstract void fillEllipsoid(P3d center, P3d[] points, short colix, 
                               int x, int y, int z, int diameter,
@@ -581,15 +563,13 @@ public abstract class ___Exporter {
     return (z <= 3 ? z + (int) tm.cameraDistance : z);
   }
 
-  void plotImage(int x, int y, int z, Object image, short bgcolix, int width,
-                 int height) {
+  void plotImage(int x, int y, int z, Object image, short bgcolix, int width, int height) {
     outputComment("start image " + (++nImage));
     gdata.plotImage(x, y, z, image, export3D, bgcolix, width, height);
     outputComment("end image " + nImage);
   }
 
   void plotText(int x, int y, int z, short colix, String text, Font font3d) {
-  	
     // trick here is that we use Jmol's standard g3d package to construct
     // the bitmap, but then output to jmolRenderer, which returns control
     // here via drawPixel.
@@ -597,8 +577,4 @@ public abstract class ___Exporter {
     gdata.plotText(x, y, z, gdata.getColorArgbOrGray(colix), 0, text, font3d, export3D);
     outputComment("end text " + nText + ": " + text);
   }
-
 }
-
-
-

@@ -46,10 +46,8 @@ import org.jmol.util.Logger;
 /*
  * for programs that use the standard 3D coordinates.
  * IDTF, Maya, OBJ, VRML, JS
- * 
  */
 abstract public class __CartesianExporter extends ___Exporter {
-
   protected A4d viewpoint = new A4d();
   protected boolean canCapCylinders;
   protected boolean noColor;
@@ -78,7 +76,6 @@ abstract public class __CartesianExporter extends ___Exporter {
   }
 
   protected P3d getCameraPosition() {
-
     // used for VRML/X3D only
 
     P3d ptCamera = new P3d();
@@ -88,17 +85,12 @@ abstract public class __CartesianExporter extends ___Exporter {
     // this is NOT QUITE correct when the model has been shifted with CTRL-ALT
     // because in that case the center of distortion is not the screen center,
     // and these simpler perspective models don't allow for that.
-    tempP3.set(screenWidth / 2, screenHeight / 2, cameraDistance
-        * scalePixelsPerAngstrom);
+    tempP3.set(screenWidth / 2, screenHeight / 2, cameraDistance * scalePixelsPerAngstrom);
     tm.unTransformPoint(tempP3, tempP3);
     tempP3.sub(center);
     ptCamera.add(tempP3);
 
-    //System.out.println(ptCamera + " " + cameraPosition);
-    //  return ptCamera;
-
     return cameraPosition;
-
   }
 
   private void setTempPoints(P3d ptA, P3d ptB, boolean isCartesian) {
@@ -125,8 +117,7 @@ abstract public class __CartesianExporter extends ___Exporter {
     return n;
   }
 
-  protected int[] getNormalMap(T3d[] normals, int nNormals,
-                               BS bsValid, Lst<String> vNormals) {
+  protected int[] getNormalMap(T3d[] normals, int nNormals, BS bsValid, Lst<String> vNormals) {
     Map<String, Integer> htNormals = new Hashtable<String, Integer>();
     int[] normalMap = new int[nNormals];
     for (int i = 0; i < nNormals; i++) {
@@ -148,8 +139,7 @@ abstract public class __CartesianExporter extends ___Exporter {
     return normalMap;
   }
 
-  protected void outputIndices(int[][] indices, int[] map, int nPolygons,
-                               BS bsPolygons, int faceVertexMax) {
+  protected void outputIndices(int[][] indices, int[] map, int nPolygons, BS bsPolygons, int faceVertexMax) {
     // called from IDtf, Vrml, Xed when outputting a surface
     boolean isAll = (bsPolygons == null);
     int i0 = (isAll ? nPolygons - 1 : bsPolygons.nextSetBit(0));
@@ -160,26 +150,19 @@ abstract public class __CartesianExporter extends ___Exporter {
   // called from IDtf, Vrml, Xed when outputting a surface
   protected abstract void outputFace(int[] is, int[] coordMap, int faceVertexMax);
 
-  abstract protected void outputCircle(P3d pt1, P3d pt2, double radius,
-                                       short colix, boolean doFill);
+  abstract protected void outputCircle(P3d pt1, P3d pt2, double radius, short colix, boolean doFill);
 
-  abstract protected void outputCone(P3d ptBase, P3d ptTip,
-                                     double radius, short colix);
+  abstract protected void outputCone(P3d ptBase, P3d ptTip, double radius, short colix);
 
-  abstract protected boolean outputCylinder(P3d ptCenter, P3d pt1,
-                                            P3d pt2, short colix1,
-                                            byte endcaps, double radius,
-                                            P3d ptX, P3d ptY, boolean checkRadius);
+  abstract protected boolean outputCylinder(P3d ptCenter, P3d pt1, P3d pt2, short colix1, byte endcaps, double radius, P3d ptX, P3d ptY, boolean checkRadius);
 
-  abstract protected void outputEllipsoid(P3d center, P3d[] points,
-                                          short colix);
+  abstract protected void outputEllipsoid(P3d center, P3d[] points, short colix);
 
   abstract protected void outputSphere(P3d ptCenter, double f, short colix, boolean checkRadius);
 
   abstract protected void outputTextPixel(P3d pt, int argb);
 
-  abstract protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3,
-                                         short colix);
+  abstract protected void outputTriangle(T3d pt1, T3d pt2, T3d pt3, short colix);
 
   // these are called by Export3D:
 
@@ -191,15 +174,11 @@ abstract public class __CartesianExporter extends ___Exporter {
     // trick here is that we use Jmol's standard g3d package to construct
     // the bitmap, but then output to jmolRenderer, which returns control
     // here via drawPixel.
-    gdata.plotText(x, y, z, gdata.getColorArgbOrGray(colix), 0, text,
-        font3d, export3D);
+    gdata.plotText(x, y, z, gdata.getColorArgbOrGray(colix), 0, text, font3d, export3D);
   }
 
   @Override
-  void plotImage(int x, int y, int z, Object image, short bgcolix, int width,
-                 int height) {
-    // not implemented in VRML
-    //    gdata.plotImage(x, y, z, image, jmolRenderer, bgcolix, width, height);
+  void plotImage(int x, int y, int z, Object image, short bgcolix, int width, int height) {
   }
 
   @Override
@@ -222,8 +201,7 @@ abstract public class __CartesianExporter extends ___Exporter {
   }
 
   @Override
-  boolean drawEllipse(P3d ptCenter, P3d ptX, P3d ptY, short colix,
-                      boolean doFill) {
+  boolean drawEllipse(P3d ptCenter, P3d ptX, P3d ptY, short colix, boolean doFill) {
     tempV1.sub2(ptX, ptCenter);
     tempV2.sub2(ptY, ptCenter);
     tempV2.cross(tempV1, tempV2);
@@ -231,9 +209,7 @@ abstract public class __CartesianExporter extends ___Exporter {
     tempV2.scale(doFill ? 0.002f : 0.005d);
     tempP1.sub2(ptCenter, tempV2);
     tempP2.add2(ptCenter, tempV2);
-    return outputCylinder(ptCenter, tempP1, tempP2, colix,
-        doFill ? GData.ENDCAPS_FLAT : GData.ENDCAPS_NONE, 1.01f, ptX,
-        ptY, true);
+    return outputCylinder(ptCenter, tempP1, tempP2, colix, doFill ? GData.ENDCAPS_FLAT : GData.ENDCAPS_NONE, 1.01f, ptX, ptY, true);
   }
 
   @Override
@@ -253,8 +229,7 @@ abstract public class __CartesianExporter extends ___Exporter {
   }
 
   @Override
-  void fillConeScreen(short colix, byte endcap, int screenDiameter,
-                      P3d screenBase, P3d screenTip, boolean isBarb) {
+  void fillConeScreen(short colix, byte endcap, int screenDiameter, P3d screenBase, P3d screenTip, boolean isBarb) {
     tm.unTransformPoint(screenBase, tempP1);
     tm.unTransformPoint(screenTip, tempP2);
     double radius = vwr.tm.unscaleToScreen(screenBase.z, screenDiameter) / 2;
@@ -268,8 +243,7 @@ abstract public class __CartesianExporter extends ___Exporter {
    * bond order -2 -- multiple bond, Cartesian 
    */
   @Override
-  void drawCylinder(P3d ptA, P3d ptB, short colix1, short colix2,
-                    byte endcaps, int mad, int bondOrder) {
+  void drawCylinder(P3d ptA, P3d ptB, short colix1, short colix2, byte endcaps, int mad, int bondOrder) {
     setTempPoints(ptA, ptB, bondOrder < 0);
     double radius = mad / 2000d;
     if (Logger.debugging)
@@ -283,12 +257,8 @@ abstract public class __CartesianExporter extends ___Exporter {
         endcaps = GData.ENDCAPS_FLAT;
       else if (canCapCylinders && endcaps == GData.ENDCAPS_SPHERICAL)
         endcaps = (solidOnly ? GData.ENDCAPS_FLAT_TO_SPHERICAL : GData.ENDCAPS_OPEN_TO_SPHERICAL);
-      outputCylinder(null, tempP3, tempP1, colix1,
-          (endcaps == GData.ENDCAPS_SPHERICAL ? GData.ENDCAPS_NONE
-              : endcaps), radius, null, null, true);
-      outputCylinder(null, tempP3, tempP2, colix2,
-          (endcaps == GData.ENDCAPS_SPHERICAL ? GData.ENDCAPS_NONE
-              : endcaps), radius, null, null, true);
+      outputCylinder(null, tempP3, tempP1, colix1, (endcaps == GData.ENDCAPS_SPHERICAL ? GData.ENDCAPS_NONE : endcaps), radius, null, null, true);
+      outputCylinder(null, tempP3, tempP2, colix2, (endcaps == GData.ENDCAPS_SPHERICAL ? GData.ENDCAPS_NONE : endcaps), radius, null, null, true);
       if (endcaps == GData.ENDCAPS_SPHERICAL) {
         outputSphere(tempP1, radius * 1.01f, colix1, bondOrder != -2);
         outputSphere(tempP2, radius * 1.01f, colix2, bondOrder != -2);
@@ -297,24 +267,21 @@ abstract public class __CartesianExporter extends ___Exporter {
   }
 
   @Override
-  void fillCylinderScreenMad(short colix, byte endcaps, int mad,
-                             P3d screenA, P3d screenB) {
+  void fillCylinderScreenMad(short colix, byte endcaps, int mad, P3d screenA, P3d screenB) {
     double radius = mad / 2000d;
     setTempPoints(screenA, screenB, false);
     outputCylinder(null, tempP1, tempP2, colix, endcaps, radius, null, null, true);
   }
 
   @Override
-  void fillCylinderScreen(short colix, byte endcaps, int screenDiameter,
-                          P3d screenA, P3d screenB, P3d ptA, P3d ptB, double radius) {
+  void fillCylinderScreen(short colix, byte endcaps, int screenDiameter, P3d screenA, P3d screenB, P3d ptA, P3d ptB, double radius) {
     if (ptA != null) {
       drawCylinder(ptA, ptB, colix, colix, endcaps, (int) Math.round(radius * 2000d), -1);
       return;
     }    
     // vectors, polyhedra
     // was (int) in older version
-    int mad = (int) Math.round(vwr.tm.unscaleToScreen((screenA.z + screenB.z) / 2,
-        screenDiameter) * 1000);
+    int mad = (int) Math.round(vwr.tm.unscaleToScreen((screenA.z + screenB.z) / 2, screenDiameter) * 1000);
     fillCylinderScreenMad(colix, endcaps, mad, screenA, screenB);
   }
 
@@ -332,9 +299,7 @@ abstract public class __CartesianExporter extends ___Exporter {
   }
 
   @Override
-  protected void fillTriangle(short colix, T3d ptA, T3d ptB, T3d ptC,
-                              boolean twoSided) {
-    
+  protected void fillTriangle(short colix, T3d ptA, T3d ptB, T3d ptC, boolean twoSided) {
     // fillTriangleTwoSided
     //   for Polyhedra (collapsed)
 
@@ -370,8 +335,7 @@ abstract public class __CartesianExporter extends ___Exporter {
 
   protected M4d sphereMatrix = new M4d();
 
-  protected void setSphereMatrix(T3d center, double rx, double ry, double rz,
-                                 A4d a, M4d sphereMatrix) {
+  protected void setSphereMatrix(T3d center, double rx, double ry, double rz, A4d a, M4d sphereMatrix) {
     if (a != null) {
       M3d m = new M3d();
       m.m00 = rx;
@@ -391,6 +355,4 @@ abstract public class __CartesianExporter extends ___Exporter {
     sphereMatrix.m23 = center.z;
     sphereMatrix.m33 = 1;
   }
-  
-
 }
