@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public class JMenu extends JMenuItem {
-
   public JMenu() {
     super("mnu",TYPE_MENU);
   }

@@ -1,7 +1,6 @@
 package org.jmol.awtjs;
 
 public class Event {
-
   public static final int MOUSE_LEFT   =  16;
   public static final int MOUSE_MIDDLE =   8; //Event.ALT_MASK;
   public static final int MOUSE_RIGHT  =   4; //Event.META_MASK;
@@ -17,7 +16,6 @@ public class Event {
   public static final int MOUSE_EXIT   = 505; //Event.MOUSE_EXIT;
   public static final int MOUSE_DRAG   = 506; //Event.MOUSE_DRAG;
     
-  
   public static final int SHIFT_MASK =  1;//InputEvent.SHIFT_MASK;
   public static final int ALT_MASK   =  8;//InputEvent.ALT_MASK;
   public static final int CTRL_MASK  =  2;//InputEvent.CTRL_MASK;
@@ -49,5 +47,4 @@ public class Event {
   public final static int WHEELED = 3;
   public final static int PRESSED = 4;
   public final static int RELEASED = 5;
-
 }

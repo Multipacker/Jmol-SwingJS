@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public class Cell {
-
 	private JComponent component;
 	private int colspan;
 	private int rowspan;
@@ -17,9 +16,6 @@ public class Cell {
 
 	public String toHTML(String id) {
 		String style = c.getStyle(false); 
-		return "<td id='" + id +"' " + (colspan < 2 ? "" : "colspan='" + colspan + "' ") 
-		+ style + "><span " + c.getStyle(true) + ">" + component.toHTML() + "</span></td>";
+		return "<td id='" + id +"' " + (colspan < 2 ? "" : "colspan='" + colspan + "' ") + style + "><span " + c.getStyle(true) + ">" + component.toHTML() + "</span></td>";
 	}
-
-
 }

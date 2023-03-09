@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import javajs.util.SB;
 
 public class JScrollPane extends JComponent {
-
 	public JScrollPane(JComponent component) {
 		super("JScP");
 		add(component);
@@ -24,7 +23,5 @@ public class JScrollPane extends JComponent {
   @Override
   public void setMinimumSize(Dimension dimension) {
 		// TODO Auto-generated method stub
-		
 	}
-
 }

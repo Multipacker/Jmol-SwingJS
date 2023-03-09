@@ -1,11 +1,6 @@
 package org.jmol.awtjs.swing;
 
-/**
- *  implementation of a JComponent
- * 
- */
 class JComponentImp extends JComponent {
-
   protected JComponentImp(String type) {
     super(type);
   }
@@ -14,5 +9,4 @@ class JComponentImp extends JComponent {
   public String toHTML() {
     return null;
   }
-
 }

@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import javajs.util.SB;
 
 public class JSplitPane extends JComponent {
-
 	public static final int HORIZONTAL_SPLIT = 1;
 	boolean isH = true;
 	private int split = 1;
@@ -82,6 +81,4 @@ public class JSplitPane extends JComponent {
 		sb.append("</div></div>\n");
 		return sb.toString();
 	}
-
-
 }

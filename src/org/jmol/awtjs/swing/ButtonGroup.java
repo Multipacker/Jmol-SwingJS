@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import org.jmol.api.SC;
 
 public class ButtonGroup {
-  
   private String id;
   
   public ButtonGroup() {
@@ -20,5 +19,4 @@ public class ButtonGroup {
   public int getButtonCount() {
     return count;
   }
-
 }

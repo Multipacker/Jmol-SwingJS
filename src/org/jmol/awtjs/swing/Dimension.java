@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public class Dimension {
-
   public int width;
   public int height;
 
@@ -14,5 +13,4 @@ public class Dimension {
     height = h;
     return this;
   }
-
 }

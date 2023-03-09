@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import javajs.util.Lst;
   
 abstract public class Container extends Component {
-  
   protected Lst<Component> list;
   
   private Component[] cList;
@@ -75,5 +74,4 @@ abstract public class Container extends Component {
   public int getSubcomponentHeight() {
     return (list != null && list.size() == 1 ? list.get(0).getSubcomponentHeight() : 0);
   }
-
 }

@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import org.jmol.api.SC;
 
 public abstract class AbstractButton extends JComponent implements SC {
-
   Object itemListener;
   Object applet;
   String htmlName;
@@ -21,14 +20,6 @@ public abstract class AbstractButton extends JComponent implements SC {
   @Override
   public void setSelected(boolean selected) {
     this.selected = selected;
-    /**
-     * @j2sNative
-     * 
-     * SwingController.setSelected(this);
-     * 
-     */
-    {
-    }
   }
 
   @Override
@@ -57,14 +48,6 @@ public abstract class AbstractButton extends JComponent implements SC {
     this.icon = (String) icon;
     this.actionCommand = actionCommand;
     this.popupMenu = popupMenu;
-    /**
-     * @j2sNative
-     * 
-     *  SwingController.initMenuItem(this);
-     *  
-     */
-    {
-    }
   }
  
   public SC getTopPopupMenu() {
@@ -91,9 +74,7 @@ public abstract class AbstractButton extends JComponent implements SC {
   }
 
   protected String getMenuHTML() {
-    String label = (this.icon != null ? this.icon
-        : this.text != null ? this.text 
-         : null);
+    String label = (this.icon != null ? this.icon : this.text != null ? this.text : null);
     String s = (label == null ? "" : "<li><a>" + label + "</a>"
       + htmlMenuOpener("ul"));
     int n = getComponentCount();
@@ -112,5 +93,4 @@ public abstract class AbstractButton extends JComponent implements SC {
   protected String getHtmlDisabled() {
     return " disabled=\"disabled\"";
   }  
-
 }

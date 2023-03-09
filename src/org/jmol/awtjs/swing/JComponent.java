@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public abstract class JComponent extends Container {
-
   protected boolean autoScrolls;
   protected String actionCommand;
   protected Object actionListener;
@@ -23,7 +22,6 @@ public abstract class JComponent extends Container {
    * of JTextField's actionListener business. 
    * 
    * @param listener 
-   * 
    */
   public void addActionListener(Object listener) {
     actionListener = listener;
@@ -36,8 +34,4 @@ public abstract class JComponent extends Container {
   public void setActionCommand(String actionCommand) {
     this.actionCommand = actionCommand;
   }
-
-
-
-  
 }

@@ -14,7 +14,6 @@ package org.jmol.awtjs.swing;
  * 
  */
 public interface SwingController {
-  
   /**
    * Fired from clicking an element such as a button or 
    * check box or table entry, or from entering text in a text box.
@@ -37,7 +36,6 @@ public interface SwingController {
    */
   void click(HTMLElement element, HTMLWindowEvent event);
   
-
   /**
    * Remove this component's HTML5 equivalent and clear references to it.
    * 
@@ -129,5 +127,4 @@ public interface SwingController {
    * @param element
    */
   void windowClosing(HTMLElement element);
- 
 }

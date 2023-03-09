@@ -7,10 +7,8 @@ import javajs.util.SB;
  * Operates as its own Document; no attributes
  * 
  * @author hansonr
- *
  */
 public class JTextPane extends JComponent implements Document {
-
 	public JTextPane() {
 		super("txtJTP");
 		text = "";
@@ -32,5 +30,4 @@ public class JTextPane extends JComponent implements Document {
 		sb.append("<textarea type=text id='" + id + "' class='JTextPane' style='" + getCSSstyle(98, 98) + "'>"+ text + "</textarea>");
 		return sb.toString();
 	}
-
 }

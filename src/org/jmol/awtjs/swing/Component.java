@@ -4,7 +4,6 @@ import javajs.api.GenericColor;
 import javajs.util.CU;
 
 abstract public class Component {
-
   private boolean _visible;  
   protected boolean enabled = true;
   protected String text;    
@@ -27,13 +26,6 @@ abstract public class Component {
     id = newID(type);
     if (type == null)
       return;
-    /**
-     * @j2sNative
-     *            SwingController.register(this, type);
-     */
-    {
-    }
-
   }
   
   public static String newID(String type) {
@@ -48,14 +40,6 @@ abstract public class Component {
 
   public void setText(String text) {
     this.text = text;
-    /**
-     * @j2sNative
-     * 
-     * SwingController.setText(this);
-     * 
-     */
-    {
-    }
   }
 
   public void setName(String name) {
@@ -89,13 +73,6 @@ abstract public class Component {
   
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
-    /**
-     * @j2sNative
-     * 
-     * SwingController.setEnabled(this);
-     * 
-     */
-    {}
   }
 
   public boolean isVisible() {
@@ -104,13 +81,6 @@ abstract public class Component {
 
   public void setVisible(boolean visible) {
     this._visible = visible;
-    /**
-     * @j2sNative
-     * 
-     * SwingController.setVisible(this);
-     * 
-     */
-    {}
   }
 
   public int getHeight() {
@@ -151,5 +121,4 @@ abstract public class Component {
   public void repaint() {
     // for inheritance
   }
-
 }

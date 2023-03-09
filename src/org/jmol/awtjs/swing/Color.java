@@ -3,9 +3,7 @@ package org.jmol.awtjs.swing;
 import javajs.api.GenericColor;
 
 public class Color implements GenericColor {
-
 	public int argb;
-
 
   @Override
   public int getRGB() {
@@ -18,7 +16,6 @@ public class Color implements GenericColor {
 		return ((argb >> 24) & 0xFF);
 	}
 
-	
   @Override
   public void setOpacity255(int a) {
 		argb = argb & 0xFFFFFF | ((a & 0xFF) << 24);
@@ -48,6 +45,4 @@ public class Color implements GenericColor {
     String s = ("00000000" + Integer.toHexString(argb));
     return "[0x" + s.substring(s.length() - 8, s.length()) + "]";
   }
-
-	
 }

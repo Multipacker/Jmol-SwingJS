@@ -3,9 +3,7 @@ package org.jmol.awtjs.swing;
 import javajs.util.BS;
 import javajs.util.SB;
 
-
 public class JTable extends JComponent implements ListSelectionModel, ColumnSelectionModel {
-
 	private AbstractTableModel tableModel;
 	private BS bsSelectedCells;
 	private BS bsSelectedRows;
@@ -59,7 +57,6 @@ public class JTable extends JComponent implements ListSelectionModel, ColumnSele
 	 * page to do with selectionListener what is desired.
 	 * 
 	 * @param listener 
-	 * 
 	 */
 	@Override
   public void addListSelectionListener(Object listener) {

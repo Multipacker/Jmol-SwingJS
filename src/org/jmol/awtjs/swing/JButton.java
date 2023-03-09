@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import javajs.util.SB;
 
 public class JButton extends AbstractButton {
-
   public JButton() {
     super("btnJB");
   }

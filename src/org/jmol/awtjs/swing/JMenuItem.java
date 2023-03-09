@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public class JMenuItem extends AbstractButton {
-
   public final int btnType;
   
   public static final int TYPE_SEPARATOR = 0;
@@ -9,7 +8,6 @@ public class JMenuItem extends AbstractButton {
   public static final int TYPE_CHECKBOX = 2;
   public static final int TYPE_RADIO = 3;
   public static final int TYPE_MENU = 4;
-
 
   public JMenuItem(String text) {
     super("btn");
@@ -24,8 +22,7 @@ public class JMenuItem extends AbstractButton {
 
   @Override
   public String toHTML() {
-    return htmlMenuOpener("li")
-        + (text == null ? "" : "<a>" + htmlLabel() + "</a>") + "</li>";
+    return htmlMenuOpener("li") + (text == null ? "" : "<a>" + htmlLabel() + "</a>") + "</li>";
   }
 
   @Override
@@ -41,6 +38,4 @@ public class JMenuItem extends AbstractButton {
         + "\" " + (selected ? "checked" : "") + " />" 
         + text + "</label>");
   }
-
-
 }

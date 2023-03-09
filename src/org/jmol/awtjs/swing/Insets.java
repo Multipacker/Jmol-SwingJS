@@ -1,7 +1,6 @@
 package org.jmol.awtjs.swing;
 
 public class Insets {
-
 	int top, left, bottom, right;
 	
 	public Insets(int top, int left, int bottom, int right) {
@@ -10,5 +9,4 @@ public class Insets {
 		this.bottom = bottom;
 		this.right = right;
 	}
-
 }

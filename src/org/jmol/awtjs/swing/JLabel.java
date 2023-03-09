@@ -3,7 +3,6 @@ package org.jmol.awtjs.swing;
 import javajs.util.SB;
 
 public class JLabel extends JComponent {
-
 	public JLabel(String text) {
 		super("lblJL");
 		this.text = text;
@@ -17,6 +16,4 @@ public class JLabel extends JComponent {
 		sb.append("</span>");
 		return sb.toString();
 	}
-
-
 }
