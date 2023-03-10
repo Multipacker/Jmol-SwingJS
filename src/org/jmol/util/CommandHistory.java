@@ -25,47 +25,26 @@ package org.jmol.util;
 
 import javajs.util.Lst;
 
-
 /**
  * Implements a queue for a bash-like command history.
  */
 final public class CommandHistory {
-
-  
   public final static String ERROR_FLAG = "#??";
   public final static String NOHISTORYLINE_FLAG = "#--";
   public final static String NOHISTORYATALL_FLAG = "#----";
   final static int DEFAULT_MAX_SIZE = 100;
   
-  /**
-   * Array of commands.
-   */
   private Lst<String> commandList = null;
   private int maxSize = DEFAULT_MAX_SIZE;
 
-  /**
-   * Position of the next command.
-   */
   private int nextCommand;
 
-  /**
-   * Current position of the cursor;
-   */
   private int cursorPos;
 
-
-  /**
-   * Creates a new instance using the default size (100) 
-   *
-   */
   public CommandHistory() {
     reset(DEFAULT_MAX_SIZE);
   }
   
-  /**
-   * clears the history.
-   * 
-   */
   public void clear() {
     reset(maxSize);
   }
@@ -251,8 +230,6 @@ final public class CommandHistory {
     nextCommand++;
     cursorPos = nextCommand;
     commandList.add(nextCommand, "");
-    //for (int i = 0; i < nextCommand; i++)
-    //System.out.println("HISTORY:" + i+" "+commandList.get(i));
   }
 
   private Lst<String> lstStates;
@@ -269,5 +246,4 @@ final public class CommandHistory {
     String s = lstStates.removeItemAt(lstStates.size() - 1);
     return s;
   }
-
 }

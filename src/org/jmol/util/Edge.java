@@ -27,13 +27,10 @@ package org.jmol.util;
 import javajs.util.PT;
 
 public abstract class Edge implements SimpleEdge {
-
-  
   /**
    * Extended Bond Definition Types
    * 
    * Originally these were short 16-bit values
-   *
    */
   
   //.1 1111 1111 1100 0000 0000
@@ -446,12 +443,8 @@ public abstract class Edge implements SimpleEdge {
           return item.number;
       return "?";
     }
-
   }
 
-  /**
-   * @param c  
-   */
   public void setCIPChirality(int c) {
     // default is no action
   }
@@ -463,5 +456,4 @@ public abstract class Edge implements SimpleEdge {
   public String getCIPChirality(boolean doCalculate) {
     return "";
   }
-
 }

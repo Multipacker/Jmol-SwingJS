@@ -233,37 +233,6 @@ public final class C {
     return argbsGreyscale[colix & OPAQUE_MASK];
   }
 
-  /*
-  Int2IntHash hashMix2 = new Int2IntHash(32);
-
-  short getColixMix(short colixA, short colixB) {
-    if (colixA == colixB)
-      return colixA;
-    if (colixA <= 0)
-      return colixB;
-    if (colixB <= 0)
-      return colixA;
-    int translucentMask = colixA & colixB & TRANSLUCENT_MASK;
-    colixA &= ~TRANSLUCENT_MASK;
-    colixB &= ~TRANSLUCENT_MASK;
-    int mixId = ((colixA < colixB)
-                 ? ((colixA << 16) | colixB)
-                 : ((colixB << 16) | colixA));
-    int mixed = hashMix2.get(mixId);
-    if (mixed == Integer.MIN_VALUE) {
-      int argbA = argbs[colixA];
-      int argbB = argbs[colixB];
-      int r = (((argbA & 0x00FF0000)+(argbB & 0x00FF0000)) >> 1) & 0x00FF0000;
-      int g = (((argbA & 0x0000FF00)+(argbB & 0x0000FF00)) >> 1) & 0x0000FF00;
-      int b = (((argbA & 0x000000FF)+(argbB & 0x000000FF)) >> 1);
-      int argbMixed = 0xFF000000 | r | g | b;
-      mixed = getColix(argbMixed);
-      hashMix2.put(mixId, mixed);
-    }
-    return (short)(mixed | translucentMask);
-  }
-  */
-  
   static {
     int[] predefinedArgbs =  { // For Google Closure Compiler
       0xFF000000, // black
@@ -322,10 +291,7 @@ public final class C {
       return 0;
     if (translucentLevel < 0) //screened
       return TRANSLUCENT_SCREENED;
-//    if (translucentLevel < 0) //screened
-  //    translucentLevel = 128;//return TRANSLUCENT_SCREENED;
-    if (Double.isNaN(translucentLevel) || translucentLevel >= 255
-        || translucentLevel == 1.0)
+    if (Double.isNaN(translucentLevel) || translucentLevel >= 255 || translucentLevel == 1.0)
       return TRANSPARENT;
     int iLevel = (int) Math.floor(translucentLevel < 1 ? translucentLevel * 256
         : translucentLevel >= 15 ? translucentLevel
@@ -361,8 +327,7 @@ public final class C {
     default:
       //check this colix irrespective of translucency, and if inherit, then
       //it must be inherit color but not translucent level; 
-      return ((myColix & OPAQUE_MASK) == INHERIT_COLOR ? (short) (parentColix
-          & OPAQUE_MASK | myColix & TRANSLUCENT_MASK) : myColix);
+      return ((myColix & OPAQUE_MASK) == INHERIT_COLOR ? (short) (parentColix & OPAQUE_MASK | myColix & TRANSLUCENT_MASK) : myColix);
     }
   }
 
@@ -379,25 +344,20 @@ public final class C {
     return (colix >= 0 ? -1 : (short) (colix & UNMASK_CHANGEABLE_TRANSLUCENT));
   }
 
-  public final static short getColixTranslucent3(short colix,
-                                                 boolean isTranslucent,
-                                                 double translucentLevel) {
+  public final static short getColixTranslucent3(short colix, boolean isTranslucent, double translucentLevel) {
     colix &= ~TRANSLUCENT_MASK;
     if (colix == INHERIT_ALL)
       colix = INHERIT_COLOR;
-    return (isTranslucent ? (short) (colix | getTranslucentFlag(translucentLevel))
-        : colix);
+    return (isTranslucent ? (short) (colix | getTranslucentFlag(translucentLevel)) : colix);
   }
 
   public final static short copyColixTranslucency(short colixFrom, short colixTo) {
-    return getColixTranslucent3(colixTo, isColixTranslucent(colixFrom),
-        getColixTranslucencyLevel(colixFrom));
+    return getColixTranslucent3(colixTo, isColixTranslucent(colixFrom), getColixTranslucencyLevel(colixFrom));
   }
 
   public static double getColixTranslucencyFractional(short colix) {
     int translevel = getColixTranslucencyLevel(colix);
-    return (translevel == -1 ? 0.5d : translevel == 0 ? 0
-        : translevel == 255 ? 1 : translevel / 256d);
+    return (translevel == -1 ? 0.5d : translevel == 0 ? 0 : translevel == 255 ? 1 : translevel / 256d);
   }
 
   public static String getColixTranslucencyLabel(short colix) {
@@ -467,8 +427,6 @@ public final class C {
   }  
 
   public static short getBgContrast(int argb) {
-    return ((CU.toFFGGGfromRGB(argb) & 0xFF) < 128 ? WHITE
-        : BLACK);
+    return ((CU.toFFGGGfromRGB(argb) & 0xFF) < 128 ? WHITE : BLACK);
   }
-
 }

@@ -1,13 +1,11 @@
 package org.jmol.util;
 
-
 import javajs.util.AU;
 import javajs.util.M3d;
 import javajs.util.P3d;
 import javajs.util.P3i;
 import javajs.util.T3d;
 import javajs.util.V3d;
-
 
 import org.jmol.api.GenericPlatform;
 import org.jmol.api.JmolGraphicsInterface;
@@ -132,7 +130,6 @@ public class GData implements JmolGraphicsInterface {
     setDepth(depth);
   }
 
-
   protected Object graphicsForMetrics;
 
   public final static int EXPORT_RAYTRACER = 2;
@@ -144,7 +141,6 @@ public class GData implements JmolGraphicsInterface {
   public void setAmbientOcclusion(int value) {
     ambientOcclusion = value;
   }
-
 
   /**
    * is full scene / oversampling antialiasing in effect
@@ -178,8 +174,7 @@ public class GData implements JmolGraphicsInterface {
   public int[] getShades(short colix) {
     if (colix < 0)
       colix = changeableColixMap[colix & C.UNMASK_CHANGEABLE_TRANSLUCENT];
-    return (inGreyscaleMode ? shader.getShadesG(colix) : shader
-        .getShades(colix));
+    return (inGreyscaleMode ? shader.getShadesG(colix) : shader.getShades(colix));
   }
 
   /**
@@ -438,9 +433,6 @@ public class GData implements JmolGraphicsInterface {
     return currentFont;
   }
 
-  /**
-   * @param font3d  
-   */
   public void setFont(Font font3d) {
     // see Graphics3D
   }
@@ -449,10 +441,6 @@ public class GData implements JmolGraphicsInterface {
     setFont(getFont3DFSS(fontFace, "Bold", fontSize));
   }
 
-
-  /**
-   * @param TF  
-   */
   public void setBackgroundTransparent(boolean TF) {
   }
 
@@ -535,10 +523,6 @@ public class GData implements JmolGraphicsInterface {
   public void releaseScreenImage() {
   }
 
-  /**
-   * @param stereoMode  
-   * @param stereoColors 
-   */
   public void applyAnaglygh(STER stereoMode, int[] stereoColors) {
   }
 
@@ -556,8 +540,7 @@ public class GData implements JmolGraphicsInterface {
   public void clearFontCache() {
   }
 
-  public void drawQuadrilateralBits(JmolRendererInterface jmolRenderer, short colix, P3d screenA, P3d screenB,
-                                    P3d screenC, P3d screenD) {
+  public void drawQuadrilateralBits(JmolRendererInterface jmolRenderer, short colix, P3d screenA, P3d screenB, P3d screenC, P3d screenD) {
     //mesh only -- translucency has been checked
     jmolRenderer.drawLineBits(colix, colix, screenA, screenB);
     jmolRenderer.drawLineBits(colix, colix, screenB, screenC);
@@ -565,8 +548,7 @@ public class GData implements JmolGraphicsInterface {
     jmolRenderer.drawLineBits(colix, colix, screenD, screenA);
   }
 
-  public void drawTriangleBits(JmolRendererInterface renderer, P3d screenA, short colixA, P3d screenB,
-                               short colixB, P3d screenC, short colixC, int check) {
+  public void drawTriangleBits(JmolRendererInterface renderer, P3d screenA, short colixA, P3d screenB, short colixB, P3d screenC, short colixC, int check) {
     // primary method for mapped Mesh
     if ((check & 1) == 1)
       renderer.drawLineBits(colixA, colixB, screenA, screenB);
@@ -576,40 +558,12 @@ public class GData implements JmolGraphicsInterface {
       renderer.drawLineBits(colixC, colixA, screenC, screenA);
   }
 
-  /**
-   * @param x  
-   * @param y 
-   * @param z 
-   * @param image 
-   * @param jmolRenderer
-   * @param bgcolix
-   * @param width
-   * @param height
-   *  
-   */
-  public void plotImage(int x, int y, int z, Object image,
-                        JmolRendererInterface jmolRenderer, short bgcolix,
-                        int width, int height) {
+  public void plotImage(int x, int y, int z, Object image, JmolRendererInterface jmolRenderer, short bgcolix, int width, int height) {
   }
 
-  /**
-   * @param x  
-   * @param y 
-   * @param z 
-   * @param colorArgbOrGray
-   * @param bgColor TODO
-   * @param text
-   * @param font3d 
-   * @param jmolRenderer
-   *  
-   */
-  public void plotText(int x, int y, int z, int colorArgbOrGray, int bgColor,
-                       String text, Font font3d, JmolRendererInterface jmolRenderer) {
+  public void plotText(int x, int y, int z, int colorArgbOrGray, int bgColor, String text, Font font3d, JmolRendererInterface jmolRenderer) {
   }
 
-  /**
-   * @param jmolRenderer  
-   */
   public void renderBackground(JmolRendererInterface jmolRenderer) {
   }
 
@@ -644,15 +598,7 @@ public class GData implements JmolGraphicsInterface {
    * @return number closest to zero
    */
   public static int roundInt(int a) {
-    /**
-     * @z2sNative
-     *
-     *  return a < 0 ? Math.ceil(a) : Math.floor(a);
-     *  
-     */
-    {
       return a;
-    }
   }
 
   public void clear() {
@@ -664,9 +610,6 @@ public class GData implements JmolGraphicsInterface {
     // only in Graphics3D
   }
 
-  /**
-   * @param tok  
-   */
   public void addRenderer(int tok) {
     // needed for JavaScript implementation to avoid unnecessary core loading
   }
@@ -685,9 +628,7 @@ public class GData implements JmolGraphicsInterface {
    * @param n
    * @param isPt
    */
-  public static void getHermiteList(int tension, T3d p0, T3d p1,
-                                    T3d p2, T3d p3, T3d p4,
-                                    T3d[] list, int index0, int n, boolean isPt) {
+  public static void getHermiteList(int tension, T3d p0, T3d p1, T3d p2, T3d p3, T3d p4, T3d[] list, int index0, int n, boolean isPt) {
     //always deliver ONE MORE than one might expect, to provide a normal
     int nPoints = n + 1;
     double fnPoints = n - 1;
@@ -753,6 +694,4 @@ public class GData implements JmolGraphicsInterface {
   public void drawLinePixels(P3i sA, P3i sB, int z, int zslab) {
     return;
   }
-
-
 }

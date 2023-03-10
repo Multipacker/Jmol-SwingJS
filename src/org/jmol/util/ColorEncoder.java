@@ -34,7 +34,6 @@ import java.util.Hashtable;
 
 import java.util.Map;
 
-
 import org.jmol.script.T;
 import org.jmol.viewer.FileManager;
 import org.jmol.viewer.JC;
@@ -44,7 +43,6 @@ import org.jmol.c.PAL;
 import javajs.util.P3d;
 
 /*
- * 
  * just a simple class using crude color encoding
  * 
  * 
@@ -52,13 +50,10 @@ import javajs.util.P3d;
  * 
  * The idea was that isosurface would have access to user-defined applet-wide color schemes.
  * but what we have is a set of globals that any applet could use to mess up any other applet.
- * 
  */
 
-
- public class ColorEncoder {
-
-   private Viewer vwr;
+public class ColorEncoder {
+  private Viewer vwr;
 
   public ColorEncoder(ColorEncoder ce, Viewer vwr) {
     if (ce == null) {
@@ -83,7 +78,6 @@ import javajs.util.P3d;
   
   private final static int GRAY = 0xFF808080;
   
-
   public final static String BYELEMENT_PREFIX  = "byelement";
   public final static String BYRESIDUE_PREFIX = "byresidue";
   private final static String BYELEMENT_JMOL = BYELEMENT_PREFIX + "_jmol"; 
@@ -152,14 +146,12 @@ import javajs.util.P3d;
   private static int[] rasmolScale;
   public Map<String, int[]> schemes;
 
-
   public int currentPalette = ROYGB;
   public int currentSegmentCount = 1;
   public boolean isTranslucent = false;
   public double lo;
   public double hi;
   public boolean isReversed;
-
 
   //TODO  NONE OF THESE SHOULD BE STATIC:
   
@@ -170,19 +162,16 @@ import javajs.util.P3d;
   
   ColorEncoder ce;
 
-
   public static int[] argbsChainAtom;
   public static int[] argbsChainHetero;
 
   /**
-   * 
    * @param name
    * @param scale  if null, then this is a reset.
    * @param isOverloaded  if TRUE, 
    * @return  >= 0 for a default color scheme
    */
-  private synchronized int makeColorScheme(String name, int[] scale,
-                                                  boolean isOverloaded) {
+  private synchronized int makeColorScheme(String name, int[] scale, boolean isOverloaded) {
     // from getColorScheme, setUserScale, ColorManager.setDefaultColors
     name = fixName(name);
     if (scale == null) {
@@ -278,7 +267,6 @@ import javajs.util.P3d;
     return (argbsNucleic == null ? argbsNucleic = vwr.getJBR().getArgbs(T.nucleic) : argbsNucleic);
   }
    
-
   /**
    * 
    * @param colorScheme
@@ -287,8 +275,7 @@ import javajs.util.P3d;
    * @param isOverloaded
    * @return paletteID
    */
-  public int createColorScheme(String colorScheme, boolean defaultToRoygb,
-                               boolean isOverloaded) {
+  public int createColorScheme(String colorScheme, boolean defaultToRoygb, boolean isOverloaded) {
     // main method for creating a new scheme or modifying an old one
 
     if (colorScheme.equalsIgnoreCase("inherit"))
@@ -522,9 +509,7 @@ import javajs.util.P3d;
 
   }
   
-  public short getColorIndexFromPalette(double val, double lo,
-                                                     double hi, int palette,
-                                                     boolean isTranslucent) {
+  public short getColorIndexFromPalette(double val, double lo, double hi, int palette, boolean isTranslucent) {
     short colix = C.getColix(getArgbFromPalette(val, lo, hi, palette));
     if (isTranslucent) {
       double f = (hi - val) / (hi - lo); 
@@ -634,18 +619,15 @@ import javajs.util.P3d;
   // nonstatic methods:
   
   public int getArgb(double val) {
-    return (isReversed ? getArgbFromPalette(-val, -hi, -lo, currentPalette)
-        : getArgbFromPalette(val, lo, hi, currentPalette));
+    return (isReversed ? getArgbFromPalette(-val, -hi, -lo, currentPalette) : getArgbFromPalette(val, lo, hi, currentPalette));
   }
   
   public int getArgbMinMax(double val, double min, double max) {
-    return (isReversed ? getArgbFromPalette(-val, -max, -min, currentPalette)
-        : getArgbFromPalette(val, min, max, currentPalette));
+    return (isReversed ? getArgbFromPalette(-val, -max, -min, currentPalette) : getArgbFromPalette(val, min, max, currentPalette));
   }
   
   public short getColorIndex(double val) {
-    return (isReversed ? getColorIndexFromPalette(-val, -hi, -lo, currentPalette, isTranslucent)
-        : getColorIndexFromPalette(val, lo, hi, currentPalette, isTranslucent));
+    return (isReversed ? getColorIndexFromPalette(-val, -hi, -lo, currentPalette, isTranslucent) : getColorIndexFromPalette(val, lo, hi, currentPalette, isTranslucent));
   }
 
   public Map<String, Object> getColorKey() {
@@ -671,16 +653,9 @@ import javajs.util.P3d;
   }
 
   public String getColorScheme() {
-    return (isTranslucent ? "translucent " : "")
-        + (currentPalette < 0 ? getColorSchemeList(getColorSchemeArray(currentPalette))
-            : getColorSchemeName(currentPalette));
+    return (isTranslucent ? "translucent " : "") + (currentPalette < 0 ? getColorSchemeList(getColorSchemeArray(currentPalette)) : getColorSchemeName(currentPalette));
   }
 
-  /**
-   * 
-   * @param colorScheme
-   * @param isTranslucent
-   */
   public void setColorScheme(String colorScheme, boolean isTranslucent) {
     this.isTranslucent = isTranslucent;
     if (colorScheme != null)
@@ -850,5 +825,4 @@ import javajs.util.P3d;
     int i = (int) Math.floor(q <= 0 ? 0 : q);
     return i % segmentCount;
   }
-
 }

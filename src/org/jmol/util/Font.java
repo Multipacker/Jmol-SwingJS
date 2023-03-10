@@ -23,11 +23,9 @@
  */
 package org.jmol.util;
 
-
 import org.jmol.api.FontManager;
 
 import javajs.util.AU;
-
 
 /**
  *<p>
@@ -41,7 +39,6 @@ import javajs.util.AU;
  * @author Miguel, miguel@jmol.org
  */
 final public class Font {
-
   public final int fid;
   public final String fontFace;
   public final String fontStyle;
@@ -57,8 +54,7 @@ final public class Font {
   private boolean isBold;
   private boolean isItalic;
   
-  private Font(FontManager manager, int fid, int idFontFace,
-      int idFontStyle, double fontSize, double fontSizeNominal, Object graphics) {
+  private Font(FontManager manager, int fid, int idFontFace, int idFontStyle, double fontSize, double fontSizeNominal, Object graphics) {
     this.manager = manager;
     this.fid = fid;
     this.fontFace = fontFaces[idFontFace];
@@ -74,8 +70,6 @@ final public class Font {
     fontMetrics = manager.getFontMetrics(this, graphics);
     descent = manager.getFontDescent(fontMetrics);
     ascent = manager.getFontAscent(fontMetrics);
-
-    //System.out.println("font3d constructed for fontsizeNominal=" + fontSizeNominal + "  and fontSize=" + fontSize);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -94,26 +88,20 @@ final public class Font {
                                                double fontsizeNominal,
                                                FontManager manager,
                                                Object graphicsForMetrics) {
-    //if (graphicsForMetrics == null)
-    // return null;
     if (fontsize > 0xFF)
       fontsize = 0xFF;
     int fontsizeX16 = ((int) fontsize) << 4;
-    int fontkey = ((fontface & 3) | ((fontstyle & 3) << 2)
-        | (fontsizeX16 << 4));
+    int fontkey = ((fontface & 3) | ((fontstyle & 3) << 2) | (fontsizeX16 << 4));
     // watch out for race condition here!
     for (int i = fontkeyCount; --i > 0;)
-      if (fontkey == fontkeys[i]
-          && font3ds[i].fontSizeNominal == fontsizeNominal)
+      if (fontkey == fontkeys[i] && font3ds[i].fontSizeNominal == fontsizeNominal)
         return font3ds[i];
     int fontIndexNext = fontkeyCount++;
     if (fontIndexNext == fontkeys.length) {
       fontkeys = AU.arrayCopyI(fontkeys, fontIndexNext + FONT_ALLOCATION_UNIT);
-      font3ds = (Font[]) AU.arrayCopyObject(font3ds,
-          fontIndexNext + FONT_ALLOCATION_UNIT);
+      font3ds = (Font[]) AU.arrayCopyObject(font3ds, fontIndexNext + FONT_ALLOCATION_UNIT);
     }
-    Font font3d = new Font(manager, fontIndexNext, fontface, fontstyle,
-        fontsize, fontsizeNominal, graphicsForMetrics);
+    Font font3d = new Font(manager, fontIndexNext, fontface, fontstyle, fontsize, fontsizeNominal, graphicsForMetrics);
     // you must set the font3d before setting the fontkey in order
     // to prevent a race condition with getFont3D
     font3ds[fontIndexNext] = font3d;
@@ -137,9 +125,7 @@ final public class Font {
   {"Plain", "Bold", "Italic", "BoldItalic"};
   
   public static int getFontFaceID(String fontface) {
-    return ("Monospaced".equalsIgnoreCase(fontface) ? FONT_FACE_MONO 
-        : "Serif".equalsIgnoreCase(fontface) ? FONT_FACE_SERIF 
-        : FONT_FACE_SANS);
+    return ("Monospaced".equalsIgnoreCase(fontface) ? FONT_FACE_MONO : "Serif".equalsIgnoreCase(fontface) ? FONT_FACE_SERIF : FONT_FACE_SANS);
   }
 
   public static int getFontStyleID(String fontstyle) {
@@ -178,6 +164,3 @@ final public class Font {
     return "[" + getInfo() + "]";
   }
 }
-
-
-

@@ -4,7 +4,6 @@ import java.util.Comparator;
 
 /**
  * sort from smallest to largest absolute
- * 
  */
 class EigenSort implements Comparator<Object> {
   @Override

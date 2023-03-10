@@ -47,12 +47,9 @@ import javajs.util.SB;
 import javajs.util.T3d;
 import javajs.util.V3d;
 
-
-
 public class Escape {
-
   public static String escapeColor(int argb) {
-    return (argb == 0 ? null  :  "[x" + getHexColorFromRGB(argb) + "]");
+    return (argb == 0 ? null : "[x" + getHexColorFromRGB(argb) + "]");
   }
 
   public static String getHexColorFromRGB(int argb) {
@@ -87,8 +84,7 @@ public class Escape {
     return "{" + x.x + " " + x.y + " " + x.z + " " + x.w + "}";
   }
 
-  public static String drawQuat(Qd q, String prefix, String id, P3d ptCenter, 
-                         double scale) {
+  public static String drawQuat(Qd q, String prefix, String id, P3d ptCenter, double scale) {
     String strV = " VECTOR " + eP(ptCenter) + " ";
     if (scale == 0)
       scale = 1d;
@@ -181,26 +177,7 @@ public class Escape {
     return sb.toString();
   }
   
-//  /**
-//   * 
-//   * @param f
-//   * @param asArray -- FALSE allows bypassing of escape(Object f); TRUE: unnecssary
-//   * @return tabular string
-//   */
-//  public static String escapeFloatA(float[] f, boolean asArray) {
-//    if (asArray)
-//      return PT.toJSON(null, f); // or just use escape(f)
-//    SB sb = new SB();
-//    for (int i = 0; i < f.length; i++) {
-//      if (i > 0)
-//        sb.appendC('\n');
-//      sb.appendF(f[i]);
-//    }
-//    return sb.toString();
-//  }
-  
   /**
-   * 
    * @param f
    * @param asArray -- FALSE allows bypassing of escape(Object f); TRUE: unnecssary
    * @return tabular string
@@ -217,19 +194,6 @@ public class Escape {
     return sb.toString();
   }
 
-//  public static String escapeFloatAA(float[][] f, boolean addSemi) {
-//    SB sb = new SB();
-//    String eol = (addSemi ? ";\n" : "\n");
-//    for (int i = 0; i < f.length; i++)
-//      if (f[i] != null) {
-//        if (i > 0)
-//          sb.append(eol);
-//        for (int j = 0; j < f[i].length; j++)
-//          sb.appendF(f[i][j]).appendC('\t');
-//      }
-//    return sb.toString();
-//  }
-//
   public static String escapeDoubleAA(double[][] f, boolean addSemi) {
     SB sb = new SB();
     String eol = (addSemi ? ";\n" : "\n");
@@ -264,29 +228,7 @@ public class Escape {
     return sb.toString();
   }
 
-//  public static String escapeFloatAAA(float[][][] f, boolean addSemi) {
-//    SB sb = new SB();
-//    String eol = (addSemi ? ";\n" : "\n");
-//    if (f[0] == null || f[0][0] == null)
-//      return "0 0 0" + eol;
-//    sb.appendI(f.length).append(" ")
-//      .appendI(f[0].length).append(" ")
-//      .appendI(f[0][0].length);
-//    for (int i = 0; i < f.length; i++)
-//      if (f[i] != null) {
-//        sb.append(eol);
-//        for (int j = 0; j < f[i].length; j++)
-//          if (f[i][j] != null) {
-//            sb.append(eol);
-//            for (int k = 0; k < f[i][j].length; k++)
-//              sb.appendF(f[i][j][k]).appendC('\t');
-//          }
-//      }
-//    return sb.toString();
-//  }
-
   /**
-   * 
    * @param list
    *          list of strings to serialize
    * @param nicely TODO
@@ -332,19 +274,6 @@ public class Escape {
     }
     return s.append("]").toString();
   }
-
-//  public static String eAF(float[] flist) {
-//    if (flist == null)
-//      return PT.esc("");
-//    SB s = new SB();
-//    s.append("[");
-//    for (int i = 0; i < flist.length; i++) {
-//      if (i > 0)
-//        s.append(", ");
-//      s.appendF(flist[i]);
-//    }
-//    return s.append("]").toString();
-//  }
 
   public static String eAP(T3d[] plist) {
     if (plist == null)
@@ -407,31 +336,6 @@ public class Escape {
       return P4d.new4(points[0], points[1], points[2], points[3]);
     return strPoint;
   }
-//
-//  public static Object unescapeMatrix(String strMatrix) {
-//    if (strMatrix == null || strMatrix.length() == 0)
-//      return strMatrix;
-//    String str = strMatrix.replace('\n', ' ').trim();
-//    if (str.lastIndexOf("[[") != 0 || str.indexOf("]]") != str.length() - 2)
-//      return strMatrix;
-//    float[] points = new float[16];
-//    str = str.substring(2, str.length() - 2).replace('[',' ').replace(']',' ').replace(',',' ');
-//    int[] next = new int[1];
-//    int nPoints = 0;
-//    for (; nPoints < 16; nPoints++) {
-//      points[nPoints] = PT.parseDoubleNext(str, next);
-//      if (Double.isNaN(points[nPoints])) {
-//        break;
-//      }
-//    }
-//    if (!Double.isNaN(PT.parseDoubleNext(str, next)))
-//      return strMatrix; // overflow
-//    if (nPoints == 9)
-//      return M3.newA9(points);
-//    if (nPoints == 16)
-//      return M4.newA16(points);
-//    return strMatrix;
-//  }
   
   public static Object unescapeMatrixD(String strMatrix) {
     if (strMatrix == null || strMatrix.length() == 0)
@@ -458,20 +362,6 @@ public class Escape {
     return strMatrix;
   }
 
-/*
-  public static Object unescapeArray(String strArray) {
-    if (strArray == null || strArray.length() == 0)
-      return strArray;
-    String str = strArray.replace('\n', ' ').replace(',', ' ').trim();
-    if (str.lastIndexOf("[") != 0 || str.indexOf("]") != str.length() - 1)
-      return strArray;
-    float[] points = Parser.parseDoubleArray(str);
-    for (int i = 0; i < points.length; i++)
-      if (Double.isNaN(points[i]))
-        return strArray;
-    return points;
-  }
-*/
   public static String eBS(BS bs) {
     return BS.escape(bs, '(', ')');
   }
@@ -518,16 +408,6 @@ public class Escape {
       sb.append("]");
       return packageReadableSb(name, "int[" + imax + "]", sb);
     }
-//    if (AU.isAF(info)) {
-//      sb.append("[");
-//      int imax = ((float[]) info).length;
-//      for (int i = 0; i < imax; i++) {
-//        sb.append(sep).appendF(((float[]) info)[i]);
-//        sep = ",";
-//      }
-//      sb.append("]");
-//      return packageReadableSb(name, "float[" + imax + "]", sb);
-//    }
     if (AU.isAD(info)) {
       sb.append("[");
       int imax = ((double[]) info).length;
@@ -585,8 +465,7 @@ public class Escape {
       }
       return packageReadableSb(name, "List[" + imax + "]", sb);
     }
-    if (info instanceof M34d
-        || info instanceof T3d) {
+    if (info instanceof M34d || info instanceof T3d) {
       sb.append(e(info));
       return packageReadableSb(name, null, sb);
     }
@@ -602,13 +481,11 @@ public class Escape {
     return packageReadable(name, null, PT.toJSON(null, info));
   }
 
-  private static String packageReadableSb(String infoName, String infoType,
-                                        SB sb) {
+  private static String packageReadableSb(String infoName, String infoType, SB sb) {
     return packageReadable(infoName, infoType, sb.toString());
   }
   
-  private static String packageReadable(String infoName, String infoType,
-                                        String info) {
+  private static String packageReadable(String infoName, String infoType, String info) {
     String s = (infoType == null ? "" : infoType + "\t");
     if (infoName == null)
       return s + info;
@@ -638,15 +515,6 @@ public class Escape {
     return "  DATA \"" + name + "\"\n" + s + "    END \"" + name + "\";\n";
     
   }
-
-//  public static String escapeXml(Object value) {
-//    if (value instanceof String)
-//      return XmlUtil.wrapCdata(value.toString());
-//    String s = "" + value;
-//    if (s.length() == 0 || s.charAt(0) != '[')
-//      return s;
-//    return XmlUtil.wrapCdata(toReadable(null, value));
-//  }
 
   public static String unescapeUnicode(String s) {
     int ichMax = s.length();
@@ -710,7 +578,6 @@ public class Escape {
     return v.toArray(new String[v.size()]);
   }
 
-
   /**
    * Jmol-specific post-processing of 
    * the array data returned by Measure.computeHelicalAxis
@@ -723,7 +590,6 @@ public class Escape {
    * @return various objects depending upon tokType
    */
   public static Object escapeHelical(String id, int tokType, P3d a, P3d b, T3d[] pts) {
-    // new T3[] { pt_a_prime, n, r, P3.new3(theta, pitch, residuesPerTurn), pt_b_prime };
     switch (tokType) {
     case T.point:
       return (pts == null ? new P3d() : pts[0]);
@@ -733,16 +599,11 @@ public class Escape {
     case T.angle:
       return Double.valueOf(pts == null ? Double.NaN : pts[3].x);
     case T.draw:
-      return (pts == null ? "" : "draw ID \"" + id + "\" VECTOR "
-          + Escape.eP(pts[0]) + " " + Escape.eP(pts[1]) + " color "
-          + (pts[3].x < 0 ? "{255.0 200.0 0.0}" : "{255.0 0.0 128.0}"));
+      return (pts == null ? "" : "draw ID \"" + id + "\" VECTOR " + Escape.eP(pts[0]) + " " + Escape.eP(pts[1]) + " color " + (pts[3].x < 0 ? "{255.0 200.0 0.0}" : "{255.0 0.0 128.0}"));
     case T.measure:
-      return (pts == null ? "" : "measure " + Escape.eP(a) + Escape.eP(pts[0])
-          + Escape.eP(pts[4]))
-          + Escape.eP(b);
+      return (pts == null ? "" : "measure " + Escape.eP(a) + Escape.eP(pts[0]) + Escape.eP(pts[4])) + Escape.eP(b);
     default:
       return (pts == null ? new T3d[0] : pts);
     }
   }
-
 }

@@ -32,9 +32,7 @@ import javajs.util.PT;
 import org.jmol.c.VDW;
 import javajs.util.BS;
 
-
 public class Elements {
-
   /**
    * The default elementSymbols. Presumably the only entry which may cause
    * confusion is element 0, whose symbol we have defined as "Xx". 

@@ -1,6 +1,5 @@
 package org.jmol.util;
 
-
 import javajs.util.P3d;
 import javajs.util.V3d;
 
@@ -114,5 +113,4 @@ public class ContactPair {
   public String toString() {
     return "type=" + T.nameOf(contactType) + " " + myAtoms[0] + " " + myAtoms[1] + " dAB=" + d + " score=" +  score + " chord=" + chord + " volume=" + volume;
   }
-
 }
