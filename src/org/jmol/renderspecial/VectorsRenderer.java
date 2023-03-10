@@ -25,7 +25,6 @@
 
 package org.jmol.renderspecial;
 
-
 import javajs.util.P3d;
 import javajs.util.P3i;
 import javajs.util.V3d;
@@ -41,7 +40,6 @@ import org.jmol.util.Point3fi;
 import org.jmol.util.Vibration;
 
 public class VectorsRenderer extends ShapeRenderer {
-
   private final static double arrowHeadOffset = -0.2d;
   private final Point3fi ptTemp = new Point3fi();
   private final P3d pointVectorStart = new P3d();
@@ -55,7 +53,6 @@ public class VectorsRenderer extends ShapeRenderer {
   
   
   private int diameter;
-  //double headWidthAngstroms;
   private int headWidthPixels;
   private double vectorScale;
   private boolean vectorSymmetry;
@@ -70,7 +67,6 @@ public class VectorsRenderer extends ShapeRenderer {
   private int vectorTrail;
   private P3d ptTemp4;
   private P3d ptTemp2;
-
 
   @Override
   protected boolean render() {
@@ -151,8 +147,7 @@ public class VectorsRenderer extends ShapeRenderer {
     return needTranslucent;
   }
 
-  private boolean transform(short mad, Atom atom, Vibration vib,
-                            JmolModulationSet mod2) {
+  private boolean transform(short mad, Atom atom, Vibration vib, JmolModulationSet mod2) {
     boolean isMod = (vib == null || vib.modDim >= 0);
     boolean isSpin = (!isMod && vib.modDim == Vibration.TYPE_SPIN);
     if (vib == null)
@@ -193,15 +188,6 @@ public class VectorsRenderer extends ShapeRenderer {
       headOffsetVector.scale(headScale / headOffsetVector.length());
     } else if (vectorsCentered || isSpin) {
       standardVector = false;
-      //     Vibration v;
-      //     if (mod2 == null || !mod2.isEnabled()) {
-      //       v = vib; 
-      //      } else {
-      //        v = vibTemp;
-      //        vibTemp.set(0,  0,  0);
-      //        v.setTempPoint(vibTemp, null, 1, vwr.g.modulationScale);
-      //        vwr.tm.getVibrationPoint(vib, v, Double.NaN);
-      //      }
       pointVectorEnd.scaleAdd2(0.5d * vectorScale, vib, ptTemp);
       pointVectorStart.scaleAdd2(-0.5d * vectorScale, vib, ptTemp);
     } else {
@@ -227,8 +213,7 @@ public class VectorsRenderer extends ShapeRenderer {
         pointArrowHead.setT(pointVectorEnd);
       tm.transformPtScrT3(pointArrowHead, screenArrowHead);
     }
-    diameter = (int) (mad < 0 ? -mad : mad < 1 ? 1 : vwr.tm.scaleToScreen(
-        (int) screenVectorEnd.z, mad));
+    diameter = (int) (mad < 0 ? -mad : mad < 1 ? 1 : vwr.tm.scaleToScreen( (int) screenVectorEnd.z, mad));
     headWidthPixels = diameter << 1;
     if (headWidthPixels < diameter + 2)
       headWidthPixels = diameter + 2;
@@ -263,7 +248,6 @@ public class VectorsRenderer extends ShapeRenderer {
         g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screenVectorStart, screenArrowHead);
     }
     if (drawCap)
-      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels, screenArrowHead,
-          screenVectorEnd, false);
+      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels, screenArrowHead, screenVectorEnd, false);
   }
 }

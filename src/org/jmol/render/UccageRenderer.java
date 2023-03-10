@@ -23,8 +23,6 @@
  */
 package org.jmol.render;
 
-//import java.text.NumberFormat;
-
 import javajs.util.DF;
 import javajs.util.Lst;
 import javajs.util.P3d;
@@ -43,7 +41,6 @@ import org.jmol.viewer.JC;
 import org.jmol.viewer.StateManager;
 
 public class UccageRenderer extends CageRenderer {
-
   private final P3d[] verticesT = new P3d[8]; 
 
   @Override
@@ -59,8 +56,7 @@ public class UccageRenderer extends CageRenderer {
     imageFontScaling = vwr.imageFontScaling;
     font3d = vwr.gdata.getFont3DScaled(((Uccage) shape).font3d, imageFontScaling);
     int mad10 = vwr.getObjectMad10(StateManager.OBJ_UNITCELL);
-    if (mad10 == 0 || vwr.isJmolDataFrame() || tm.isNavigating()
-        && vwr.getBoolean(T.navigationperiodic))
+    if (mad10 == 0 || vwr.isJmolDataFrame() || tm.isNavigating() && vwr.getBoolean(T.navigationperiodic))
       return false;
     colix = vwr.getObjectColix(StateManager.OBJ_UNITCELL);
     boolean needTranslucent = C.renderPass2(colix);
@@ -136,8 +132,7 @@ public class UccageRenderer extends CageRenderer {
       allow1 = 0xFF;
       P3d[] pts = BoxInfo.unitCubePoints;
       for (int i = 8; --i >= 0;) {
-        P3d v = P3d.new3(pts[i].x * (cell1.x - cell0.x),
-            pts[i].y * (cell1.y - cell0.y), pts[i].z * (cell1.z - cell0.z));
+        P3d v = P3d.new3(pts[i].x * (cell1.x - cell0.x), pts[i].y * (cell1.y - cell0.y), pts[i].z * (cell1.z - cell0.z));
         unitcell.toCartesian(v, true);
         verticesT[i].add2(v, offsetT);
       }
@@ -162,8 +157,7 @@ public class UccageRenderer extends CageRenderer {
             allow1 = 0xFF;
             for (int i = 8; --i >= 0;)
               verticesT[i].add2(vertices[i], offsetT);
-            renderCage(mad10, verticesT, faces, aPoints, firstLine, allow0,
-                allow1, scale);
+            renderCage(mad10, verticesT, faces, aPoints, firstLine, allow0, allow1, scale);
           }
         }
       }
@@ -181,8 +175,7 @@ public class UccageRenderer extends CageRenderer {
     ypos = lineheight = (int) Math.floor(15 * imageFontScaling);
 
     if (!unitcell.isSimple()) {
-      String sgName = (isPolymer ? "polymer"
-          : isSlab ? "slab" : unitcell.getSpaceGroupName());
+      String sgName = (isPolymer ? "polymer" : isSlab ? "slab" : unitcell.getSpaceGroupName());
       if (sgName != null) {
         if (sgName.startsWith("cell=!"))
           sgName = "cell=inverse[" + sgName.substring(6) + "]";
@@ -223,6 +216,4 @@ public class UccageRenderer extends CageRenderer {
       s += DF.formatDecimal(unitcell.getUnitCellInfoType(type), 3) + post;
     g3d.drawStringNoSlab(s, null, xpos, ypos, 0, (short) 0);
   }
-
 }
-

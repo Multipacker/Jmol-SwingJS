@@ -46,12 +46,13 @@ public class StrandsRenderer extends BioShapeRenderer {
   }
 
   protected boolean setStrandCount() {
-    if (wingVectors == null)
+    if (wingVectors == null) {
       return false;
+	}
+
     strandCount = (shape instanceof Strands ? vwr.getStrandCount(((Strands) shape).shapeID) : 10);
     strandSeparation = (strandCount <= 1) ? 0 : 1d / (strandCount - 1);
-    baseStrandOffset = ((strandCount & 1) == 0 ? strandSeparation / 2
-        : strandSeparation);
+    baseStrandOffset = ((strandCount & 1) == 0 ? strandSeparation / 2 : strandSeparation);
     return true;
   }
 
@@ -74,7 +75,8 @@ public class StrandsRenderer extends BioShapeRenderer {
   }
 
   private void renderStrand(P3d[] screens) {
-    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible.nextSetBit(i + 1))
+    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible.nextSetBit(i + 1)) {
       renderHermiteCylinder(screens, i);
+	}
   }
 }

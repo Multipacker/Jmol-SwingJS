@@ -23,7 +23,6 @@
  */
 package org.jmol.renderspecial;
 
-
 import javajs.util.P3d;
 import javajs.util.P3i;
 import javajs.util.T3d;
@@ -40,7 +39,6 @@ import org.jmol.util.GData;
 import org.jmol.util.MeshSurface;
 
 public class PolyhedraRenderer extends ShapeRenderer {
-
   private int drawEdges;
   private boolean isAll;
   private boolean frontOnly, edgesOnly;
@@ -61,9 +59,11 @@ public class PolyhedraRenderer extends ShapeRenderer {
     vibs = (ms.vibrations != null && tm.vibrationOn);
     showNumbers = vwr.getBoolean(T.testflag3);
     boolean needTranslucent = false;
-    for (int i = polyhedra.polyhedronCount; --i >= 0;) 
-      if (polyhedrons[i].isValid && render1(polyhedrons[i]))
+    for (int i = polyhedra.polyhedronCount; --i >= 0;) {
+      if (polyhedrons[i].isValid && render1(polyhedrons[i])) {
         needTranslucent = true;
+	  }
+	}
     return needTranslucent;
   }
 
@@ -76,8 +76,7 @@ public class PolyhedraRenderer extends ShapeRenderer {
     double scale = 1;
     if (p.id == null) {
       iAtom = p.centralAtom.i;
-      colix = (colixes == null || iAtom >= colixes.length ? C.INHERIT_ALL
-          : colixes[iAtom]);
+      colix = (colixes == null || iAtom >= colixes.length ? C.INHERIT_ALL : colixes[iAtom]);
       colix = C.getColixInherited(colix, p.centralAtom.colixAtom);
     } else {
       colix = p.colix;
@@ -114,8 +113,9 @@ public class PolyhedraRenderer extends ShapeRenderer {
 
     if (screens3f == null || screens3f.length < vertices.length) {
       screens3f = new P3d[vertices.length];
-      for (int i = vertices.length; --i >= 0;)
+      for (int i = vertices.length; --i >= 0;) {
         screens3f[i] = new P3d();
+	  }
     }
     P3d[] sc = this.screens3f;
     int[][] planes = p.triangles;
@@ -125,33 +125,25 @@ public class PolyhedraRenderer extends ShapeRenderer {
       P3d v = sc[i];
       if (atom == null) {
         tm.transformPtScrT3(vertices[i], v);
-        //      } else if (atom.isVisible(myVisibilityFlag)) {
-        //      v.set(atom.sX, atom.sY, atom.sZ);
       } else if (vibs && atom.hasVibration()) {
         scrVib = tm.transformPtVib(atom, ms.vibrations[atom.i]);
         v.set(scrVib.x, scrVib.y, scrVib.z);
       } else {
         tm.transformPt3f(atom, v);
       }
-      if (elemNos != null
-          && i < elemNos.length
-          && g3d.setC(elemNos[i] < 0 ? colix : vwr.cm.setElementArgb(
-              elemNos[i], Integer.MAX_VALUE))) {
-        g3d.fillSphereBits(
-            (int) tm.scaleToScreen((int) v.z, (int) (p.pointScale * 1000)), v);
+      if (elemNos != null && i < elemNos.length && g3d.setC(elemNos[i] < 0 ? colix : vwr.cm.setElementArgb(elemNos[i], Integer.MAX_VALUE))) {
+        g3d.fillSphereBits((int) tm.scaleToScreen((int) v.z, (int) (p.pointScale * 1000)), v);
         g3d.setC(colix);
       }
       if (showNumbers) {
         if (g3d.setC(C.BLACK)) {
-          g3d.drawStringNoSlab("" + i, null, (int) v.x, (int) v.y,
-              (int) v.z - 30, (short) 0);
+          g3d.drawStringNoSlab("" + i, null, (int) v.x, (int) v.y, (int) v.z - 30, (short) 0);
           g3d.setC(colix);
         }
       }
     }
 
-    boolean isSelected = (iAtom >= 0 && bsSelected != null && bsSelected
-        .get(iAtom));
+    boolean isSelected = (iAtom >= 0 && bsSelected != null && bsSelected.get(iAtom));
     isAll = (drawEdges == Polyhedra.EDGES_ALL || isSelected);
     frontOnly = (drawEdges == Polyhedra.EDGES_FRONT);
     edgesOnly = (drawEdges == Polyhedra.EDGES_ONLY);
@@ -172,16 +164,12 @@ public class PolyhedraRenderer extends ShapeRenderer {
         for (int i = planes.length; --i >= 0;) {
           int[] pl = planes[i];
           try {
-            if (!showNumbers
-                || g3d.setC((short) (Math.round(Math.random() * 10) + 5)))
-              g3d.fillTriangleTwoSided(normixes[i], sc[pl[0]], sc[pl[1]],
-                  sc[pl[2]]);
+            if (!showNumbers || g3d.setC((short) (Math.round(Math.random() * 10) + 5)))
+              g3d.fillTriangleTwoSided(normixes[i], sc[pl[0]], sc[pl[1]], sc[pl[2]]);
           } catch (Exception e) {
             System.out.println("PolyhedraRendererError");
           }
         }
-        //        if (pl[3] >= 0)
-        //        g3d.fillTriangleTwoSided(normixes[i], sc[pl[2]], sc[pl[3]], sc[pl[0]]);
       }
     }
     // edges are not drawn translucently ever
@@ -193,14 +181,7 @@ public class PolyhedraRenderer extends ShapeRenderer {
       if (g3d.setC(C.getColixTranslucent3(colix, false, 0)))
         for (int i = planes.length; --i >= 0;) {
           int[] pl = planes[i];
-          //       if (pl[3] < 0) {
           drawEdges(normixes[i], sc[pl[0]], sc[pl[1]], sc[pl[2]], -pl[3]);
-          //          break;
-          //        } else {
-          //          drawFace(normixes[i], sc[pl[0]], sc[pl[1]], sc[pl[2]], 3);
-          //          drawFace(normixes[i], sc[pl[0]], sc[pl[2]], sc[pl[3]], 6);
-          //        }
-
         }
     }
     return needTranslucent;
@@ -217,6 +198,4 @@ public class PolyhedraRenderer extends ShapeRenderer {
         g3d.fillCylinderBits(GData.ENDCAPS_SPHERICAL, d, a, c);
     }
   }
-
-
 }

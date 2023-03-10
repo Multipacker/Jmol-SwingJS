@@ -31,24 +31,23 @@ import org.jmol.util.C;
 import org.jmol.viewer.JC;
 
 public class EchoRenderer extends LabelsRenderer {
-
-  private boolean haveTranslucent;
-
   @Override
   protected boolean render() {
-    if (vwr.isPreviewOnly)
+    if (vwr.isPreviewOnly) {
       return false;
+	}
+
     Echo echo = (Echo) shape;
-    sppm = (vwr.getBoolean(T.fontscaling) ? vwr
-        .getScalePixelsPerAngstrom(true) * 10000 : 0);
+    sppm = (vwr.getBoolean(T.fontscaling) ? vwr.getScalePixelsPerAngstrom(true) * 10000 : 0);
     imageFontScaling = vwr.imageFontScaling;
-    haveTranslucent = false;
+    boolean haveTranslucent = false;
     int alias = (g3d.isAntialiased() ? TextRenderer.MODE_IS_ANTIALIASED : 0);
     for (Text t : echo.objects.values()) {
-      renderEcho(t, alias);
+      haveTranslucent |= renderEcho(t, alias);
     }
-    if (echo.scaleObject != null)
-      renderEcho(echo.scaleObject, alias);
+    if (echo.scaleObject != null) {
+      haveTranslucent |= renderEcho(echo.scaleObject, alias);
+	}
     if (!isExport) {
       String frameTitle = vwr.getFrameTitle();
       if (frameTitle != null && frameTitle.length() > 0) {
@@ -60,22 +59,27 @@ public class EchoRenderer extends LabelsRenderer {
     return haveTranslucent;
   }
   
-  private void renderEcho(Text t, int alias) {
+  private boolean renderEcho(Text t, int alias) {
+    boolean haveTranslucent = false;
     if (!t.visible || t.hidden) {
-      return;
+      return haveTranslucent;
     }
     if (t.pointerPt instanceof Atom) {
-      if (!((Atom) t.pointerPt).checkVisible())
-        return;
+      if (!((Atom) t.pointerPt).checkVisible()) {
+        return haveTranslucent;
+	  }
     }
-    if (t.valign == JC.ECHO_XYZ)
+    if (t.valign == JC.ECHO_XYZ) {
       TextRenderer.calcBarPixelsXYZ(tm, t, pt0i, true); 
-    if (t.pymolOffset != null)
+	}
+    if (t.pymolOffset != null) {
       t.getPymolScreenOffset(t.xyz, pt0i, zSlab, pTemp, sppm);
+	}
     else if (t.movableZPercent != Integer.MAX_VALUE) {
       int z = vwr.tm.zValueFromPercent(t.movableZPercent % 1000);
-      if (t.valign == JC.ECHO_XYZ && Math.abs(t.movableZPercent) >= 1000)
+      if (t.valign == JC.ECHO_XYZ && Math.abs(t.movableZPercent) >= 1000) {
         z = pt0i.z - vwr.tm.zValueFromPercent(0) + z;
+	  }
       t.setZs(z, z);
     }
     if (t.pointerPt == null) {
@@ -86,15 +90,19 @@ public class EchoRenderer extends LabelsRenderer {
       t.atomX = pt0i.x;
       t.atomY = pt0i.y;
       t.atomZ = pt0i.z;
-      if (t.zSlab == Integer.MIN_VALUE)
+      if (t.zSlab == Integer.MIN_VALUE) {
         t.zSlab = 1;
+	  }
     }
-    if (TextRenderer.render(tm, t, g3d, sppm, imageFontScaling, null, xy, pt2i, (short) 0, 0, alias)
-        && t.valign == JC.ECHO_BOTTOM
-        && t.align == JC.TEXT_ALIGN_RIGHT)
+    if (TextRenderer.render(tm, t, g3d, sppm, imageFontScaling, null, xy, pt2i, (short) 0, 0, alias) && t.valign == JC.ECHO_BOTTOM && t.align == JC.TEXT_ALIGN_RIGHT) {
       vwr.noFrankEcho = false;
-    if (C.renderPass2(t.bgcolix) || C.renderPass2(t.colix))
+	}
+
+    if (C.renderPass2(t.bgcolix) || C.renderPass2(t.colix)) {
       haveTranslucent = true;
+	}
+
+	return haveTranslucent;
   }
 
   private void renderFrameTitle(String frameTitle) {

@@ -36,10 +36,7 @@ import org.jmol.util.Geodesic;
 import javajs.util.P3i;
 import javajs.util.V3d;
 
-
-
 public class DotsRenderer extends ShapeRenderer {
-
   public boolean iShowSolid;
   
   public int screenLevel;
@@ -66,12 +63,10 @@ public class DotsRenderer extends ShapeRenderer {
   }
 
   protected void render1(Dots dots) {
-    //dots.timeBeginExecution = System.currentTimeMillis();
     if (!iShowSolid && !g3d.setC(C.BLACK)) // no translucent for dots
       return;
     int sppa = (int) vwr.getScalePixelsPerAngstrom(true);
-    screenLevel = (iShowSolid || sppa > 20 ? 3 : sppa > 10 ? 2 : sppa > 5 ? 1
-        : 0);
+    screenLevel = (iShowSolid || sppa > 20 ? 3 : sppa > 10 ? 2 : sppa > 5 ? 1 : 0);
     if (!iShowSolid)
       screenLevel += vwr.getInt(T.dotdensity) - 3;
     screenLevel = Math.max(Math.min(screenLevel, Dots.MAX_LEVEL), 0);
@@ -81,8 +76,7 @@ public class DotsRenderer extends ShapeRenderer {
     for (int i = dots.ec.getDotsConvexMax(); --i >= 0;) {
       Atom atom = ms.at[i];
       BS map = maps[i];
-      if (map == null || !isVisibleForMe(atom)
-          || !g3d.isInDisplayRange(atom.sX, atom.sY))
+      if (map == null || !isVisibleForMe(atom) || !g3d.isInDisplayRange(atom.sX, atom.sY))
         continue;
       try {
         double radius = dots.ec.getAppropriateRadius(i);
@@ -109,18 +103,14 @@ public class DotsRenderer extends ShapeRenderer {
         }
 
         if (nPoints != 0)
-          renderConvex(C.getColixInherited(dots.colixes[i], atom.colixAtom),
-              map, nPoints);
+          renderConvex(C.getColixInherited(dots.colixes[i], atom.colixAtom), map, nPoints);
       } catch (Exception e) {
         System.out.println("Dots rendering error");
         System.out.println(e.toString());
         // ignore -- some sort of fluke
       }
     }
-    //dots.timeEndExecution = System.currentTimeMillis();
-    //Logger.debug("dots rendering time = "+ gs.getExecutionWalltime());
   }
-  
 
   /**
    * generic renderer -- dots and geosurface

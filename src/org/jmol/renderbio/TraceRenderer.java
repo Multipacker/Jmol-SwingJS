@@ -29,15 +29,18 @@ import org.jmol.shapebio.BioShape;
 public class TraceRenderer extends StrandsRenderer {
   @Override
   protected void renderBioShape(BioShape bioShape) {
-    if (wireframeOnly)
+    if (wireframeOnly) {
       renderStrands();
-    else
+	}
+    else {
       renderTrace();
+	}
   }
 
   protected void renderTrace() {
     calcScreenControlPoints();
-    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible.nextSetBit(i + 1))
+    for (int i = bsVisible.nextSetBit(0); i >= 0; i = bsVisible.nextSetBit(i + 1)) {
       renderHermiteConic(i, false, 7);
+	}
   }
 }

@@ -40,10 +40,8 @@ import javajs.util.Lst;
 import javajs.util.P3d;
 import javajs.util.T3d;
 
-
 /**
  * extends CartoonRenderer for nucleics
- * 
  */
 public class NucleicRenderer {
 

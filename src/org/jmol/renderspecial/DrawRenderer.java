@@ -62,12 +62,10 @@ public class DrawRenderer extends MeshRenderer {
      * Each drawn object, draw.meshes[i], may consist of several polygons, one
      * for each MODEL FRAME. Or, it may be "fixed" and only contain one single
      * polygon.
-     * 
      */
     needTranslucent = false;
     imageFontScaling = vwr.imageFontScaling;
     Draw draw = (Draw) shape;
-    //isPrecision = true;//vwr.tm.perspectiveDepth;
     for (int i = draw.meshCount; --i >= 0;) {
       Mesh mesh = dmesh = (DrawMesh) draw.meshes[i];
       if (mesh == null) {
@@ -91,9 +89,7 @@ public class DrawRenderer extends MeshRenderer {
       }
       if (renderMesh2(mesh))
         renderInfo();
-      if (!isExport 
-          && mesh.visibilityFlags != 0
-          && vwr.getPickingMode() == ActionManager.PICKING_DRAW) {
+      if (!isExport && mesh.visibilityFlags != 0 && vwr.getPickingMode() == ActionManager.PICKING_DRAW) {
         if (!g3d.setC(C.getColixTranslucent3(C.GOLD, true, 0.5d)))
           needTranslucent = true;
         else
@@ -105,8 +101,7 @@ public class DrawRenderer extends MeshRenderer {
 
   @Override
   protected boolean isPolygonDisplayable(int i) {
-    return Draw.isPolygonDisplayable(dmesh, i)
-        && (dmesh.modelFlags == null || dmesh.bsMeshesVisible.get(i));
+    return Draw.isPolygonDisplayable(dmesh, i) && (dmesh.modelFlags == null || dmesh.bsMeshesVisible.get(i));
   }
 
   @Override
@@ -121,8 +116,7 @@ public class DrawRenderer extends MeshRenderer {
       return;
     }
     int nPoints = vertexCount;
-    boolean isCurved = ((drawType == EnumDrawType.CURVE
-        || drawType == EnumDrawType.ARROW || drawType == EnumDrawType.ARC) && vertexCount > 2);
+    boolean isCurved = ((drawType == EnumDrawType.CURVE || drawType == EnumDrawType.ARROW || drawType == EnumDrawType.ARC) && vertexCount > 2);
     if (width > 0 && isCurved || drawType == EnumDrawType.ARROW) {
       pt1f.set(0, 0, 0);
       int n = (drawType == EnumDrawType.ARC ? 2 : vertexCount);
@@ -130,8 +124,7 @@ public class DrawRenderer extends MeshRenderer {
         pt1f.add(vertices[i]);
       pt1f.scale(1d / n);
       tm.transformPtScr(pt1f, pt1i);
-      diameter = (int) vwr.tm.scaleToScreen(pt1i.z,
-          (int) Math.floor(width * 1000));
+      diameter = (int) vwr.tm.scaleToScreen(pt1i.z, (int) Math.floor(width * 1000));
       if (diameter == 0)
         diameter = 1;
     }
@@ -144,8 +137,7 @@ public class DrawRenderer extends MeshRenderer {
         // as a percent 
         // just a Point3f with z = -Double.MAX_VALUE
         for (int i = 0; i < 2; i++)
-          if (vertices[i].z == Double.MAX_VALUE
-              || vertices[i].z == -Double.MAX_VALUE)
+          if (vertices[i].z == Double.MAX_VALUE || vertices[i].z == -Double.MAX_VALUE)
             ptXY += i + 1;
         if (--ptXY < 2) {
           renderXyArrow(ptXY);
@@ -176,24 +168,19 @@ public class DrawRenderer extends MeshRenderer {
       if (dmesh.scale > 0)
         width *= dmesh.scale;
       if (width > 0)
-        diameter = (int) vwr.tm.scaleToScreen(pt1i.z,
-            (int) Math.floor(width * 1000));
+        diameter = (int) vwr.tm.scaleToScreen(pt1i.z, (int) Math.floor(width * 1000));
       if (diameter > 0 && (mesh.drawTriangles || mesh.fillTriangles)) {
         g3d.addRenderer(T.circle);
-        g3d.drawFilledCircle(colix, mesh.fillTriangles ? colix : 0, diameter,
-            pt1i.x, pt1i.y, pt1i.z);
+        g3d.drawFilledCircle(colix, mesh.fillTriangles ? colix : 0, diameter, pt1i.x, pt1i.y, pt1i.z);
       }
       return;
     case LINE_SEGMENT:
       for (int i = 0; i < nPoints - 1; i++)
-        drawEdge(i, i + 1, true, vertices[i], vertices[i + 1], screens[i],
-            screens[i + 1]);
+        drawEdge(i, i + 1, true, vertices[i], vertices[i + 1], screens[i], screens[i + 1]);
       return;
     case CURVE:
       break;
     case ARC:
-      //renderArrowHead(controlHermites[nHermites - 2], controlHermites[nHermites - 1], false);
-      // 
       // {pt1} {pt2} {ptref} {nDegreesOffset, theta, fractionalOffset}
       T3d ptRef = (vertexCount > 2 ? vertices[2] : Draw.randomPoint());
       double nDegreesOffset = (vertexCount > 3 ? vertices[3].x : 0);
@@ -201,8 +188,7 @@ public class DrawRenderer extends MeshRenderer {
       if (theta == 0)
         return;
       double fractionalOffset = (vertexCount > 3 ? vertices[3].z : 0);
-      nPoints = setArc(vertices[0], vertices[1], ptRef, nDegreesOffset, theta,
-          fractionalOffset, dmesh.scale);
+      nPoints = setArc(vertices[0], vertices[1], ptRef, nDegreesOffset, theta, fractionalOffset, dmesh.scale);
       if (dmesh.isVector && !dmesh.noHead) {
         renderArrowHead(pt0, pt1, 0.3d, false, false, dmesh.isBarb);
         tm.transformPtScr(pt1f, screens[nPoints - 1]);
@@ -223,8 +209,7 @@ public class DrawRenderer extends MeshRenderer {
           vertices[vertexCount - 2], vertices[vertexCount - 1],
           vertices[vertexCount - 1], vertices[vertexCount - 1],
           controlHermites, 0, nHermites, true);
-      renderArrowHead(controlHermites[nHermites - 2],
-          controlHermites[nHermites - 1], 0, false, false, dmesh.isBarb);
+      renderArrowHead(controlHermites[nHermites - 2], controlHermites[nHermites - 1], 0, false, false, dmesh.isBarb);
       break;
     }
     // CURVE ARC ARROW only
@@ -233,15 +218,12 @@ public class DrawRenderer extends MeshRenderer {
     if (isCurved) {
       g3d.addRenderer(T.hermitelevel);
       for (int i = 0, i0 = 0; i < nPoints - 1; i++) {
-        g3d.fillHermite(tension, diameter, diameter, diameter, p3Screens[i0],
-            p3Screens[i], p3Screens[i + 1], p3Screens[i
-                + (i == nPoints - 2 ? 1 : 2)]);
+        g3d.fillHermite(tension, diameter, diameter, diameter, p3Screens[i0], p3Screens[i], p3Screens[i + 1], p3Screens[i + (i == nPoints - 2 ? 1 : 2)]);
         i0 = i;
       }
     } else {
       render2b(false);
     }
-
   }
 
   private int setArc(T3d v1, T3d v2, T3d ptRef, double nDegreesOffset, double theta, double fractionalOffset, double scale) {

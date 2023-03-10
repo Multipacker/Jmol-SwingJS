@@ -37,7 +37,6 @@ import javajs.util.P3d;
 import javajs.util.P3i;
 
 public class LabelsRenderer extends FontLineShapeRenderer {
-
   // offsets are from the font baseline
 
   final int[] minZ = new int[1];
@@ -86,8 +85,9 @@ public class LabelsRenderer extends FontLineShapeRenderer {
     String[] labelStrings = labels.strings;
     int[] fids = labels.fids;
     int[] offsets = labels.offsets;
-    if (labelStrings == null)
+    if (labelStrings == null) {
       return false;
+	}
     Atom[] atoms = ms.at;
     short backgroundColixContrast = vwr.cm.colixBackgroundContrast;
     int backgroundColor = vwr.getBackgroundArgb();
@@ -99,19 +99,21 @@ public class LabelsRenderer extends FontLineShapeRenderer {
     boolean isAntialiased = g3d.isAntialiased();
     for (int i = labelStrings.length; --i >= 0;) {
       atomPt = atom = atoms[i];
-      if (!isVisibleForMe(atom))
+      if (!isVisibleForMe(atom)) {
         continue;
+	  }
+
       String label = labelStrings[i];
-      if (label == null || label.length() == 0 || labels.mads != null
-          && labels.mads[i] < 0)
+      if (label == null || label.length() == 0 || labels.mads != null && labels.mads[i] < 0) {
         continue;
+	  }
+
       labelColix = labels.getColix2(i, atom, false);
       bgcolix = labels.getColix2(i, atom, true);
-      if (bgcolix == 0
-          && vwr.gdata.getColorArgbOrGray(labelColix) == backgroundColor)
+      if (bgcolix == 0 && vwr.gdata.getColorArgbOrGray(labelColix) == backgroundColor) {
         labelColix = backgroundColixContrast;
-      fid = ((fids == null || i >= fids.length || fids[i] == 0) ? labels.zeroFontId
-          : fids[i]);
+	  }
+      fid = ((fids == null || i >= fids.length || fids[i] == 0) ? labels.zeroFontId : fids[i]);
       offset = (offsets == null || i >= offsets.length ? 0 : offsets[i]);
       boolean labelsFront = ((offset & JC.LABEL_ZPOS_FRONT) != 0);
       boolean labelsGroup = ((offset & JC.LABEL_ZPOS_GROUP) != 0);
@@ -121,8 +123,9 @@ public class LabelsRenderer extends FontLineShapeRenderer {
       int isAbsolute = offset & JC.LABEL_EXPLICIT;
       mode = (doPointer | isAbsolute | (isAntialiased ? TextRenderer.MODE_IS_ANTIALIASED : 0));
       zSlab = atom.sZ - atom.sD / 2 - 3;
-      if (zSlab < 1)
+      if (zSlab < 1) {
         zSlab = 1;
+	  }
       zBox = zSlab;
       if (labelsGroup) {
         Group group = atom.group;
@@ -135,13 +138,15 @@ public class LabelsRenderer extends FontLineShapeRenderer {
       } else if (labelsFront) {
         zBox = 1;
       }
-      if (zBox < 1)
+      if (zBox < 1) {
         zBox = 1;
+	  }
 
       Text text = labels.getLabel(i);
       boxXY = (!isExport || vwr.creatingImage ? labels.getBox(i) : new double[5]);
-      if (boxXY == null)
+      if (boxXY == null) {
         labels.putBox(i, boxXY = new double[5]);
+	  }
       text = renderLabelOrMeasure(text, label);
       if (text != null) {
         labels.putLabel(i, text);
@@ -157,11 +162,11 @@ public class LabelsRenderer extends FontLineShapeRenderer {
 
   protected Text renderLabelOrMeasure(Text text, String label) {
     boolean newText = false;
-    short pointerColix = ((pointer & JC.LABEL_POINTER_BACKGROUND) != 0
-        && bgcolix != 0 ? bgcolix : labelColix);
+    short pointerColix = ((pointer & JC.LABEL_POINTER_BACKGROUND) != 0 && bgcolix != 0 ? bgcolix : labelColix);
     if (text != null) {
-      if (text.font == null)
+      if (text.font == null) {
         text.setFontFromFid(fid);
+	  }
       text.atomX = atomPt.sX; // just for pointer
       text.atomY = atomPt.sY;
       text.atomZ = zSlab;
@@ -184,20 +189,14 @@ public class LabelsRenderer extends FontLineShapeRenderer {
           descent = font3d.getDescent();
         }
       }
-      boolean isSimple = isLeft
-          && (imageFontScaling == 1 && scalePixelsPerMicron == 0
-              && label.indexOf("|") < 0 && label.indexOf("\n") < 0 && label.indexOf("<su") < 0 && label
-              .indexOf("<co") < 0);
+      boolean isSimple = isLeft && (imageFontScaling == 1 && scalePixelsPerMicron == 0 && label.indexOf("|") < 0 && label.indexOf("\n") < 0 && label.indexOf("<su") < 0 && label.indexOf("<co") < 0);
       if (isSimple) {
         boxXY[0] = atomPt.sX;
         boxXY[1] = atomPt.sY;
-        TextRenderer.renderSimpleLabel(g3d, font3d, label, labelColix, bgcolix,
-            boxXY, zBox, zSlab, JC.getXOffset(offset), JC.getYOffset(offset),
-            ascent, descent, pointerColix, (doPointer == 0 ? 0 : vwr.getInt(T.labelpointerwidth)), mode);
+        TextRenderer.renderSimpleLabel(g3d, font3d, label, labelColix, bgcolix, boxXY, zBox, zSlab, JC.getXOffset(offset), JC.getYOffset(offset), ascent, descent, pointerColix, (doPointer == 0 ? 0 : vwr.getInt(T.labelpointerwidth)), mode);
         return null;
       }
-      text = Text.newLabel(vwr, font3d, label, labelColix, bgcolix, textAlign,
-          0);
+      text = Text.newLabel(vwr, font3d, label, labelColix, bgcolix, textAlign, 0);
       text.atomX = atomPt.sX; // just for pointer
       text.atomY = atomPt.sY;
       text.atomZ = zSlab;
@@ -205,15 +204,16 @@ public class LabelsRenderer extends FontLineShapeRenderer {
       newText = true;
     }
     if (text.pymolOffset == null) {
-      if (text.font == null)
+      if (text.font == null) {
         text.setFontFromFid(font3d.fid);
+	  }
       text.setOffset(offset);
-      if (textAlign != JC.TEXT_ALIGN_NONE)
+      if (textAlign != JC.TEXT_ALIGN_NONE) {
         text.setAlignment(textAlign);
+	  }
     }
     text.pointer = pointer;
-    TextRenderer.render(null, text, g3d, scalePixelsPerMicron, imageFontScaling,
-       boxXY, xy, null, pointerColix, (doPointer == 0 ? 0 : vwr.getInt(T.labelpointerwidth)), mode);
+    TextRenderer.render(null, text, g3d, scalePixelsPerMicron, imageFontScaling, boxXY, xy, null, pointerColix, (doPointer == 0 ? 0 : vwr.getInt(T.labelpointerwidth)), mode);
     return (newText ? text : null);
   }
 }

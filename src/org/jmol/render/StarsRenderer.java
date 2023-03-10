@@ -32,29 +32,35 @@ import org.jmol.shape.Stars;
 import org.jmol.util.GData;
 
 public class StarsRenderer extends ShapeRenderer {
-
   private int mar; // milliangstrom radius
   private int width;
 
   @Override
   protected boolean render() {
     Stars stars = (Stars) shape;
-    if (stars.mads == null)
+    if (stars.mads == null) {
       return false;
-    boolean needTranslucent = false;
+	}
+
     mar = (int) (vwr.getDouble(T.starwidth) * 1000);
-    if (mar == 0 && (g3d.isAntialiased() || isExport))
+    if (mar == 0 && (g3d.isAntialiased() || isExport)) {
       mar = 50;
+	}
     Atom[] atoms = ms.at;
+
+    boolean needTranslucent = false;
     for (int i = ms.ac; --i >= 0;) {
       Atom atom = atoms[i];
-      if (!isVisibleForMe(atom))
+      if (!isVisibleForMe(atom)) {
         continue;
+	  }
+
       colix = Shape.getColix(stars.colixes, i, atom);
-      if (g3d.setC(colix))
+      if (g3d.setC(colix)) {
         render1(atom, stars.mads[i]);
-      else
+	  } else {
         needTranslucent = true;
+	  }
     }
     return needTranslucent;
   }
@@ -66,14 +72,17 @@ public class StarsRenderer extends ShapeRenderer {
     int d = (int) vwr.tm.scaleToScreen(z, mad);
     d -= (d & 1) ^ 1; // round down to odd value
     int r = d / 2;
-    if (r < 1)
+    if (r < 1) {
       r = 1;
+	}
     if (mar > 0) {
       width = (int) vwr.tm.scaleToScreen(z, mar);
-      if (width == 0)
+      if (width == 0) {
         width = 1;
-      if (width == 1 && g3d.isAntialiased())
+	  }
+      if (width == 1 && g3d.isAntialiased()) {
         width = 2;
+	  }
     } else {
       // added to strengthen:
       drawLine(x - r - 1, y + 1, z, x - r - 1 + d, y + 1, z);
@@ -85,11 +94,10 @@ public class StarsRenderer extends ShapeRenderer {
   }
 
   private void drawLine(int xA, int yA, int zA, int xB, int yB, int zB) {
-    if (mar > 0)
-      g3d.fillCylinderXYZ(colix, colix, GData.ENDCAPS_FLAT, width, xA, yA, zA,
-          xB, yB, zB);
-    else
+    if (mar > 0) {
+      g3d.fillCylinderXYZ(colix, colix, GData.ENDCAPS_FLAT, width, xA, yA, zA, xB, yB, zB);
+	} else {
       g3d.drawLineXYZ(xA, yA, zA, xB, yB, zB);
+	}
   }
-
 }

@@ -23,18 +23,11 @@
  */
 package org.jmol.rendersurface;
 
-
-
 public class PmeshRenderer extends IsosurfaceRenderer {
-  
   @Override
   protected boolean render() {
     return renderIso();
   }
 
-
   // no changes to renderer
-  
-  ///g3d.setC((short) (Math.round(Math.random() * 10) + 5)))
-
 }

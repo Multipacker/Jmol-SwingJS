@@ -23,8 +23,5 @@
  */
 package org.jmol.rendersurface;
 
-
-
-
 public class ContactRenderer extends IsosurfaceRenderer {
 }

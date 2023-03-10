@@ -426,8 +426,7 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
       return;
     }
     for (int i = 1, pt = 3; i < 8; i += 2, pt += 6) {
-    //if (i == 3 || i == 7) 
-    	renderArc(octants[pt], octants[pt + 1]);
+      renderArc(octants[pt], octants[pt + 1]);
       renderArc(octants[pt + 1], octants[pt + 2]);
       renderArc(octants[pt + 2], octants[pt]);
     }
@@ -451,25 +450,19 @@ final public class EllipsoidsRenderer extends ShapeRenderer {
       pt2.scaleAdd2(cossin[pt + 1] * d2, v2, pt2);
       tm.transformPtScrT3(pt2, s2);
       if (fillArc) {
-//       colix = (short) Math.ceil(Math.random()  * 20);
-//        if (i < 4 && i > 1)
         g3d.fillTriangle3CNBits(s0, colix, normix, s1, colix, normix, s2, colix, normix, true);
-      }
-      else if (bOptions[OPT_WIREFRAME])
+      } else if (bOptions[OPT_WIREFRAME]) {
         g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, s1, s2);
-      else
+	  } else {
         screens[i + 7].setT(s2);
+	  }
       pt1.setT(pt2);
       s1.setT(s2);
     }
     if (!fillArc && !bOptions[OPT_WIREFRAME]) {
       g3d.addRenderer(T.hermitelevel);
       for (int i = 0; i < 18; i++) {
-        g3d.fillHermite(5, diameter, diameter, diameter, 
-            screens[i == 0 ? i + 6 : i + 5], 
-            screens[i + 6], 
-            screens[i + 7], 
-            screens[i == 17 ? i + 7 : i + 8]);
+        g3d.fillHermite(5, diameter, diameter, diameter, screens[i == 0 ? i + 6 : i + 5], screens[i + 6], screens[i + 7], screens[i == 17 ? i + 7 : i + 8]);
       }
     }
   }

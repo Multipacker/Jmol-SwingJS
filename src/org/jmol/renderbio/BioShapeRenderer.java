@@ -45,7 +45,6 @@ import javajs.util.V3d;
 /**
    * @author Alexander Rose
    * @author Bob Hanson
-   * 
  */
 abstract class BioShapeRenderer extends ShapeRenderer {
   //ultimately this renderer calls MeshRenderer.render1(mesh)
@@ -120,8 +119,6 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     val1 = (val1 <= 0 ? -val1 : vwr.getInMotion(true) ? 0 : val1);
     if (cartoonsFancy && !wireframeOnly)
       val1 = Math.max(val1, 3); // at least HermiteLevel 3 for "cartoonFancy" and 
-    //else if (val1 == 0 && exportType == GData.EXPORT_CARTESIAN)
-    //val1 = 5; // forces hermite for 3D exporters
     if (val1 != hermiteLevel)// && val1 != 0)
       invalidateMesh = true;
     hermiteLevel = Math.min(val1, 8);
@@ -138,8 +135,7 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     aspectRatio = val;
     if (aspectRatio > 0) {
       if (meshRenderer == null) {
-        meshRenderer = (BioMeshRenderer) Interface
-            .getInterface("org.jmol.renderbio.BioMeshRenderer");
+        meshRenderer = (BioMeshRenderer) Interface.getInterface("org.jmol.renderbio.BioMeshRenderer");
         meshRenderer.setViewerG3dShapeID(vwr, shape.shapeID);
       }
       meshRenderer.setup(g3d, ms, shape);
@@ -195,8 +191,7 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     if (ms.isJmolDataFrameForModel(bioShape.modelIndex)) {
       controlPoints = bioShape.bioPolymer.getControlPoints(true, 0, false);
     } else {
-      controlPoints = bioShape.bioPolymer.getControlPoints(isTraceAlpha,
-          sheetSmoothing, invalidateSheets);
+      controlPoints = bioShape.bioPolymer.getControlPoints(isTraceAlpha, sheetSmoothing, invalidateSheets);
     }
     monomerCount = bioShape.monomerCount;
     monomers = bioShape.monomers;
@@ -208,8 +203,7 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     if (invalidateMesh)
       bioShape.falsifyMesh();
     for (int i = monomerCount; --i >= 0;) {
-      if ((monomers[i].shapeVisibilityFlags & myVisibilityFlag) == 0
-          || ms.isAtomHidden(leadAtomIndices[i]) || bsDeleted != null && bsDeleted.get(leadAtomIndices[i]))
+      if ((monomers[i].shapeVisibilityFlags & myVisibilityFlag) == 0 || ms.isAtomHidden(leadAtomIndices[i]) || bsDeleted != null && bsDeleted.get(leadAtomIndices[i]))
         continue;
       Atom lead = ms.at[leadAtomIndices[i]];
       if (!g3d.isInDisplayRange(lead.sX, lead.sY))
@@ -275,24 +269,20 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     } else {
       double offset_1000 = offsetFraction / 1000d;
       for (int i = count; --i >= 0;)
-        calc1Screen(controlPoints[i], wingVectors[i],
-            (mads[i] == 0 && i > 0 ? mads[i - 1] : mads[i]), offset_1000,
-            screens[i]);
+        calc1Screen(controlPoints[i], wingVectors[i], (mads[i] == 0 && i > 0 ? mads[i - 1] : mads[i]), offset_1000, screens[i]);
     }
     return screens;
   }
 
   private final P3d pointT = new P3d();
 
-  private void calc1Screen(P3d center, V3d vector, short mad,
-                           double offset_1000, P3d screen) {
+  private void calc1Screen(P3d center, V3d vector, short mad, double offset_1000, P3d screen) {
     pointT.scaleAdd2(mad * offset_1000, vector, center);
     tm.transformPtScrT3(pointT, screen);
   }
 
   protected short getLeadColix(int i) {
-    return C.getColixInherited(colixes[i], monomers[i].getLeadAtom()
-        .colixAtom);
+    return C.getColixInherited(colixes[i], monomers[i].getLeadAtom().colixAtom);
   }
 
   protected short getLeadColixBack(int i) {
@@ -356,13 +346,10 @@ abstract class BioShapeRenderer extends ShapeRenderer {
         madEnd = (short) (((mads[iNext] == 0 ? madMid : mads[iNext]) + madMid) >> 1);
     }
     diameterBeg = (int) vwr.tm.scaleToScreen((int) controlPointScreens[i].z, madBeg);
-    diameterMid = (int) vwr.tm.scaleToScreen(monomers[i].getLeadAtom().sZ,
-        madMid);
+    diameterMid = (int) vwr.tm.scaleToScreen(monomers[i].getLeadAtom().sZ, madMid);
     diameterEnd = (int) vwr.tm.scaleToScreen((int) controlPointScreens[iNext].z, madEnd);
-    boolean doCap0 = (i == iPrev || !bsVisible.get(iPrev) || thisTypeOnly
-        && structureTypes[i] != structureTypes[iPrev]);
-    boolean doCap1 = (iNext == iNext2 || iNext2 == iNext3 || !bsVisible.get(iNext) || thisTypeOnly
-        && structureTypes[i] != structureTypes[iNext]);
+    boolean doCap0 = (i == iPrev || !bsVisible.get(iPrev) || thisTypeOnly && structureTypes[i] != structureTypes[iPrev]);
+    boolean doCap1 = (iNext == iNext2 || iNext2 == iNext3 || !bsVisible.get(iNext) || thisTypeOnly && structureTypes[i] != structureTypes[iNext]);
     return (aspectRatio > 0 && meshRenderer != null && meshRenderer.check(doCap0, doCap1));
   }
 
@@ -372,8 +359,7 @@ abstract class BioShapeRenderer extends ShapeRenderer {
     if (!setBioColix(colix))
       return;
     setNeighbors(i);
-    g3d.drawHermite4(isNucleic ? 4 : 7, screens[iPrev], screens[i],
-        screens[iNext], screens[iNext2]);
+    g3d.drawHermite4(isNucleic ? 4 : 7, screens[iPrev], screens[i], screens[iNext], screens[iNext2]);
   }
 
   protected void renderHermiteConic(int i, boolean thisTypeOnly, int tension) {
@@ -396,7 +382,6 @@ abstract class BioShapeRenderer extends ShapeRenderer {
   }
 
   /**
-   * 
    * @param doFill
    * @param i
    * @param thisTypeOnly true for Cartoon but not MeshRibbon

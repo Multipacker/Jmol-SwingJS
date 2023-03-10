@@ -25,11 +25,7 @@ package org.jmol.rendersurface;
 
 import org.jmol.script.T;
 
-//import java.text.NumberFormat;
-
-
 public class MolecularOrbitalRenderer extends IsosurfaceRenderer {
-
   @Override
   protected boolean render() {
     imageFontScaling = vwr.imageFontScaling;
@@ -39,10 +35,7 @@ public class MolecularOrbitalRenderer extends IsosurfaceRenderer {
 
   @Override
   protected void renderInfo() {
-    if (isExport || vwr.am.cmi < 0
-        || mesh.title == null 
-        || !g3d.setC(vwr.cm.colixBackgroundContrast)
-        || vwr.gdata.getTextPosition() != 0)
+    if (isExport || vwr.am.cmi < 0 || mesh.title == null || !g3d.setC(vwr.cm.colixBackgroundContrast) || vwr.gdata.getTextPosition() != 0)
       return;
     double ht = vwr.getInt(T.infofontsize);
     vwr.gdata.setFontBold("Serif", ht * imageFontScaling);
@@ -56,5 +49,4 @@ public class MolecularOrbitalRenderer extends IsosurfaceRenderer {
       }
     vwr.gdata.setTextPosition(y);
   }
-
 }

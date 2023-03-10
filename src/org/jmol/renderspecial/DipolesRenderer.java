@@ -25,11 +25,10 @@
 
 package org.jmol.renderspecial;
 
-
+import javajs.util.BS;
 import javajs.util.P3d;
 import javajs.util.V3d;
 
-import javajs.util.BS;
 import org.jmol.render.ShapeRenderer;
 import org.jmol.script.T;
 import org.jmol.shapespecial.Dipole;
@@ -38,7 +37,6 @@ import org.jmol.util.C;
 import org.jmol.util.GData;
 
 public class DipolesRenderer extends ShapeRenderer {
-
   private double dipoleVectorScale;
   private final V3d offset = new V3d();
   private final P3d[] screens3f = new P3d[6];
@@ -72,7 +70,6 @@ public class DipolesRenderer extends ShapeRenderer {
   private final static double crossOffset = 0.1d;
   private final static double crossWidth = 0.04d;
 
-
   @Override
   protected boolean render() {
     Dipoles dipoles = (Dipoles) shape;
@@ -94,8 +91,7 @@ public class DipolesRenderer extends ShapeRenderer {
     mad = dipole.mad;
     offsetSide = dipole.offsetSide;
     noCross = dipole.noCross;
-    colixA = (dipole.bond == null ? dipole.colix : C.getColixInherited(
-        dipole.colix, dipole.bond.colix));
+    colixA = (dipole.bond == null ? dipole.colix : C.getColixInherited( dipole.colix, dipole.bond.colix));
     colixB = colixA;
     if (dipole.atoms[0] != null) {
       colixA = C.getColixInherited(colixA, dipole.atoms[0].colixAtom);
@@ -112,8 +108,7 @@ public class DipolesRenderer extends ShapeRenderer {
     }
     double factor = dipole.offsetAngstroms / dipole.dipoleValue;
     if (dipole.lstDipoles == null)
-      return renderVector(dipole.vector, dipole.origin, dipole.center,
-          factor, false);
+      return renderVector(dipole.vector, dipole.origin, dipole.center, factor, false);
     boolean needTranslucent = false;
     for (int i = dipole.lstDipoles.size(); --i >= 0;) {
       Object[] o = (Object[]) dipole.lstDipoles.get(i);
@@ -147,22 +142,16 @@ public class DipolesRenderer extends ShapeRenderer {
         points[cylinderBase].add(offset);
       }
     }
-    points[cross].scaleAdd2(dipoleVectorScale * crossOffset, vector,
-        points[cylinderBase]);
-    points[crossEnd].scaleAdd2(dipoleVectorScale * (crossOffset + crossWidth),
-        vector, points[cylinderBase]);
-    points[center]
-        .scaleAdd2(dipoleVectorScale / 2, vector, points[cylinderBase]);
-    points[arrowHeadBase].scaleAdd2(dipoleVectorScale * arrowHeadOffset, vector,
-        points[cylinderBase]);
-    points[arrowHeadTip].scaleAdd2(dipoleVectorScale, vector,
-        points[cylinderBase]);
+    points[cross].scaleAdd2(dipoleVectorScale * crossOffset, vector, points[cylinderBase]);
+    points[crossEnd].scaleAdd2(dipoleVectorScale * (crossOffset + crossWidth), vector, points[cylinderBase]);
+    points[center].scaleAdd2(dipoleVectorScale / 2, vector, points[cylinderBase]);
+    points[arrowHeadBase].scaleAdd2(dipoleVectorScale * arrowHeadOffset, vector, points[cylinderBase]);
+    points[arrowHeadTip].scaleAdd2(dipoleVectorScale, vector, points[cylinderBase]);
 
     offset.setT(points[center]);
     offset.cross(offset, vector);
     if (offset.length() == 0) {
-      offset.set(points[center].x + 0.2345d, points[center].y + 0.1234d,
-          points[center].z + 0.4321f);
+      offset.set(points[center].x + 0.2345d, points[center].y + 0.1234d, points[center].z + 0.4321f);
       offset.cross(offset, vector);
     }
     offset.scale(offsetSide / offset.length());
@@ -182,31 +171,24 @@ public class DipolesRenderer extends ShapeRenderer {
     if (colix == colixB) {
       if (!g3d.setC(colix))
         return true;
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter,
-          screens3f[cylinderBase], screens3f[arrowHeadBase]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens3f[cylinderBase], screens3f[arrowHeadBase]);
       if (!noCross)
-        g3d.fillCylinderBits(GData.ENDCAPS_FLAT, crossWidthPixels, cross0,
-            cross1);
-      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels,
-          screens3f[arrowHeadBase], screens3f[arrowHeadTip], false);
+        g3d.fillCylinderBits(GData.ENDCAPS_FLAT, crossWidthPixels, cross0, cross1);
+      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels, screens3f[arrowHeadBase], screens3f[arrowHeadTip], false);
       return false;
     }
     boolean needTranslucent = false;
     if (g3d.setC(colix)) {
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter,
-          screens3f[cylinderBase], screens3f[center]);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens3f[cylinderBase], screens3f[center]);
       if (!noCross)
-        g3d.fillCylinderBits(GData.ENDCAPS_FLAT, crossWidthPixels, cross0,
-            cross1);
+        g3d.fillCylinderBits(GData.ENDCAPS_FLAT, crossWidthPixels, cross0, cross1);
     } else {
       needTranslucent = true;
     }
     colix = colixB;
     if (g3d.setC(colix)) {
-      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens3f[center],
-          screens3f[arrowHeadBase]);
-      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels,
-          screens3f[arrowHeadBase], screens3f[arrowHeadTip], false);
+      g3d.fillCylinderBits(GData.ENDCAPS_FLAT, diameter, screens3f[center], screens3f[arrowHeadBase]);
+      g3d.fillConeScreen3f(GData.ENDCAPS_FLAT, headWidthPixels, screens3f[arrowHeadBase], screens3f[arrowHeadTip], false);
     } else {
       needTranslucent = true;
     }

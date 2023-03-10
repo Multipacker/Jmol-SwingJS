@@ -23,8 +23,6 @@
  */
 package org.jmol.render;
 
-
-
 import org.jmol.api.SymmetryInterface;
 import org.jmol.script.T;
 import org.jmol.shape.Mesh;
@@ -48,7 +46,6 @@ import javajs.util.V3d;
  * an abstract class subclasssed by BioShapeRenderer, DrawRenderer, and IsosurfaceRenderer
  */
 public abstract class MeshRenderer extends ShapeRenderer {
-
   protected Mesh mesh;
   protected T3d[] vertices;
   protected short[] normixes;
@@ -62,7 +59,6 @@ public abstract class MeshRenderer extends ShapeRenderer {
   protected int diameter;
   protected double width;
   
-
   protected boolean allowDashed = true;
   protected boolean isTranslucent;
   protected boolean frontOnly;
@@ -71,7 +67,6 @@ public abstract class MeshRenderer extends ShapeRenderer {
   protected boolean haveBsDisplay;
   protected boolean selectedPolyOnly;
   protected boolean isGhostPass;
-  //protected boolean isPrecision; // DRAW, bioshape
 
   protected P4d thePlane;
   protected P3d latticeOffset = new P3d();
@@ -97,20 +92,24 @@ public abstract class MeshRenderer extends ShapeRenderer {
     if (!doRender)
       return mesh.title != null;
     latticeOffset.set(0, 0, 0);
-    if (mesh.modelIndex < 0
-        || mesh.lattice == null && mesh.symops == null) {
-      for (int i = vertexCount; --i >= 0;)
-        if (vertices[i] != null)
+    if (mesh.modelIndex < 0 || mesh.lattice == null && mesh.symops == null) {
+      for (int i = vertexCount; --i >= 0;) {
+        if (vertices[i] != null) {
           tm.transformPtScr(vertices[i], screens[i]);
-      //if (isPrecision) 
+		}
+	  }
       if (mesh.haveXyPoints) {
-        for (int i = vertexCount; --i >= 0;)
-          if (vertices[i] != null)
+        for (int i = vertexCount; --i >= 0;) {
+          if (vertices[i] != null) {
             tm.transformPtScrT32D(vertices[i], p3Screens[i]);
+		  }
+		}
       } else {
-        for (int i = vertexCount; --i >= 0;)
-          if (vertices[i] != null)
+        for (int i = vertexCount; --i >= 0;) {
+          if (vertices[i] != null) {
             tm.transformPtScrT3(vertices[i], p3Screens[i]);
+		  }
+		}
       } 
        
       render2(isExport);
@@ -120,17 +119,20 @@ public abstract class MeshRenderer extends ShapeRenderer {
         P3d p2 = new P3d();
         if (mesh.symops != null) {
           P3d vTemp = new P3d();
-          if (mesh.symopNormixes == null)
+          if (mesh.symopNormixes == null) {
             mesh.symopNormixes = AU.newShort2(mesh.symops.length);
+		  }
           P3d[] verticesTemp = null;
           int max = mesh.symops.length;
           short c = mesh.colix;
           for (int j = max; --j >= 0;) {
             M4d m = mesh.symops[j];
-            if (m == null)
+            if (m == null) {
               continue;
-            if (mesh.colorType == T.symop)
+			}
+            if (mesh.colorType == T.symop) {
               mesh.colix = mesh.symopColixes[j];
+			}
             short[] normals = mesh.symopNormixes[j];
             boolean needNormals = (normals == null);
             verticesTemp = (needNormals ? new P3d[vertexCount] : null);
@@ -146,21 +148,20 @@ public abstract class MeshRenderer extends ShapeRenderer {
                 p2 = new P3d();
               }
             }
-            if (needNormals)
-              normixes = mesh.symopNormixes[j] = mesh.setNormixes(mesh
-                  .getNormals(verticesTemp, null));
-            else
+            if (needNormals) {
+              normixes = mesh.symopNormixes[j] = mesh.setNormixes(mesh.getNormals(verticesTemp, null));
+			} else {
               normixes = mesh.normixes = mesh.symopNormixes[j];
+			}
             render2(isExport);
           }
           mesh.colix = c;
         } else {
           P3i minXYZ = new P3i();
-          P3i maxXYZ = P3i.new3((int) mesh.lattice.x, (int) mesh.lattice.y,
-              (int) mesh.lattice.z);
+          P3i maxXYZ = P3i.new3((int) mesh.lattice.x, (int) mesh.lattice.y, (int) mesh.lattice.z);
           SimpleUnitCell.setMinMaxLatticeParameters((int) unitcell.getUnitCellInfoType(SimpleUnitCell.INFO_DIMENSIONS), minXYZ, maxXYZ, 0);
-          for (int tx = minXYZ.x; tx < maxXYZ.x; tx++)
-            for (int ty = minXYZ.y; ty < maxXYZ.y; ty++)
+          for (int tx = minXYZ.x; tx < maxXYZ.x; tx++) {
+            for (int ty = minXYZ.y; ty < maxXYZ.y; ty++) {
               for (int tz = minXYZ.z; tz < maxXYZ.z; tz++) {
                 latticeOffset.set(tx, ty, tz);
                 unitcell.toCartesian(latticeOffset, false);
@@ -170,14 +171,18 @@ public abstract class MeshRenderer extends ShapeRenderer {
                 }
                 render2(isExport);
               }
+			}
+		  }
         }
       }
     }
 
-    if (screens != null)
+    if (screens != null) {
       vwr.freeTempScreens(screens);
-    if (p3Screens != null)
+	}
+    if (p3Screens != null) {
       vwr.freeTempPoints(p3Screens);
+	}
     return true;
   }
 
@@ -199,11 +204,9 @@ public abstract class MeshRenderer extends ShapeRenderer {
       g3d.setC(mesh.slabColix); // forces a second pass
     if (mesh.colorsExplicit)
       g3d.setC((short) C.LAST_AVAILABLE_COLIX);
-    isGhostPass = (mesh.bsSlabGhost != null && (isExport ? exportPass == 2
-        : vwr.gdata.isPass2));
+    isGhostPass = (mesh.bsSlabGhost != null && (isExport ? exportPass == 2 : vwr.gdata.isPass2));
     isTranslucentInherit = (isGhostPass && C.getColixTranslucent3(mesh.slabColix, false, 0)== C.INHERIT_COLOR);
-    isTranslucent = isGhostPass
-        || C.renderPass2(mesh.colix);
+    isTranslucent = isGhostPass || C.renderPass2(mesh.colix);
     if (isTranslucent || volumeRender || mesh.bsSlabGhost != null)
       needTranslucent = true;
     doRender = (setColix(mesh.colix) || mesh.showContourLines);
@@ -229,16 +232,13 @@ public abstract class MeshRenderer extends ShapeRenderer {
       // mesh.bsSlabDisplay is a temporary slab effect 
       // that is reversible; these are the polygons to display
       selectedPolyOnly = (isGhostPass || mesh.bsSlabDisplay != null);
-      bsPolygons = (isGhostPass ? mesh.bsSlabGhost
-          : selectedPolyOnly ? mesh.bsSlabDisplay : null);
+      bsPolygons = (isGhostPass ? mesh.bsSlabGhost : selectedPolyOnly ? mesh.bsSlabDisplay : null);
       
       renderLow = (!isExport && !vwr.checkMotionRendering(T.mesh));
-      boolean allowFrontOnly = (!mesh.isTwoSided && !selectedPolyOnly 
-          && (meshSlabValue == Integer.MIN_VALUE || meshSlabValue >= 100));
+      boolean allowFrontOnly = (!mesh.isTwoSided && !selectedPolyOnly && (meshSlabValue == Integer.MIN_VALUE || meshSlabValue >= 100));
       frontOnly = renderLow || mesh.frontOnly && !tm.slabEnabled && allowFrontOnly;
       isShell = mesh.isShell && allowFrontOnly;
       screens = vwr.allocTempScreens(vertexCount);
-      //if (isPrecision)
         p3Screens = vwr.allocTempPoints(vertexCount);
       if (frontOnly || isShell)
         transformedVectors = vwr.gdata.getTransformedVertexVectors();
@@ -266,7 +266,6 @@ public abstract class MeshRenderer extends ShapeRenderer {
   /**
    * @param i 
    * @return T/F
-   * 
    */
   protected boolean isPolygonDisplayable(int i) {
     return true;
@@ -338,8 +337,7 @@ public abstract class MeshRenderer extends ShapeRenderer {
 
   protected BS bsPolygonsToExport = new BS();
 
-  protected void renderTriangles(boolean fill, boolean iShowTriangles,
-                                 boolean generateSet) {
+  protected void renderTriangles(boolean fill, boolean iShowTriangles, boolean generateSet) {
     g3d.addRenderer(T.triangles);
     int[][] polygons = mesh.pis;
     colix = (isGhostPass ? mesh.slabColix : mesh.colix);
@@ -378,26 +376,18 @@ public abstract class MeshRenderer extends ShapeRenderer {
         if (frontOnly && !isVisibleNormix(normix))
           continue;
         if (fill) {
-          //if (isPrecision)
-            g3d.fillTriangle3CNBits(p3Screens[iA], colix, normix,
-                p3Screens[iB], colix, normix, p3Screens[iC], colix, normix, true);
-          //else
-            //g3d.fillTriangle3CN(screens[iA], colix, normix, screens[iB], colix,
-            //    normix, screens[iC], colix, normix);
+          g3d.fillTriangle3CNBits(p3Screens[iA], colix, normix, p3Screens[iB], colix, normix, p3Screens[iC], colix, normix, true);
           continue;
         }
         check = polygon[MeshSurface.P_CHECK];
         if (iShowTriangles)
           check = 7;
         if ((check & 1) == 1)
-          drawEdge(iA, iB, true, vertices[iA], vertices[iB], screens[iA],
-              screens[iB]);
+          drawEdge(iA, iB, true, vertices[iA], vertices[iB], screens[iA], screens[iB]);
         if ((check & 2) == 2)
-          drawEdge(iB, iC, true, vertices[iB], vertices[iC], screens[iB],
-              screens[iC]);
+          drawEdge(iB, iC, true, vertices[iB], vertices[iC], screens[iB], screens[iC]);
         if ((check & 4) == 4)
-          drawEdge(iA, iC, true, vertices[iA], vertices[iC], screens[iA],
-              screens[iC]);
+          drawEdge(iA, iC, true, vertices[iA], vertices[iC], screens[iA], screens[iC]);
         continue;
       }
       short nA = normixes[iA];
@@ -414,20 +404,10 @@ public abstract class MeshRenderer extends ShapeRenderer {
             bsPolygonsToExport.set(i);
             continue;
           }
-          //if (isPrecision)
-            g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iB],
-                colix, nB, p3Screens[iC], colix, nC, false);
-          //else
-            //g3d.fillTriangle3CN(screens[iA], colix, nA, screens[iB], colix, nB,
-              //  screens[iC], colix, nC);
+          g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iB], colix, nB, p3Screens[iC], colix, nC, false);
           continue;
         }
-//        if (isPrecision)
-          drawTriangleBits(p3Screens[iA], colix, p3Screens[iB], colix,
-              p3Screens[iC], colix, check, 1);
-        //else
-        //  drawTriangle(screens[iA], colix, screens[iB], colix, screens[iC],
-        //      colix, check, 1);
+        drawTriangleBits(p3Screens[iA], colix, p3Screens[iB], colix, p3Screens[iC], colix, check, 1);
         continue;
       case 4:
         // simple quad -- DRAW only (isPrecision)
@@ -440,22 +420,11 @@ public abstract class MeshRenderer extends ShapeRenderer {
             bsPolygonsToExport.set(i);
             continue;
           }
-          //if (isPrecision) {
-          g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iB],
-              colix, nB, p3Screens[iC], colix, nC, false);
-          g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iC],
-              colix, nC, p3Screens[iD], colix, nD, false);
-//          } else {
-//            g3d.fillTriangle3CN(screens[iA], colix, nA, screens[iB],
-//                colix, nB, screens[iC], colix, nC);
-//            g3d.fillTriangle3CN(screens[iA], colix, nA, screens[iC],
-//                colix, nC, screens[iD], colix, nD);
-//            
-//          }
+          g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iB], colix, nB, p3Screens[iC], colix, nC, false);
+          g3d.fillTriangle3CNBits(p3Screens[iA], colix, nA, p3Screens[iC], colix, nC, p3Screens[iD], colix, nD, false);
           continue;
         }
-        vwr.gdata.drawQuadrilateralBits(g3d, colix, p3Screens[iA], p3Screens[iB],
-            p3Screens[iC], p3Screens[iD]);
+        vwr.gdata.drawQuadrilateralBits(g3d, colix, p3Screens[iA], p3Screens[iB], p3Screens[iC], p3Screens[iD]);
       }
     }
     if (generateSet)
@@ -466,8 +435,7 @@ public abstract class MeshRenderer extends ShapeRenderer {
     return (normix < 0 || transformedVectors[normix].z >= 0);
   }
 
-  private void drawTriangleBits(P3d screenA, short colixA, P3d screenB, short colixB,
-                                P3d screenC, short colixC, int check, int diam) {
+  private void drawTriangleBits(P3d screenA, short colixA, P3d screenB, short colixB, P3d screenC, short colixC, int check, int diam) {
     if (!antialias && diam == 1) {
      vwr.gdata.drawTriangleBits(g3d, screenA, colixA, screenB, colixB, screenC, colixC,
           check);
@@ -483,25 +451,19 @@ public abstract class MeshRenderer extends ShapeRenderer {
       g3d.fillCylinderBits2(colixA, colixC, GData.ENDCAPS_HIDDEN, diam, screenA, screenC);
   }
 
-  protected void drawTriangle(P3i screenA, short colixA, P3i screenB,
-                              short colixB, P3i screenC, short colixC,
-                              int check, int diam) {
+  protected void drawTriangle(P3i screenA, short colixA, P3i screenB, short colixB, P3i screenC, short colixC, int check, int diam) {
     if (!antialias && diam == 1) {
-      g3d.drawTriangle3C(screenA, colixA, screenB, colixB, screenC, colixC,
-          check);
+      g3d.drawTriangle3C(screenA, colixA, screenB, colixB, screenC, colixC, check);
       return;
     }
     if (antialias)
       diam <<= 1;
     if ((check & 1) == 1)
-      g3d.fillCylinderXYZ(colixA, colixB, GData.ENDCAPS_HIDDEN, diam, screenA.x,
-          screenA.y, screenA.z, screenB.x, screenB.y, screenB.z);
+      g3d.fillCylinderXYZ(colixA, colixB, GData.ENDCAPS_HIDDEN, diam, screenA.x, screenA.y, screenA.z, screenB.x, screenB.y, screenB.z);
     if ((check & 2) == 2)
-      g3d.fillCylinderXYZ(colixB, colixC, GData.ENDCAPS_HIDDEN, diam, screenB.x,
-          screenB.y, screenB.z, screenC.x, screenC.y, screenC.z);
+      g3d.fillCylinderXYZ(colixB, colixC, GData.ENDCAPS_HIDDEN, diam, screenB.x, screenB.y, screenB.z, screenC.x, screenC.y, screenC.z);
     if ((check & 4) == 4)
-      g3d.fillCylinderXYZ(colixA, colixC, GData.ENDCAPS_HIDDEN, diam, screenA.x,
-          screenA.y, screenA.z, screenC.x, screenC.y, screenC.z);
+      g3d.fillCylinderXYZ(colixA, colixC, GData.ENDCAPS_HIDDEN, diam, screenA.x, screenA.y, screenA.z, screenC.x, screenC.y, screenC.z);
   }
 
   protected int checkFront(short nA, short nB, short nC) {
@@ -515,11 +477,8 @@ public abstract class MeshRenderer extends ShapeRenderer {
     return check;
   }
 
-  protected void drawEdge(int iA, int iB, boolean fill, T3d vA, T3d vB, P3i sA,
-                          @SuppressWarnings("unused") P3i sB) {
-    byte endCap = (iA != iB && !fill ? GData.ENDCAPS_NONE : width < 0
-        || width == -0.0 || iA != iB && isTranslucent ? GData.ENDCAPS_FLAT
-            : GData.ENDCAPS_SPHERICAL);
+  protected void drawEdge(int iA, int iB, boolean fill, T3d vA, T3d vB, P3i sA, @SuppressWarnings("unused") P3i sB) {
+    byte endCap = (iA != iB && !fill ? GData.ENDCAPS_NONE : width < 0 || width == -0.0 || iA != iB && isTranslucent ? GData.ENDCAPS_FLAT : GData.ENDCAPS_SPHERICAL);
     if (width == 0) {
       if (diameter == 0)
         diameter = (mesh.diameter > 0 ? mesh.diameter : iA == iB ? 7 : 3);
@@ -528,18 +487,10 @@ public abstract class MeshRenderer extends ShapeRenderer {
         tm.transformPtScr(pt1f, pt1i);
       }
       if (iA == iB) {
-        //        if (isPrecision) {
         pt1f.set(sA.x, sA.y, sA.z);
         g3d.fillSphereBits(diameter, pt1f);
-        //        } else {
-        //          g3d.fillSphereI(diameter, pt1i);
-        //        }
         return;
       }
-      //      if (!isPrecision) {
-      //        g3d.fillCylinder(endCap, diameter, sA, sB);
-      //        return;
-      //      }
     } else {
       pt1f.ave(vA, vB);
       tm.transformPtScr(pt1f, pt1i);
@@ -574,5 +525,4 @@ public abstract class MeshRenderer extends ShapeRenderer {
     mesh.normals = null;
     mesh.bsPolygons = null;
   }
-
 }

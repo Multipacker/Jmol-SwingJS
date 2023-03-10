@@ -45,6 +45,7 @@ class TextRenderer {
     if (text == null || text.image == null && !text.doFormatText && text.lines == null) {
       return false;
 	}
+
     boolean isAbsolute = ((mode & JC.LABEL_EXPLICIT) != 0);
     boolean doPointer = ((mode & JC.LABEL_POINTER_ON) != 0);
     boolean isAntialiased = ((mode & MODE_IS_ANTIALIASED) != 0);
@@ -52,6 +53,7 @@ class TextRenderer {
     if (!showText && (text.image == null && (text.bgcolix == 0 || !g3d.setC(text.bgcolix)))) {
       return false;
 	}
+
     if (tm != null && text.valign == JC.ECHO_XYZ) {
       calcBarPixelsXYZ(tm, text, pTemp, false);
 	}
@@ -87,10 +89,10 @@ class TextRenderer {
     }
     // now draw the pointer, if requested
 
-    if (!doPointer) {
-      return true;
+    if (doPointer) {
+      drawLineXYZ(g3d, text.atomX, text.atomY, text.atomZ, text.boxX, text.boxY, text.zSlab, text.boxWidth, text.boxHeight, pointerColix, pointerWidth * (isAntialiased ? 2 : 1));
 	}
-    drawLineXYZ(g3d, text.atomX, text.atomY, text.atomZ, text.boxX, text.boxY, text.zSlab, text.boxWidth, text.boxHeight, pointerColix, pointerWidth * (isAntialiased ? 2 : 1));
+
     return true;
   }
 
@@ -131,25 +133,9 @@ class TextRenderer {
     g3d.fillTextRect(x1, y-h/2-ia, z, text.zSlab, x2-x1, 2*ia);
     g3d.fillTextRect(x1, y-h*2/2, z, text.zSlab, 2*ia, h*2/2);
     g3d.fillTextRect(x2, y-h*2/2, z, text.zSlab, 2*ia, h*2/2);
-//
-//    g3d.drawLinePixels(sA, sB, text.z, text.zSlab);
-//    sA.y = y + h;
-//    sB.y = y - h;    
-//    sB.x = x1;
-//    g3d.drawLinePixels(sA, sB, text.z, text.zSlab);
-//    sA.x = sB.x = x2;
-//    g3d.drawLinePixels(sA, sB, text.z, text.zSlab);
-//    
-    //}
   }
 
-
-  private static void drawLineXYZ(JmolRendererInterface g3d, int x0, int y0,
-                                  int z0, double x1, double y1, int z1, double w,
-                                  double h, short pointerColix,
-                                  int pointerWidth) {
-    
-
+  private static void drawLineXYZ(JmolRendererInterface g3d, int x0, int y0, int z0, double x1, double y1, int z1, double w, double h, short pointerColix, int pointerWidth) {
     // This complex sequence ensures that the label is pointed to in a reasonable manner.
     
     double offsetX = x1 - x0;
@@ -172,7 +158,6 @@ class TextRenderer {
       g3d.setC(pointerColix);
       g3d.drawLineXYZ(x0, y0, z0, (int) x1, (int) y1, z1);
     }
-
   }
 
   static void renderSimpleLabel(JmolRendererInterface g3d, Font font,
@@ -208,10 +193,7 @@ class TextRenderer {
     }
   }
 
-  private static void showBox(JmolRendererInterface g3d, short colix,
-                              int x, int y, int z, int zSlab,
-                              int boxWidth, int boxHeight,
-                              double imageFontScaling, boolean atomBased) {
+  private static void showBox(JmolRendererInterface g3d, short colix, int x, int y, int z, int zSlab, int boxWidth, int boxHeight, double imageFontScaling, boolean atomBased) {
     g3d.fillTextRect(x, y, z, zSlab, boxWidth, boxHeight);
     g3d.setC(colix);
     if (!atomBased) {

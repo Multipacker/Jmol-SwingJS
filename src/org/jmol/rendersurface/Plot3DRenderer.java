@@ -23,6 +23,5 @@
  */
 package org.jmol.rendersurface;
 
-
 public class Plot3DRenderer extends PmeshRenderer {
 }
