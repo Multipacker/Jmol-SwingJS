@@ -30,11 +30,14 @@ import org.jmol.api.Interface;
 import org.jmol.api.JmolRendererInterface;
 import org.jmol.api.JmolRepaintManager;
 import org.jmol.api.js.JmolToJSmolInterface;
+import org.jmol.modelkit.ModelKit;
 import org.jmol.modelset.Atom;
 import org.jmol.modelset.ModelSet;
 import org.jmol.script.T;
 import org.jmol.shape.Balls;
+import org.jmol.shape.Frank;
 import org.jmol.shape.Shape;
+import org.jmol.util.C;
 import org.jmol.util.GData;
 import org.jmol.util.Logger;
 import org.jmol.util.Rectangle;
@@ -163,7 +166,7 @@ public class RepaintManager implements JmolRepaintManager {
   private boolean renderShape(int shapeID, JmolRendererInterface g3d, ModelSet modelSet, Shape shape) {
 	  switch (shapeID) {
 		  case JC.SHAPE_BALLS: return RepaintManager.renderBalls(vwr, g3d, modelSet, shape);
-		  case JC.SHAPE_FRANK: return FrankRenderer.renderFrank(vwr, g3d, modelSet, shape);
+		  case JC.SHAPE_FRANK: return RepaintManager.renderFrank(vwr, g3d, modelSet, shape);
 		  default: return getRenderer(shapeID).renderShape(g3d, modelSet, shape);
 	  }
   }
@@ -291,5 +294,48 @@ public class RepaintManager implements JmolRepaintManager {
     }
 
     return needTranslucent;
+  }
+
+  public static boolean renderFrank(Viewer vwr, JmolRendererInterface g3d, ModelSet ms, Shape shape) {
+    boolean isExport = (g3d.getExportType() != GData.EXPORT_NOT);
+
+    Frank frank = (Frank) shape;
+    boolean allowKeys = vwr.getBooleanProperty("allowKeyStrokes");
+    boolean modelKitMode = vwr.getBoolean(T.modelkitmode);
+    short colix = (modelKitMode && !vwr.getModelkit(false).isHidden() ? C.MAGENTA : allowKeys ? C.BLUE : C.GRAY);
+
+    if (isExport || !vwr.getShowFrank() || !g3d.setC(colix)) {
+      return false;
+	}
+    if (vwr.frankOn && !vwr.noFrankEcho) {
+      return vwr.noFrankEcho;
+	}
+    vwr.noFrankEcho = true;
+    double imageFontScaling = vwr.imageFontScaling;
+    frank.getFont(imageFontScaling);
+    int dx = (int) (frank.frankWidth + Frank.frankMargin * imageFontScaling);
+    int dy = frank.frankDescent;
+    g3d.drawStringNoSlab(frank.frankString, frank.font3d, vwr.gdata.width - dx, vwr.gdata.height - dy, 0, (short) 0);
+    ModelKit kit = (modelKitMode ? vwr.getModelkit(false) : null);
+    if (modelKitMode && !kit.isHidden()) {
+      g3d.setC(C.GRAY);
+      int w = 10;
+      int h = 26;
+      g3d.fillTextRect(0, 0, 1, 0, w, h*4);
+      String active = kit.getActiveMenu();  
+      if (active != null) {
+        if ("atomMenu".equals(active)) {
+          g3d.setC(C.YELLOW);
+          g3d.fillTextRect(0, 0, 0, 0, w, h);
+        } else if ("bondMenu".equals(active)) {
+          g3d.setC(C.BLUE);
+          g3d.fillTextRect(0, h, 0, 0, w, h);
+        } else if ("xtalMenu".equals(active)) {
+          g3d.setC(C.WHITE);
+          g3d.fillTextRect(0, h<<1, 0, 0, w, h);
+        }
+      }
+    }
+    return false;
   }
 }
