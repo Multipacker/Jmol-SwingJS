@@ -78,18 +78,13 @@ class TextRenderer {
     htFont3dAntialias.clear();
   }
 
-  static int plot(int x, int y, int z, int argb, int bgargb,
-                         String text, Font font3d,
-                         Graphics3D g3d, JmolRendererInterface jr, boolean antialias) {
+  static int plot(int x, int y, int z, int argb, int bgargb, String text, Font font3d, Graphics3D g3d, JmolRendererInterface jr, boolean antialias) {
     if (text.length() == 0)
       return 0;
-    //System.out.println(x + "  " + y + " " + text);
     if (text.indexOf("<su") >= 0 || text.indexOf("<color") >= 0)
       return plotByCharacter(x, y, z, argb, bgargb, text, font3d, g3d, jr,
           antialias);
     int offset = font3d.getAscent();
-    //if (antialias)
-      //offset += offset;
     y -= offset;
 
     //setColix has presumably been carried out for argb, and the two 
@@ -111,9 +106,7 @@ class TextRenderer {
     Pixelator p = g.pixel;
     int tLog = g.translucencyLog;
     
-    if (jr != null
-        || (x < 0 || x + text3d.width > width || y < 0 || y + text3d.height > height) 
-        && (jr = g3d) != null) {
+    if (jr != null || (x < 0 || x + text3d.width > width || y < 0 || y + text3d.height > height) && (jr = g3d) != null) {
       for (int off = 0, i = 0; i < textHeight; i++) {
         for (int j = 0; j < textWidth; j++) {
           byte shade = tmap[off++];
@@ -129,11 +122,7 @@ class TextRenderer {
     return text3d.width;
   }
 
-  private static int plotByCharacter(int x, int y, int z, int argb, int bgargb,
-                                      String text, Font font3d, 
-                                      Graphics3D g3d, JmolRendererInterface jmolRenderer,
-                                      boolean antialias) {
-    //int subscale = 1; //could be something less than that
+  private static int plotByCharacter(int x, int y, int z, int argb, int bgargb, String text, Font font3d, Graphics3D g3d, JmolRendererInterface jmolRenderer, boolean antialias) {
     int w = 0;
     int len = text.length();
     int suboffset = Math.round(font3d.getHeight() * 0.25f);
@@ -180,15 +169,9 @@ class TextRenderer {
           font3d, g3d, jmolRenderer, antialias);
       w += width;
     }
-    //System.out.println("w=" + w);
     return w;
   }
   
-  /**
-   * 
-   * @param text
-   * @param font3d
-   */
   private TextRenderer(String text, Font font3d) {
     ascent = font3d.getAscent();
     height = font3d.getHeight();
@@ -199,9 +182,7 @@ class TextRenderer {
     size = mapWidth * height;
   }
 
-  private synchronized static TextRenderer getPlotText3D(int x, int y, Graphics3D g3d,
-                                               String text, Font font3d,
-                                               boolean antialias) {
+  private synchronized static TextRenderer getPlotText3D(int x, int y, Graphics3D g3d, String text, Font font3d, boolean antialias) {
     TextRenderer.working = true;
     Map<Font, Map<String, TextRenderer>> ht = (antialias ? TextRenderer.htFont3dAntialias : TextRenderer.htFont3d);
     Map<String, TextRenderer> htForThisFont = ht.get(font3d);
@@ -218,8 +199,7 @@ class TextRenderer {
       text3d = new TextRenderer(text, font3d);
       newText = true;
     }
-    text3d.isInvalid = (text3d.width == 0 || x + text3d.width <= 0
-        || x >= g3d.width || y + text3d.height <= 0 || y >= g3d.height);
+    text3d.isInvalid = (text3d.width == 0 || x + text3d.width <= 0 || x >= g3d.width || y + text3d.height <= 0 || y >= g3d.height);
     if (text3d.isInvalid)
       return text3d;
     if (newFont)
@@ -240,9 +220,7 @@ class TextRenderer {
    * @param g3d
    */
   private void setTranslucency(String text, Font font3d, Graphics3D g3d) {
-    int[] pixels = g3d.apiPlatform.getTextPixels(text, font3d, g3d.platform
-        .getGraphicsForTextOrImage(mapWidth, height),
-        g3d.platform.offscreenImage, mapWidth, height, ascent);
+    int[] pixels = g3d.apiPlatform.getTextPixels(text, font3d, g3d.platform.getGraphicsForTextOrImage(mapWidth, height), g3d.platform.offscreenImage, mapWidth, height, ascent);
     if (pixels == null)
       return;
     tmap = new byte[size];
@@ -253,5 +231,4 @@ class TextRenderer {
       }
     }
   }
-
 }

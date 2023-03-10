@@ -206,7 +206,7 @@ public class HermiteRenderer implements G3DRenderer {
       return;
     if (!fill) {
       tension = Math.abs(tension);
-      renderParallelPair(fill, tension, p0, p1, p2, p3, p4, p5, p6, p7);
+      renderParallelPair(tension, p0, p1, p2, p3, p4, p5, p6, p7);
       return;
     }
     boolean isRev = (tension < 0);
@@ -288,7 +288,6 @@ public class HermiteRenderer implements G3DRenderer {
                       g3d.fillQuadrilateral(c, d, b, a, false);
                     else
                       g3d.fillQuadrilateral(a, b, d, c, false);
-
                   } else {
                     if (isRev) {
                       if (fillType != isFront(a, b, d))
@@ -362,20 +361,7 @@ public class HermiteRenderer implements G3DRenderer {
     return (vAB.z < 0 ? -1 : 1);
   }
 
-  /**
-   * 
-   * @param fill   NOT USED
-   * @param tension
-   * @param p0
-   * @param p1
-   * @param p2
-   * @param p3
-   * @param p4
-   * @param p5
-   * @param p6
-   * @param p7
-   */
-  private void renderParallelPair(boolean fill, int tension,
+  private void renderParallelPair(int tension,
                 //top strand segment
                 P3d p0, P3d p1, P3d p2, P3d p3,
                 //bottom strand segment

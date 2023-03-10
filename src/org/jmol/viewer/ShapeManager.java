@@ -23,7 +23,6 @@
  */
 package org.jmol.viewer;
 
-
 import java.util.Map;
 
 import org.jmol.api.Interface;
@@ -47,7 +46,6 @@ import javajs.util.P3d;
 import javajs.util.P3i;
 
 public class ShapeManager {
-
   private ModelSet ms;
   public Shape[] shapes;
   public Viewer vwr;
@@ -59,10 +57,6 @@ public class ShapeManager {
     bsSlabbedInternal = new BS();
   }
 
-  /**
-   * @j2sIgnore
-   * 
-   */
   public void setParallel() {
     resetShapes(false);
     loadDefaultShapes(vwr.ms);
@@ -171,25 +165,19 @@ public class ShapeManager {
     shapes = new Shape[JC.SHAPE_MAX];
   }
   
-  /**
-   * @param shapeID
-   * @param size in milliangstroms
-   * @param rd
-   * @param bsSelected
-   */
-  public void setShapeSizeBs(int shapeID, int size, RadiusData rd, BS bsSelected) {
+  public void setShapeSizeBs(int shapeID, int sizeInMilliangstroms, RadiusData rd, BS bsSelected) {
     if (shapes == null)
       return;
     if (bsSelected == null && 
-        (shapeID != JC.SHAPE_STICKS || size != Integer.MAX_VALUE))
+        (shapeID != JC.SHAPE_STICKS || sizeInMilliangstroms != Integer.MAX_VALUE))
       bsSelected = vwr.bsA();
     if (rd != null && rd.value != 0 && rd.vdwType == VDW.TEMP)
       ms.getBfactor100Lo();
     vwr.setShapeErrorState(shapeID, "set size");
-    if (rd == null ? size != 0 : rd.value != 0)
+    if (rd == null ? sizeInMilliangstroms != 0 : rd.value != 0)
       loadShape(shapeID);
     if (shapes[shapeID] != null) {
-      shapes[shapeID].setShapeSizeRD(size, rd, bsSelected);
+      shapes[shapeID].setShapeSizeRD(sizeInMilliangstroms, rd, bsSelected);
     }
     vwr.setShapeErrorState(-1, null);
   }
@@ -205,8 +193,7 @@ public class ShapeManager {
     setShapePropertyBs(JC.SHAPE_LABELS, "label", strLabel, bsSelection);
   }
 
-  public void setShapePropertyBs(int shapeID, String propertyName, Object value,
-                               BS bsSelected) {
+  public void setShapePropertyBs(int shapeID, String propertyName, Object value, BS bsSelected) {
     if (shapes == null || shapes[shapeID] == null)
       return;
     if (bsSelected == null)
@@ -234,42 +221,34 @@ public class ShapeManager {
   
   private static int clickableMax = hoverable.length - 1;
   
-  Map<String, Object> checkObjectClicked(int x, int y, int modifiers,
-                                         BS bsVisible, boolean drawPicking) {
+  Map<String, Object> checkObjectClicked(int x, int y, int modifiers, BS bsVisible, boolean drawPicking) {
     Shape shape;
     Map<String, Object> map = null;
     if (vwr.getPickingMode() == ActionManager.PICKING_LABEL) {
-      return shapes[JC.SHAPE_LABELS].checkObjectClicked(x, y, modifiers,
-          bsVisible, false);
+      return shapes[JC.SHAPE_LABELS].checkObjectClicked(x, y, modifiers, bsVisible, false);
     }
     if (modifiers != 0
         && vwr.getBondsPickable()
-        && (map = shapes[JC.SHAPE_STICKS].checkObjectClicked(x, y, modifiers,
-            bsVisible, false)) != null)
+        && (map = shapes[JC.SHAPE_STICKS].checkObjectClicked(x, y, modifiers, bsVisible, false)) != null)
       return map;
     for (int i = 0; i < clickableMax; i++)
-      if ((shape = shapes[hoverable[i]]) != null
-          && (map = shape.checkObjectClicked(x, y, modifiers, bsVisible,
-              drawPicking)) != null)
+      if ((shape = shapes[hoverable[i]]) != null && (map = shape.checkObjectClicked(x, y, modifiers, bsVisible, drawPicking)) != null)
         return map;
     return null;
   }
  
-  boolean checkObjectDragged(int prevX, int prevY, int x, int y, int modifiers,
-                             BS bsVisible, int iShape) {
+  boolean checkObjectDragged(int prevX, int prevY, int x, int y, int modifiers, BS bsVisible, int iShape) {
     boolean found = false;
     int n = (iShape > 0 ? iShape + 1 : JC.SHAPE_MAX);
     for (int i = iShape; !found && i < n; ++i)
       if (shapes[i] != null)
-        found = shapes[i].checkObjectDragged(prevX, prevY, x, y, modifiers,
-            bsVisible);
+        found = shapes[i].checkObjectDragged(prevX, prevY, x, y, modifiers, bsVisible);
     return found;
   }
 
   boolean checkObjectHovered(int x, int y, BS bsVisible, boolean checkBonds) {
     Shape shape = shapes[JC.SHAPE_STICKS];
-    if (checkBonds && shape != null
-        && shape.checkObjectHovered(x, y, bsVisible))
+    if (checkBonds && shape != null && shape.checkObjectHovered(x, y, bsVisible))
       return true;
     for (int i = 0; i < hoverable.length; i++) {
       shape = shapes[hoverable[i]];
@@ -357,7 +336,6 @@ public class ShapeManager {
   /**
    * Sets shape visibility flags, including ATOM_VIS_INFRAME and
    * ATOM_VIS_NOTHIDDEN.
-   * 
    */
   void setModelVisibility() {
     Shape[] shapes = this.shapes;
@@ -398,8 +376,7 @@ public class ShapeManager {
           continue;
         if (bs.get(atom.mi)) {
           int f = Atom.ATOM_INFRAME;
-          if (!ms.isAtomHidden(i)
-              && (showHydrogens || atom.getElementNumber() != 1)) {
+          if (!ms.isAtomHidden(i) && (showHydrogens || atom.getElementNumber() != 1)) {
             f |= Atom.ATOM_NOTHIDDEN;
             if (atom.madAtom != 0)
               f |= JC.VIS_BALLS_FLAG;
@@ -466,18 +443,13 @@ public class ShapeManager {
       if (d == Atom.MAD_GLOBAL)
         d = (int) (vwr.getDouble(T.atoms) * 2000);
       atom.sD = (short) vwr.tm.scaleToScreen(screen.z, d);
-      if (checkOccupancy
-          && vibrationVectors[i] != null
-          && (occ = vibrationVectors[i].getOccupancy100(vibsOn)) != Integer.MIN_VALUE) {
-        //System.out.println(atom + " " + occ);
+      if (checkOccupancy && vibrationVectors[i] != null && (occ = vibrationVectors[i].getOccupancy100(vibsOn)) != Integer.MIN_VALUE) {
         haveMods = true;
         atom.setShapeVisibility(Atom.ATOM_VISSET, false);
         if (occ >= 0 && occ < 50)
-          atom.setShapeVisibility(Atom.ATOM_NOTHIDDEN | JC.VIS_BALLS_FLAG,
-              false);
+          atom.setShapeVisibility(Atom.ATOM_NOTHIDDEN | JC.VIS_BALLS_FLAG, false);
         else
-          atom.setShapeVisibility(Atom.ATOM_NOTHIDDEN
-              | (atom.madAtom > 0 ? JC.VIS_BALLS_FLAG : 0), true);
+          atom.setShapeVisibility(Atom.ATOM_NOTHIDDEN | (atom.madAtom > 0 ? JC.VIS_BALLS_FLAG : 0), true);
         ms.occupancies[atom.i] = Math.abs(occ);
       }
     }
@@ -556,7 +528,6 @@ public class ShapeManager {
   /**
    * starting with Jmol 13.1.13, isosurfaces can use "property color" 
    * to inherit the color of the underlying atoms. This is then dynamic
-   * 
    */
   public void checkInheritedShapes() {
     if (shapes[JC.SHAPE_ISOSURFACE] == null)
@@ -585,11 +556,9 @@ public class ShapeManager {
     setShapeSizeBs(JC.SHAPE_STICKS, 0, null, null);
     // wireframe will not operate on STRUTS even though they are
     // a form of bond order (see BondIteratoSelected)
-    setShapePropertyBs(JC.SHAPE_STICKS, "type", Integer
-        .valueOf(Edge.BOND_STRUT), null);
+    setShapePropertyBs(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_STRUT), null);
     setShapeSizeBs(JC.SHAPE_STICKS, 0, null, null);
-    setShapePropertyBs(JC.SHAPE_STICKS, "type", Integer
-        .valueOf(Edge.BOND_COVALENT_MASK), null);
+    setShapePropertyBs(JC.SHAPE_STICKS, "type", Integer.valueOf(Edge.BOND_COVALENT_MASK), null);
     // also need to turn off backbones, ribbons, strands, cartoons
     BS bs = vwr.bsA();
     for (int iShape = JC.SHAPE_MAX_SIZE_ZERO_ON_RESTRICT; --iShape >= 0;)
@@ -602,5 +571,4 @@ public class ShapeManager {
       vwr.setBooleanProperty("bondModeOr", bondmode);
     vwr.selectStatus(bsSelected, false, 0, true, false);
   }
-
 }

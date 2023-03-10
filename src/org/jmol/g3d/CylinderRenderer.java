@@ -50,7 +50,6 @@ class CylinderRenderer {
   private double xAf, yAf, zAf; 
   private double dxBf, dyBf, dzBf;
   private boolean tEvenDiameter;
-  //private int evenCorrection;
   private int diameter;
   private byte endcaps;
   private boolean endCapHidden;
@@ -68,12 +67,9 @@ class CylinderRenderer {
   private int[][] xyzfRaster = new int[][] {new int[32], new int[32], new int[32], new int[32]};
 
 
-  void renderOld(short colixA, short colixB, int screen, 
-              byte endcaps, int diameter, int xa, int ya,
-              int za, int xb, int yb, int zb) {
+  void renderOld(short colixA, short colixB, int screen, byte endcaps, int diameter, int xa, int ya, int za, int xb, int yb, int zb) {
     //0 for colixA or colixB means ignore for this pass
     int r = diameter / 2 + 1;
-    //System.out.println("Cyl " + xa + " "  + ya + " "  + za + " "  + xb + " "  + yb + " "  + zb + " " );
     Graphics3D g = this.g3d;
     int codeMinA = g.clipCode3(xa - r, ya - r, za - r);
     int codeMaxA = g.clipCode3(xa + r, ya + r, za + r);
@@ -152,11 +148,6 @@ class CylinderRenderer {
   
   void renderBitsFloat(short colixA, short colixB, int screen, byte endcaps, int diameter, P3d ptA, P3d ptB) {
     Graphics3D g = this.g3d;
-// checked already
-//    if (diameter == 0 || diameter == 1) {
-//      line3d.plotLineBits(g.getColorArgbOrGray(colixA), g.getColorArgbOrGray(colixB), ptA, ptB);
-//      return;
-//    }
     if (ptA0 == null) {
       ptA0 = new P3d();
       ptB0 = new P3d();
@@ -254,8 +245,6 @@ class CylinderRenderer {
     this.yAf += dyBf;
     this.zAf += dzBf;
   }
-
-  
   
   private P3i ptA0i = new P3i();
   private P3i ptB0i = new P3i();

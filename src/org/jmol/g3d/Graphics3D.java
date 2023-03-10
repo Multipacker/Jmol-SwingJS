@@ -201,8 +201,6 @@ import javajs.util.V3d;
  *         buffer, but this hasn't been implemented because the savings isn't
  *         that great, and if you are going to the trouble of having
  *         antialiasing, you probably what it all.
- * 
- * 
  */
 
 final public class Graphics3D extends GData implements JmolRendererInterface {
@@ -266,7 +264,6 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   private PixelatorShaded pixelShaded;
 
   protected int zMargin;
-  //  private int[] aobuf;
 
   void setZMargin(int dz) {
     zMargin = dz;
@@ -317,8 +314,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   private G3DRenderer getRenderer(String type) {
-    G3DRenderer r = ((G3DRenderer) Interface
-        .getOption("g3d." + type + "Renderer", vwr, "render"));
+    G3DRenderer r = ((G3DRenderer) Interface.getOption("g3d." + type + "Renderer", vwr, "render"));
     if (r == null)
       throw new NullPointerException("Interface");
     r.set(this, this);
@@ -340,13 +336,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void beginRendering(M3d rotationMatrix, boolean translucentMode,
-                             boolean isImageWrite, boolean renderLow) {
+  public void beginRendering(M3d rotationMatrix, boolean translucentMode, boolean isImageWrite, boolean renderLow) {
     if (currentlyRendering)
       endRendering();
     this.renderLow = renderLow;
-    if (windowWidth != newWindowWidth || windowHeight != newWindowHeight
-        || newAntialiasing != isFullSceneAntialiasingEnabled) {
+    if (windowWidth != newWindowWidth || windowHeight != newWindowHeight || newAntialiasing != isFullSceneAntialiasingEnabled) {
       windowWidth = newWindowWidth;
       windowHeight = newWindowHeight;
       isFullSceneAntialiasingEnabled = newAntialiasing;
@@ -371,8 +365,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     pixel.bgcolor = bgcolor;
     translucentCoverOnly = !translucentMode;
     if (pbuf == null) {
-      platform.allocateBuffers(windowWidth, windowHeight, antialiasThisFrame,
-          isImageWrite);
+      platform.allocateBuffers(windowWidth, windowHeight, antialiasThisFrame, isImageWrite);
       pbuf = platform.pBuffer;
       zbuf = platform.zBuffer;
       //aobuf = null;
@@ -387,8 +380,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       pixelScreened.width = width;
     platform.clearBuffer();
     if (backgroundImage != null)
-      plotImage(Integer.MIN_VALUE, 0, Integer.MIN_VALUE, backgroundImage, null,
-          (short) 0, 0, 0);
+      plotImage(Integer.MIN_VALUE, 0, Integer.MIN_VALUE, backgroundImage, null, (short) 0, 0, 0);
     textY = 0;
   }
 
@@ -444,16 +436,6 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
 
       if (pixel == pixelShaded && pixelShaded.zShadePower == 0)
         pixelShaded.showZBuffer();
-
-      //      if (ambientOcclusion != 0) {
-      //        if (aobuf == null)
-      //          aobuf = new int[pbuf.length];
-      //        else
-      //          for (int offset = pbuf.length; --offset >= 0;)
-      //            aobuf[offset] = 0;
-      //        shader
-      //            .occludePixels(pbuf, zbuf, aobuf, width, height, ambientOcclusion);
-      //      }
       if (antialiasThisFrame)
         downsampleFullSceneAntialiasing(false);
     }
@@ -518,20 +500,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
 
   @Override
   public Object getScreenImage(boolean isImageWrite) {
-
-    Object obj = platform.bufferedImage;
-    boolean dorelease = /** @j2sNative isImageWrite || */
-        false;
-    /**
-     * @j2sNative
-     * 
-     *            obj._img = null; if (!dorelease) obj._buf = true;
-     * 
-     * 
-     */
-    if (dorelease)
-      releaseBuffers();
-    return obj;
+    return platform.bufferedImage;
   }
 
   @Override
@@ -578,8 +547,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     if (currentlyRendering)
       throw new NullPointerException();
     anaglyphLength = windowWidth * windowHeight;
-    if (anaglyphChannelBytes == null
-        || anaglyphChannelBytes.length != anaglyphLength)
+    if (anaglyphChannelBytes == null || anaglyphChannelBytes.length != anaglyphLength)
       anaglyphChannelBytes = new byte[anaglyphLength];
     for (int i = anaglyphLength; --i >= 0;)
       anaglyphChannelBytes[i] = (byte) pbuf[i];
@@ -596,8 +564,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void setSlabAndZShade(int slabValue, int depthValue, int zSlab,
-                               int zDepth, int zShadePower) {
+  public void setSlabAndZShade(int slabValue, int depthValue, int zSlab, int zDepth, int zShadePower) {
     setSlab(slabValue);
     setDepth(depthValue);
     if (zSlab < zDepth) {
@@ -632,8 +599,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
   }
 
-  public static void downsample2d(int[] pbuf, int width, int height,
-                                  int bgcheck) {
+  public static void downsample2d(int[] pbuf, int width, int height, int bgcheck) {
     int width4 = width << 1;
     if (bgcheck != 0) {
       bgcheck &= 0xFFFFFF;
@@ -670,21 +636,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
         if (argb == bg0)
           argb = bgcheck;
 
-        /**
-         * I don't know why this is necessary.
-         * 
-         * @j2sNative
-         * 
-         *            pbuf[offset1] = argb & 0x00FFFFFF | 0xFF000000;
-         */
-        {
-          pbuf[offset1] = argb & 0x00FFFFFF;
-        }
+        pbuf[offset1] = argb & 0x00FFFFFF;
       }
   }
 
-  private static void downsample2dZ(int[] pbuf, int[] zbuf, int width,
-                                    int height, int bgcheck) {
+  private static void downsample2dZ(int[] pbuf, int[] zbuf, int width, int height, int bgcheck) {
     int width4 = width << 1;
     //we will add the alpha mask later
     int offset1 = 0, offset4 = 0;
@@ -771,8 +727,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void drawFilledCircle(short colixRing, short colixFill, int diameter,
-                               int x, int y, int z) {
+  public void drawFilledCircle(short colixRing, short colixFill, int diameter, int x, int y, int z) {
     // Halos, Draw handles
     if (isClippedZ(z))
       return;
@@ -783,20 +738,16 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     if (colixRing != 0 && setC(colixRing)) {
       if (isClipped) {
         if (!isClippedXY(diameter, x, y))
-          ((CircleRenderer) circle3d).plotCircleCenteredClipped(x, y, z,
-              diameter);
+          ((CircleRenderer) circle3d).plotCircleCenteredClipped(x, y, z, diameter);
       } else {
-        ((CircleRenderer) circle3d).plotCircleCenteredUnclipped(x, y, z,
-            diameter);
+        ((CircleRenderer) circle3d).plotCircleCenteredUnclipped(x, y, z, diameter);
       }
     }
     if (colixFill != 0 && setC(colixFill)) {
       if (isClipped)
-        ((CircleRenderer) circle3d).plotFilledCircleCenteredClipped(x, y, z,
-            diameter);
+        ((CircleRenderer) circle3d).plotFilledCircleCenteredClipped(x, y, z, diameter);
       else
-        ((CircleRenderer) circle3d).plotFilledCircleCenteredUnclipped(x, y, z,
-            diameter);
+        ((CircleRenderer) circle3d).plotFilledCircleCenteredUnclipped(x, y, z, diameter);
     }
   }
 
@@ -813,11 +764,9 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     if (isClipped && isClippedXY(diameter, x, y))
       return;
     if (isClipped)
-      ((CircleRenderer) circle3d).plotFilledCircleCenteredClipped(x, y, z,
-          diameter);
+      ((CircleRenderer) circle3d).plotFilledCircleCenteredClipped(x, y, z, diameter);
     else
-      ((CircleRenderer) circle3d).plotFilledCircleCenteredUnclipped(x, y, z,
-          diameter);
+      ((CircleRenderer) circle3d).plotFilledCircleCenteredUnclipped(x, y, z, diameter);
   }
 
   /**
@@ -841,10 +790,8 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     case 0:
       return;
     }
-    if (diameter <= (antialiasThisFrame ? SphereRenderer.maxSphereDiameter2
-        : SphereRenderer.maxSphereDiameter))
-      sphere3d.render(shadesCurrent, diameter, x, y, z, null, null, null, -1,
-          null);
+    if (diameter <= (antialiasThisFrame ? SphereRenderer.maxSphereDiameter2 : SphereRenderer.maxSphereDiameter))
+      sphere3d.render(shadesCurrent, diameter, x, y, z, null, null, null, -1, null);
   }
 
   private int saveAmbient, saveDiffuse;
@@ -888,14 +835,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   @Override
   public void fillSphereBits(int diameter, P3d center) {
     // from hermite ribbon
-    fillSphereXYZ(diameter, (int) Math.round(center.x), (int) Math.round(center.y),
-        (int) Math.round(center.z));
+    fillSphereXYZ(diameter, (int) Math.round(center.x), (int) Math.round(center.y), (int) Math.round(center.z));
   }
 
   @Override
-  public void fillEllipsoid(P3d center, P3d[] points, int x, int y, int z,
-                            int diameter, M3d mToEllipsoidal, double[] coef,
-                            M4d mDeriv, int selectedOctant, P3d[] octantPoints) {
+  public void fillEllipsoid(P3d center, P3d[] points, int x, int y, int z, int diameter, M3d mToEllipsoidal, double[] coef, M4d mDeriv, int selectedOctant, P3d[] octantPoints) {
     switch (diameter) {
     case 1:
       plotPixelClippedArgb(argbCurrent, x, y, z, width, zbuf, pixel);
@@ -903,10 +847,8 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     case 0:
       return;
     }
-    if (diameter <= (antialiasThisFrame ? SphereRenderer.maxSphereDiameter2
-        : SphereRenderer.maxSphereDiameter))
-      sphere3d.render(shadesCurrent, diameter, x, y, z, mToEllipsoidal, coef,
-          mDeriv, selectedOctant, octantPoints);
+    if (diameter <= (antialiasThisFrame ? SphereRenderer.maxSphereDiameter2 : SphereRenderer.maxSphereDiameter))
+      sphere3d.render(shadesCurrent, diameter, x, y, z, mToEllipsoidal, coef, mDeriv, selectedOctant, octantPoints);
   }
 
   /**
@@ -926,8 +868,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
    *        pixel count
    */
   @Override
-  public void drawRect(int x, int y, int z, int zSlab, int rWidth,
-                       int rHeight) {
+  public void drawRect(int x, int y, int z, int zSlab, int rWidth, int rHeight) {
     // labels (and rubberband, not implemented) and navigation cursor
     if (zSlab != 0 && isClippedZ(zSlab))
       return;
@@ -1008,8 +949,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
    *        pixel count
    */
   @Override
-  public void fillTextRect(int x, int y, int z, int zSlab, int widthFill,
-                           int heightFill) {
+  public void fillTextRect(int x, int y, int z, int zSlab, int widthFill, int heightFill) {
     // hover and labels only -- slab at atom or front -- simple Z/window clip
     if (isClippedZ(zSlab))
       return;
@@ -1062,8 +1002,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
    */
 
   @Override
-  public void drawString(String str, Font font3d, int xBaseline, int yBaseline,
-                         int z, int zSlab, short bgColix) {
+  public void drawString(String str, Font font3d, int xBaseline, int yBaseline, int z, int zSlab, short bgColix) {
     //axis, labels, measures, echo    
     currentShadeIndex = 0;
     if (str == null)
@@ -1091,8 +1030,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
    */
 
   @Override
-  public void drawStringNoSlab(String str, Font font3d, int xBaseline,
-                               int yBaseline, int z, short bgColix) {
+  public void drawStringNoSlab(String str, Font font3d, int xBaseline, int yBaseline, int z, short bgColix) {
     // echo, frank, hover, molecularOrbital, uccage
     if (str == null)
       return;
@@ -1124,32 +1062,26 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
     for (int i = 0; i < stringCount; i++) {
       TextString ts = strings[i];
-      plotText(ts.x, ts.y, ts.z, ts.argb, ts.bgargb, ts.text, ts.font,
-          (JmolRendererInterface) jmolRenderer);
+      plotText(ts.x, ts.y, ts.z, ts.argb, ts.bgargb, ts.text, ts.font, (JmolRendererInterface) jmolRenderer);
     }
     strings = null;
     stringCount = 0;
   }
 
   @Override
-  public void plotText(int x, int y, int z, int argb, int bgargb, String text,
-                       Font font3d, JmolRendererInterface jmolRenderer) {
-    TextRenderer.plot(x, y, z, argb, bgargb, text, font3d, this, jmolRenderer,
-        antialiasThisFrame);
+  public void plotText(int x, int y, int z, int argb, int bgargb, String text, Font font3d, JmolRendererInterface jmolRenderer) {
+    TextRenderer.plot(x, y, z, argb, bgargb, text, font3d, this, jmolRenderer, antialiasThisFrame);
   }
 
   @Override
-  public void drawImage(Object objImage, int x, int y, int z, int zSlab,
-                        short bgcolix, int width, int height) {
+  public void drawImage(Object objImage, int x, int y, int z, int zSlab, short bgcolix, int width, int height) {
     // overridden in Export
     if (objImage != null && width > 0 && height > 0 && !isClippedZ(zSlab))
       plotImage(x, y, z, objImage, null, bgcolix, width, height);
   }
 
   @Override
-  public void plotImage(int x, int y, int z, Object image,
-                        JmolRendererInterface jmolRenderer, short bgcolix,
-                        int imageWidth, int imageHeight) {
+  public void plotImage(int x, int y, int z, Object image, JmolRendererInterface jmolRenderer, short bgcolix, int imageWidth, int imageHeight) {
     // overridden in __Exporter
     setC(bgcolix);
     if (!isPass2)
@@ -1164,13 +1096,10 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       imageWidth = width;
       imageHeight = height;
     }
-    if (x + imageWidth <= 0 || x >= width || y + imageHeight <= 0
-        || y >= height)
+    if (x + imageWidth <= 0 || x >= width || y + imageHeight <= 0 || y >= height)
       return;
-    Object g = (vwr.isJSNoAWT ? null
-        : platform.getGraphicsForTextOrImage(imageWidth, imageHeight));
-    int[] buffer = apiPlatform.drawImageToBuffer(g, platform.offscreenImage,
-        image, imageWidth, imageHeight, isBackground ? bg : 0);
+    Object g = (vwr.isJSNoAWT ? null : platform.getGraphicsForTextOrImage(imageWidth, imageHeight));
+    int[] buffer = apiPlatform.drawImageToBuffer(g, platform.offscreenImage, image, imageWidth, imageHeight, isBackground ? bg : 0);
     if (buffer == null)
       return;
     int[] zb = zbuf;
@@ -1181,8 +1110,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     if (jmolRenderer == null
         && (x >= 0 && x + imageWidth <= w && y >= 0 && y + imageHeight <= h)) {
       // unclipped 
-      for (int i = 0, offset = 0, pbufOffset = y * w
-          + x; i < imageHeight; i++, pbufOffset += (w - imageWidth)) {
+      for (int i = 0, offset = 0, pbufOffset = y * w + x; i < imageHeight; i++, pbufOffset += (w - imageWidth)) {
         for (int j = 0; j < imageWidth; j++, offset++, pbufOffset++) {
           if (z < zb[pbufOffset]) {
             int b = buffer[offset];
@@ -1199,8 +1127,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
         for (int j = 0; j < imageWidth; j++) {
           int b = buffer[offset++];
           if ((b & 0xFF000000) == (0xFF000000 & 0xFF000000))
-            jmolRenderer.plotImagePixel(b, x + j, y + i, z, (byte) 8, bg, w, h,
-                zb, p, t);
+            jmolRenderer.plotImagePixel(b, x + j, y + i, z, (byte) 8, bg, w, h, zb, p, t);
         }
     }
   }
@@ -1209,30 +1136,6 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   public void setFont(Font font3d) {
     currentFont = font3d;
   }
-
-  /*
-  private void setRectClip(int x, int y, int width, int height) {
-    // not implemented
-    if (x < 0)
-      x = 0;
-    if (y < 0)
-      y = 0;
-    if (x + width > windowWidth)
-      width = windowWidth - x;
-    if (y + height > windowHeight)
-      height = windowHeight - y;
-    clipX = x;
-    clipY = y;
-    clipWidth = width;
-    clipHeight = height;
-    if (antialiasThisFrame) {
-      clipX *= 2;
-      clipY *= 2;
-      clipWidth *= 2;
-      clipHeight *= 2;
-    }
-  }
-  */
 
   //mostly public drawing methods -- add "public" if you need to
 
@@ -1281,17 +1184,15 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
 
   public void drawLineABBits(int run, int rise, boolean andClip) {
     line3d.plotLineBits(argbCurrent, argbCurrent, sA, sB, run, rise, andClip);
-//    if (true || isAntialiased()) {
-      if (Math.abs(sA.x - sB.x) < Math.abs(sA.y - sB.y)) {
-        sA.x += 1;
-        sB.x += 1;
-        line3d.plotLineBits(argbCurrent, argbCurrent, sA, sB, run, rise, andClip);
-      } else {
-        sA.y += 1;
-        sB.y += 1;
-        line3d.plotLineBits(argbCurrent, argbCurrent, sA, sB, run, rise, andClip);
-      }
-//    }
+    if (Math.abs(sA.x - sB.x) < Math.abs(sA.y - sB.y)) {
+      sA.x += 1;
+      sB.x += 1;
+      line3d.plotLineBits(argbCurrent, argbCurrent, sA, sB, run, rise, andClip);
+    } else {
+      sA.y += 1;
+      sB.y += 1;
+      line3d.plotLineBits(argbCurrent, argbCurrent, sA, sB, run, rise, andClip);
+    }
   }
 
   private void setScreeni(P3d pt, P3i p) {
@@ -1307,8 +1208,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void drawLine(short colixA, short colixB, int x1, int y1, int z1,
-                       int x2, int y2, int z2) {
+  public void drawLine(short colixA, short colixB, int x1, int y1, int z1, int x2, int y2, int z2) {
     // backbone and sticks
     if (!setC(colixA))
       colixA = 0;
@@ -1356,9 +1256,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void fillCylinderXYZ(short colixA, short colixB, byte endcaps,
-                              int diameter, int xA, int yA, int zA, int xB,
-                              int yB, int zB) {
+  public void fillCylinderXYZ(short colixA, short colixB, byte endcaps, int diameter, int xA, int yA, int zA, int xB, int yB, int zB) {
     //Backbone, Mps, Sticks
     if (diameter > ht3)
       return;
@@ -1374,19 +1272,9 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       screen += 1;
     if (colixA == 0 && colixB == 0)
       return;
-    cylinder3d.renderOld(colixA, colixB, screen, endcaps, diameter, xA, yA, zA,
-        xB, yB, zB);
+    cylinder3d.renderOld(colixA, colixB, screen, endcaps, diameter, xA, yA, zA, xB, yB, zB);
   }
 
-  //  @Override
-  //  public void fillCylinderScreen(byte endcaps, int diameter, int xA, int yA,
-  //                                 int zA, int xB, int yB, int zB) {
-  //    //measures, vectors, polyhedra
-  //    if (diameter <= ht3)
-  //      cylinder3d.renderOld(colixCurrent, colixCurrent, 0, endcaps, diameter, xA, yA,
-  //          zA, xB, yB, zB);
-  //  }
-  //
   @Override
   public void fillCylinderScreen3I(byte endcaps, int diameter, P3d screenA, P3d screenB, P3d pt0f, P3d pt1f, double radius) {
     //nucleic cartoon, draw arrowhead
@@ -1446,9 +1334,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   public void fillConeScreen3f(byte endcap, int screenDiameter, P3d screenBase, P3d screenTip, boolean isBarb) {
     // cartoons, rockets
     if (screenDiameter <= ht3)
-      cylinder3d.renderConeOld(colixCurrent, endcap, screenDiameter,
-          screenBase.x, screenBase.y, screenBase.z, screenTip.x, screenTip.y,
-          screenTip.z, true, isBarb);
+      cylinder3d.renderConeOld(colixCurrent, endcap, screenDiameter, screenBase.x, screenBase.y, screenBase.z, screenTip.x, screenTip.y, screenTip.z, true, isBarb);
   }
 
   @Override
@@ -1742,8 +1628,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       while (--count >= 0) {
         int z = zScaled >> 10;
         if (z < zb[offsetPbuf])
-          p.addPixel(offsetPbuf, z, 0xFF000000 | (rScaled & 0xFF0000)
-              | (gScaled & 0xFF00) | ((bScaled >> 8) & 0xFF));
+          p.addPixel(offsetPbuf, z, 0xFF000000 | (rScaled & 0xFF0000) | (gScaled & 0xFF00) | ((bScaled >> 8) & 0xFF));
         ++offsetPbuf;
         zScaled += zIncrementScaled;
         rScaled += rIncrement;
@@ -1753,15 +1638,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
   }
 
-  void plotPixelsClippedRasterBits(int count, int x, int y, int zAtLeft,
-                                   int zPastRight, Rgb16 rgb16Left,
-                                   Rgb16 rgb16Right, double a, double b) {
+  void plotPixelsClippedRasterBits(int count, int x, int y, int zAtLeft, int zPastRight, Rgb16 rgb16Left, Rgb16 rgb16Right, double a, double b) {
     // cylinder3d.renderFlatEndcap, triangle3d.fillRaster
     int depth, slab;
 
-    if (count <= 0 || y < 0 || y >= height || x >= width
-        || (zAtLeft < (slab = this.slab) && zPastRight < slab)
-        || (zAtLeft > (depth = this.depth) && zPastRight > depth))
+    if (count <= 0 || y < 0 || y >= height || x >= width || (zAtLeft < (slab = this.slab) && zPastRight < slab) || (zAtLeft > (depth = this.depth) && zPastRight > depth))
       return;
     int[] zb = zbuf;
     int seed = (x << 16) + (y << 1) ^ 0x33333333;
@@ -1783,13 +1664,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
 
       while (--count >= 0) {
         int zCurrent = line3d.getZCurrent(a, b, x++);
-        if (zCurrent >= slab && zCurrent <= depth
-            && zCurrent < zb[offsetPbuf]) {
+        if (zCurrent >= slab && zCurrent <= depth && zCurrent < zb[offsetPbuf]) {
           seed = ((seed << 16) + (seed << 1) + seed) & 0x7FFFFFFF;
           int bits = (seed >> 16) & 0x07;
 
-          p.addPixel(offsetPbuf, zCurrent,
-              bits < 2 ? adn : bits < 6 ? aup : ac);
+          p.addPixel(offsetPbuf, zCurrent, bits < 2 ? adn : bits < 6 ? aup : ac);
         }
         ++offsetPbuf;
       }
@@ -1813,8 +1692,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
   }
 
-  void plotPixelsUnclippedRasterBits(int count, int x, int y, Rgb16 rgb16Left,
-                                     Rgb16 rgb16Right, double a, double b) {
+  void plotPixelsUnclippedRasterBits(int count, int x, int y, Rgb16 rgb16Left, Rgb16 rgb16Right, double a, double b) {
     // for isosurface Triangle3D.fillRaster
 
     if (count <= 0)
@@ -1849,8 +1727,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       while (--count >= 0) {
         int zCurrent = line3d.getZCurrent(a, b, x++);
         if (zCurrent < zb[offsetPbuf])
-          p.addPixel(offsetPbuf, zCurrent, 0xFF000000 | (rScaled & 0xFF0000)
-              | (gScaled & 0xFF00) | ((bScaled >> 8) & 0xFF));
+          p.addPixel(offsetPbuf, zCurrent, 0xFF000000 | (rScaled & 0xFF0000) | (gScaled & 0xFF00) | ((bScaled >> 8) & 0xFF));
         ++offsetPbuf;
         rScaled += rIncrement;
         gScaled += gIncrement;
@@ -1859,9 +1736,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
   }
 
-  void plotPixelsUnclippedCount(int c, int count, int x, int y, int z,
-                                int width, int[] zbuf, Pixelator p) {
-
+  void plotPixelsUnclippedCount(int c, int count, int x, int y, int z, int width, int[] zbuf, Pixelator p) {
     // for Cirle3D.plot8Filled and fillRect
 
     int offsetPbuf = y * width + x;
@@ -1872,8 +1747,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     }
   }
 
-  private void plotPoints(int count, int[] coordinates, int xOffset,
-                          int yOffset) {
+  private void plotPoints(int count, int[] coordinates, int xOffset, int yOffset) {
     Pixelator p = pixel;
     int c = argbCurrent;
     int[] zb = zbuf;
@@ -1910,21 +1784,17 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   void setColorNoisy(int shadeIndex) {
     currentShadeIndex = shadeIndex;
     argbCurrent = shadesCurrent[shadeIndex];
-    argbNoisyUp = shadesCurrent[shadeIndex < Shader.SHADE_INDEX_LAST
-        ? shadeIndex + 1
-        : Shader.SHADE_INDEX_LAST];
+    argbNoisyUp = shadesCurrent[shadeIndex < Shader.SHADE_INDEX_LAST ? shadeIndex + 1 : Shader.SHADE_INDEX_LAST];
     argbNoisyDn = shadesCurrent[shadeIndex > 0 ? shadeIndex - 1 : 0];
   }
 
-  private int getShadeIndexP3(P3d screenA, P3d screenB, P3d screenC,
-                              boolean isSolid) {
+  private int getShadeIndexP3(P3d screenA, P3d screenB, P3d screenC, boolean isSolid) {
     // for fillTriangle and fillQuad.
     vectorAB.sub2(screenB, screenA);
     vectorAC.sub2(screenC, screenA);
     V3d v = vectorNormal;
     v.cross(vectorAB, vectorAC);
-    int i = (v.z < 0 ? shader.getShadeIndex(v.x, v.y, -v.z)
-        : isSolid ? -1 : shader.getShadeIndex(-v.x, -v.y, v.z));
+    int i = (v.z < 0 ? shader.getShadeIndex(v.x, v.y, -v.z) : isSolid ? -1 : shader.getShadeIndex(-v.x, -v.y, v.z));
 
     return i;
   }
@@ -1934,8 +1804,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   @Override
   public void renderBackground(JmolRendererInterface jmolRenderer) {
     if (backgroundImage != null)
-      plotImage(Integer.MIN_VALUE, 0, Integer.MIN_VALUE, backgroundImage,
-          jmolRenderer, (short) 0, 0, 0);
+      plotImage(Integer.MIN_VALUE, 0, Integer.MIN_VALUE, backgroundImage, jmolRenderer, (short) 0, 0, 0);
   }
 
   @Override
@@ -1965,9 +1834,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public JmolRendererInterface initializeExporter(Viewer vwr, double privateKey,
-                                                  GData g3d,
-                                                  Map<String, Object> params) {
+  public JmolRendererInterface initializeExporter(Viewer vwr, double privateKey, GData g3d, Map<String, Object> params) {
     return null;
   }
 
@@ -1977,13 +1844,11 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public void drawBond(P3d atomA, P3d atomB, short colixA, short colixB,
-                       byte endcaps, short mad, int bondOrder) {
+  public void drawBond(P3d atomA, P3d atomB, short colixA, short colixB, byte endcaps, short mad, int bondOrder) {
   }
 
   @Override
-  public boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY, boolean fillArc,
-                             boolean wireframeOnly) {
+  public boolean drawEllipse(P3d ptAtom, P3d ptX, P3d ptY, boolean fillArc, boolean wireframeOnly) {
     return false;
   }
 
@@ -2011,23 +1876,14 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
       V3d tv = transformedVectors[i];
       rotationMatrix.rotate2(vertexVectors[i], tv);
       shadeIndexes[i] = shader.getShadeB(tv.x, -tv.y, tv.z);
-      shadeIndexes2Sided[i] = (tv.z >= 0 ? shadeIndexes[i]
-          : shader.getShadeB(-tv.x, tv.y, -tv.z));
+      shadeIndexes2Sided[i] = (tv.z >= 0 ? shadeIndexes[i] : shader.getShadeB(-tv.x, tv.y, -tv.z));
     }
   }
 
   /////////// special rendering ///////////
 
-  /**
-   * @param minMax
-   * @param screenWidth
-   * @param screenHeight
-   * @param navOffset
-   * @param navDepth
-   */
   @Override
-  public void renderCrossHairs(int[] minMax, int screenWidth, int screenHeight,
-                               P3d navOffset, double navDepth) {
+  public void renderCrossHairs(int[] minMax, int screenWidth, int screenHeight, P3d navOffset, double navDepth) {
     // this is the square and crosshairs for the navigator
     boolean antialiased = isAntialiased();
     setC(navDepth < 0 ? C.RED : navDepth > 100 ? C.GREEN : C.GOLD);
@@ -2054,8 +1910,7 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
   }
 
   @Override
-  public boolean initializeOutput(Viewer vwr, double privateKey,
-                                  Map<String, Object> params) {
+  public boolean initializeOutput(Viewer vwr, double privateKey, Map<String, Object> params) {
     // N/A
     return false;
   }
@@ -2067,5 +1922,4 @@ final public class Graphics3D extends GData implements JmolRendererInterface {
     // such is also the case for a black scale on a white background
     return ((argb & 0xC0C0C0) == 0 ? argb | 0x040404 : argb);
   }
-
 }

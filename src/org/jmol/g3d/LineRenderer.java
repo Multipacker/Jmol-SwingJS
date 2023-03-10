@@ -82,11 +82,6 @@ final class LineRenderer extends PrecisionRenderer {
     slopeKey = Double.valueOf(slope);
     if (lineCache.containsKey(slopeKey)) {
       lineBits = lineCache.get(slopeKey);
-      //    if (Logger.debugging) {
-      //      nFound++;
-      //      if (nFound == 1000000)
-      //        Logger.debug("nCached/nFound lines: " + nCached + " " + nFound);
-      //    }
       return;
     }
     lineBits = BS.newN(nBits);

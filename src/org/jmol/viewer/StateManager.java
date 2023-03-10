@@ -46,7 +46,6 @@ import java.util.Arrays;
 import java.util.Map.Entry;
 
 public class StateManager {
-
   /* steps in adding a global variable:
    
    In Viewer:
@@ -75,8 +74,7 @@ public class StateManager {
 
   private int maxUndo = MAX_UNDO_DEFAULT;
 
-  public static String getVariableList(Map<String, SV> htVariables, int nMax,
-                                       boolean withSites, boolean definedOnly) {
+  public static String getVariableList(Map<String, SV> htVariables, int nMax, boolean withSites, boolean definedOnly) {
     SB sb = new SB();
     // user variables only:
     int n = 0;
@@ -85,10 +83,8 @@ public class StateManager {
     for (Map.Entry<String, SV> entry : htVariables.entrySet()) {
       String key = entry.getKey();
       SV var = entry.getValue();
-      if ((withSites || !key.startsWith("site_"))
-          && (!definedOnly || key.charAt(0) == '@'))
-        list[n++] = key + (key.charAt(0) == '@' ? " " + var.asString()
-            : " = " + varClip(key, var.escape(), nMax));
+      if ((withSites || !key.startsWith("site_")) && (!definedOnly || key.charAt(0) == '@'))
+        list[n++] = key + (key.charAt(0) == '@' ? " " + var.asString() : " = " + varClip(key, var.escape(), nMax));
     }
     Arrays.sort(list, 0, n);
     for (int i = 0; i < n; i++)
@@ -137,7 +133,6 @@ public class StateManager {
 
   /**
    * Reset lighting to Jmol defaults
-   * 
    */
   public void resetLighting() {
     vwr.setIntProperty("ambientPercent", 45);
@@ -224,8 +219,7 @@ public class StateManager {
     Iterator<String> e = saved.keySet().iterator();
     while (e.hasNext()) {
       String name = e.next();
-      if (name.startsWith(namelike) || name.endsWith("_" + namelike)
-          && name.indexOf("_") == name.lastIndexOf("_" + namelike))
+      if (name.startsWith(namelike) || name.endsWith("_" + namelike) && name.indexOf("_") == name.lastIndexOf("_" + namelike))
         e.remove();
     }
   }
@@ -240,8 +234,7 @@ public class StateManager {
   }
 
   public boolean restoreSelection(String saveName) {
-    String name = (saveName.length() > 0 ? "Selected_" + saveName
-        : lastSelected);
+    String name = (saveName.length() > 0 ? "Selected_" + saveName : lastSelected);
     BS bsSelected = (BS) getNoCase(saved, name);
     if (bsSelected == null) {
       vwr.selectStatus(new BS(), false, 0, false, false);
@@ -300,7 +293,6 @@ public class StateManager {
     checkStack(stack);
     if (maxUndo > 0)
       stack.addLast(vwr.getStateInfo());
-    //System.out.println("STM append " + stack.size() + (stack == undoStateStack));
   }
 
   private void checkStack(Lst<String> stack) {
@@ -313,7 +305,6 @@ public class StateManager {
       undoStateStack = new Lst<String>();
       redoStateStack = new Lst<String>();
     }
-    //System.out.println("StateManager getStack " + undoStateStack.size() + " " + redoStateStack.size() + " " + (type == T.undo));
 
     return (type == T.undo ? undoStateStack : redoStateStack);
   }
@@ -353,8 +344,7 @@ public class StateManager {
   }
 
   public String getSavedCoordinates(String saveName) {
-    String name = (saveName.length() > 0 ? "Coordinates_" + saveName
-        : lastCoordinates);
+    String name = (saveName.length() > 0 ? "Coordinates_" + saveName : lastCoordinates);
     String script = (String) getNoCase(saved, name);
     return (script == null ? "" : script);
   }
@@ -389,8 +379,7 @@ public class StateManager {
   }
 
   public boolean restoreScene(String saveName, double timeSeconds) {
-    Scene o = (Scene) getNoCase(saved,
-        (saveName.length() > 0 ? "Scene_" + saveName : lastScene));
+    Scene o = (Scene) getNoCase(saved, (saveName.length() > 0 ? "Scene_" + saveName : lastScene));
     return (o != null && o.restore(vwr, timeSeconds));
   }
 
@@ -399,21 +388,18 @@ public class StateManager {
       deleteSavedType("Orientation_");
       return;
     }
-    Orientation o = new Orientation(vwr, saveName.equalsIgnoreCase("default"),
-        pymolView);
+    Orientation o = new Orientation(vwr, saveName.equalsIgnoreCase("default"), pymolView);
     o.saveName = lastOrientation = "Orientation_" + saveName;
     saved.put(o.saveName, o);
   }
 
-  public boolean restoreOrientation(String saveName, double timeSeconds,
-                                    boolean isAll) {
+  public boolean restoreOrientation(String saveName, double timeSeconds, boolean isAll) {
     Orientation o = getOrientationFor(saveName);
     return (o != null && o.restore(timeSeconds, isAll));
   }
 
   private Orientation getOrientationFor(String saveName) {
-    String name = (saveName.length() > 0 ? "Orientation_" + saveName
-        : lastOrientation);
+    String name = (saveName.length() > 0 ? "Orientation_" + saveName : lastOrientation);
     return (Orientation) getNoCase(saved, name);
   }
 
@@ -426,8 +412,7 @@ public class StateManager {
   }
 
   public Object getContext(String saveName) {
-    return saved
-        .get(saveName.length() == 0 ? lastContext : "Context_" + saveName);
+    return saved.get(saveName.length() == 0 ? lastContext : "Context_" + saveName);
   }
 
   public void saveBonds(String saveName) {
@@ -442,16 +427,14 @@ public class StateManager {
 
   public boolean restoreBonds(String saveName) {
     vwr.clearModelDependentObjects();
-    String name = (saveName.length() > 0 ? "Bonds_" + saveName
-        : lastConnections);
+    String name = (saveName.length() > 0 ? "Bonds_" + saveName : lastConnections);
     Connections c = (Connections) getNoCase(saved, name);
     return (c != null && c.restore());
   }
 
   public static String varClip(String name, String sv, int nMax) {
     if (nMax > 0 && sv.length() > nMax)
-      sv = sv.substring(0, nMax) + " #...more (" + sv.length()
-          + " bytes -- use SHOW " + name + " or MESSAGE @" + name + " to view)";
+      sv = sv.substring(0, nMax) + " #...more (" + sv.length() + " bytes -- use SHOW " + name + " or MESSAGE @" + name + " to view)";
     return sv;
   }
 
@@ -515,8 +498,7 @@ class Connections {
     Bond[] bonds = modelSet.bo;
     for (int i = bondCount; --i >= 0;) {
       Bond b = bonds[i];
-      connections[i] = new Connection(b.atom1.i, b.atom2.i, b.mad, b.colix,
-          b.order, b.getEnergy(), b.shapeVisibilityFlags);
+      connections[i] = new Connection(b.atom1.i, b.atom2.i, b.mad, b.colix, b.order, b.getEnergy(), b.shapeVisibilityFlags);
     }
   }
 
