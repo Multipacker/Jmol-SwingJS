@@ -24,14 +24,16 @@
 package org.jmol.render;
 
 import java.util.Map;
+import javajs.util.BS;
 
 import org.jmol.api.Interface;
 import org.jmol.api.JmolRendererInterface;
 import org.jmol.api.JmolRepaintManager;
 import org.jmol.api.js.JmolToJSmolInterface;
-import javajs.util.BS;
+import org.jmol.modelset.Atom;
 import org.jmol.modelset.ModelSet;
 import org.jmol.script.T;
+import org.jmol.shape.Balls;
 import org.jmol.shape.Shape;
 import org.jmol.util.GData;
 import org.jmol.util.Logger;
@@ -41,7 +43,6 @@ import org.jmol.viewer.ShapeManager;
 import org.jmol.viewer.Viewer;
 
 public class RepaintManager implements JmolRepaintManager {
-
   private Viewer vwr;
   private ShapeManager shapeManager;
   private ShapeRenderer[] renderers;
@@ -80,7 +81,6 @@ public class RepaintManager implements JmolRepaintManager {
       holdRepaint = 0;
       if (andRepaint) {
         repaintPending = true;
-        //System.out.println("pophold repaintPending "+ why);
         repaintNow(why);
       }
     }
@@ -91,19 +91,10 @@ public class RepaintManager implements JmolRepaintManager {
   synchronized public void requestRepaintAndWait(String why) {
     JmolToJSmolInterface jmol = null;
     if (Viewer.isJS && !Viewer.isSwingJS) {
-      /**
-       *  @j2sNative jmol = (self.Jmol && Jmol.repaint ? Jmol : null) 
-       */
-      {}
     }    
-// don't inline, as the old transpiler cannot handle that.    
-//    JmolToJSmolInterface jmol = (!Viewer.isJS || Viewer.isSwingJS ? null 
-//        :  /** @j2sNative (self.Jmol && Jmol.repaint ? Jmol : null) || */null); 
     if (jmol == null) {
-      //System.out.println("RM requestRepaintAndWait() " + (test++));
       try {
         repaintNow(why);
-        //System.out.println("repaintManager requestRepaintAndWait I am waiting for a repaint: thread=" + Thread.currentThread().getName());
         if (!Viewer.isJS) wait(vwr.g.repaintWaitMs); // more than a second probably means we are locked up here
         if (repaintPending) {
           Logger.error("repaintManager requestRepaintAndWait timeout");
@@ -120,49 +111,31 @@ public class RepaintManager implements JmolRepaintManager {
 
   @Override
   public boolean repaintIfReady(String why) {
-    //System.out.println("ifready repaintPending " + why);
     if (repaintPending)
       return false;
     repaintPending = true;
-    //System.out.println("ifready repaintPending set TRUE");
     if (holdRepaint == 0)
       repaintNow(why);
     return true;
   }
 
-  /**
-   * @param why  
-   */
   private void repaintNow(String why) {
     // from RepaintManager to the System
     // -- "Send me an asynchronous update() event!"
     if (!vwr.haveDisplay)
       return;    
-      //System.out.println("RepaintMan repaintNow " + why);
-      vwr.apiPlatform.repaint(vwr.display);
+    vwr.apiPlatform.repaint(vwr.display);
   }
 
   @Override
   synchronized public void repaintDone() {
     repaintPending = false;
-    //System.out.println("repaintPending false");
 
-    /**
-     * @j2sNative
-     * 
-     * 
-     */
-    {
-      //System.out.println("repaintManager repaintDone thread=" + Thread.currentThread().getName());
-      // ignored in JavaScript
-      notify(); // to cancel any wait in requestRepaintAndWait()
-    }
+    notify(); // to cancel any wait in requestRepaintAndWait()
   }
 
-  
   /////////// renderer management ///////////
-  
-  
+
   @Override
   public void clear(int iShape) {
     if (renderers ==  null)
@@ -187,9 +160,15 @@ public class RepaintManager implements JmolRepaintManager {
 
   /////////// actual rendering ///////////
 
+  private boolean renderShape(int shapeID, JmolRendererInterface g3d, ModelSet modelSet, Shape shape) {
+	  switch (shapeID) {
+		  case JC.SHAPE_BALLS: RepaintManager.renderBalls(vwr, g3d, modelSet, shape);
+		  default: return getRenderer(shapeID).renderShape(g3d, modelSet, shape);
+	  }
+  }
+
   @Override
-  public void render(GData gdata, ModelSet modelSet, boolean isFirstPass,
-                     int[] navMinMax) {
+  public void render(GData gdata, ModelSet modelSet, boolean isFirstPass, int[] navMinMax) {
     JmolRendererInterface g3d = (JmolRendererInterface) gdata;
     if (renderers == null)
       renderers = new ShapeRenderer[JC.SHAPE_MAX];
@@ -218,8 +197,7 @@ public class RepaintManager implements JmolRepaintManager {
           msg = "rendering " + JC.getShapeClassName(i, false);
           Logger.startTimer(msg);
         }
-        if ((isFirstPass || bsTranslucent.get(i))
-            && getRenderer(i).renderShape(g3d, modelSet, shape))
+        if ((isFirstPass || bsTranslucent.get(i)) && renderShape(i, g3d, modelSet, shape))
           bsTranslucent.set(i);
         if (logTime)
           Logger.checkTimer(msg, false);
@@ -245,8 +223,7 @@ public class RepaintManager implements JmolRepaintManager {
   }
 
   @Override
-  public String renderExport(GData gdata, ModelSet modelSet,
-                             Map<String, Object> params) {
+  public String renderExport(GData gdata, ModelSet modelSet, Map<String, Object> params) {
     boolean isOK;
     shapeManager.finalizeAtoms(null, true);
     JmolRendererInterface exporter3D = vwr.initializeExporter(params);
@@ -270,17 +247,48 @@ public class RepaintManager implements JmolRepaintManager {
           msg = "rendering " + JC.getShapeClassName(i, false);
           Logger.startTimer(msg);
         }
-        getRenderer(i).renderShape(exporter3D, modelSet, shape);
+		renderShape(i, exporter3D, modelSet, shape);
         if (logTime)
           Logger.checkTimer(msg, false);
       }
       exporter3D.renderAllStrings(exporter3D);
       msg = exporter3D.finalizeOutput();
     } catch (Exception e) {
-        e.printStackTrace();
+      e.printStackTrace();
       Logger.error("rendering error? " + e);
     }
     return msg;
   }
 
+  private static boolean renderBalls(Viewer vwr, JmolRendererInterface g3d, ModelSet ms, Shape shape) {
+    boolean isExport = (g3d.getExportType() != GData.EXPORT_NOT);
+	int myVisibilityFlag = JC.getShapeVisibilityFlag(JC.SHAPE_BALLS);
+
+    boolean needTranslucent = false;
+    if (isExport || vwr.checkMotionRendering(T.atoms)) {
+      Atom[] atoms = ms.at;
+	  if (atoms == null) {
+		  return false;
+	  }
+
+      BS bsOK = vwr.shm.bsRenderableAtoms;
+      short[] colixes = ((Balls) shape).colixes;
+      for (int i = bsOK.nextSetBit(0); i >= 0; i = bsOK.nextSetBit(i + 1)) {
+        Atom atom = atoms[i];
+        if (atom == null) {
+          return false;
+		}
+
+        if (atom.sD > 0 && (atom.shapeVisibilityFlags & myVisibilityFlag) != 0) {
+          if (g3d.setC(colixes == null ? atom.colixAtom : Shape.getColix(colixes, i, atom))) {
+            g3d.drawAtom(atom, 0);
+          } else {
+            needTranslucent = true;
+          }
+        }
+      }
+    }
+
+    return needTranslucent;
+  }
 }
