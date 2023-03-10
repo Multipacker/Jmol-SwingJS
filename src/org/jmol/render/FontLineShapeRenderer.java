@@ -23,7 +23,6 @@
  */
 package org.jmol.render;
 
-
 import org.jmol.api.JmolRendererInterface;
 import org.jmol.modelset.TickInfo;
 import org.jmol.script.T;
@@ -38,9 +37,7 @@ import org.jmol.util.SimpleUnitCell;
 import javajs.util.V3d;
 
 public abstract class FontLineShapeRenderer extends ShapeRenderer {
-
   // Axes, Bbcage, Measures, Uccage, also Sticks, Echo, Measures, Labels
-
 
   protected final static int[] dashes =   { 12, 0, 0, 2, 5, 7, 10 };
   protected final static int[] hDashes =  { 10, 7, 6, 1, 3, 4, 6, 7, 9 };
@@ -71,8 +68,6 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
   final protected V3d vectorT2 = new V3d();
   final protected V3d vectorT3 = new V3d();
 
-  //final Rectangle box = new Rectangle();
-
   protected TickInfo tickInfo;
 
   protected boolean draw000 = true;
@@ -81,17 +76,12 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
   protected P3d pt0 = new P3d();
   protected P3d pt1 = new P3d();
 
-  //protected void clearBox() {
-  //  box.setBounds(0, 0, 0, 0);
-  //}
-  
   protected int getDiameter(int z, int mad10OrPixels) {
     int diameter;
     boolean isMad10 = (mad10OrPixels > 20);
     switch (exportType) {
     case GData.EXPORT_CARTESIAN:
-      diameter = (isMad10 ? mad10OrPixels 
-          : (int) Math.floor(vwr.tm.unscaleToScreen(z, mad10OrPixels * 2/10d) * 1000));
+      diameter = (isMad10 ? mad10OrPixels : (int) Math.floor(vwr.tm.unscaleToScreen(z, mad10OrPixels * 2/10d) * 1000));
       break;
     default:
       if (isMad10) {
@@ -107,8 +97,7 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     return diameter;
   }  
 
-  protected void renderLine(P3d p0, P3d p1, int diameter, 
-                            boolean drawTicks) {
+  protected void renderLine(P3d p0, P3d p1, int diameter, boolean drawTicks) {
     // used by Bbcage, Uccage, and axes
     if (diameter < 0)
       g3d.drawDashedLineBits(8, 4, p0, p1);
@@ -141,18 +130,9 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     drawTicks2(tickInfo.ticks.z, 2, diameter, null);
   }
 
-  private void drawTicks2(double dx, int length,
-                         int diameter, String[] formats) {
-
+  private void drawTicks2(double dx, int length, int diameter, String[] formats) {
     if (dx == 0)
       return;
-    /*
-    boolean isOut = true;
-    if (dx < 0) {
-      isOut = false;
-      dx = -dx;
-    }
-    */
     if (g3d.isAntialiased())
       length *= 2;
     // perpendicular to line on screen:
@@ -173,14 +153,14 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
               / vwr.getUnitCellInfo(SimpleUnitCell.INFO_B), vectorT.z
               / vwr.getUnitCellInfo(SimpleUnitCell.INFO_C));
       } else {
-        vectorT.set(vectorT.x * tickInfo.scale.x, vectorT.y * tickInfo.scale.y,
-            vectorT.z * tickInfo.scale.z);
+        vectorT.set(vectorT.x * tickInfo.scale.x, vectorT.y * tickInfo.scale.y, vectorT.z * tickInfo.scale.z);
       }
     }
     // d is in scaled units
     double d = vectorT.length() + 0.0001f * dx;
-    if (d < dx)
+    if (d < dx) {
       return;
+	}
     double f = dx / d * d0 / d;
     vectorT.scale(f);
     double dz = (tickBs.z - tickAs.z) / (d / dx);
@@ -192,8 +172,9 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     pointT.scaleAdd2(p / dx, vectorT, tickA);
     p += tickInfo.first;
     double z = tickAs.z;
-    if (diameter < 0)
+    if (diameter < 0) {
       diameter = 1;
+	}
     vectorT2.set(-vectorT2.y, vectorT2.x, 0);
     vectorT2.scale(length / vectorT2.length());
     P3d ptRef = tickInfo.reference; // not implemented
@@ -230,8 +211,7 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
         if (drawLabel && (draw000 || p != 0)) {
           val[0] = Double.valueOf((p == 0 ? 0 : p * signFactor));
           String s = PT.sprintf(formats[i % formats.length], "f", val);
-          drawString(x, y, (int) z, 4, rightJustify, centerX, centerY,
-              (int) Math.floor(pointT2.y), s);
+          drawString(x, y, (int) z, 4, rightJustify, centerX, centerY, (int) Math.floor(pointT2.y), s);
         }
       }
       pointT.add(vectorT);
@@ -241,13 +221,11 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     }
   }
 
-  protected int drawLine(int x1, int y1, int z1, int x2, int y2, int z2,
-                         int diameter) {
+  protected int drawLine(int x1, int y1, int z1, int x2, int y2, int z2, int diameter) {
     return drawLine2(g3d, x1, y1, z1, x2, y2, z2, diameter);
   }
 
-  protected int drawLine2(JmolRendererInterface g3d, int x1, int y1, int z1,
-                          int x2, int y2, int z2, int diameter) {
+  protected int drawLine2(JmolRendererInterface g3d, int x1, int y1, int z1, int x2, int y2, int z2, int diameter) {
     pt0.set(x1, y1, z1);
     pt1.set(x2, y2, z2);
     if (!dotsOrDashes) {
@@ -259,8 +237,7 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     } else if (dashDots != null) {
       // mad is not 0
       int renderD = (!isExport || mad == 1 ? width : mad);
-      drawDashedCylinder(g3d, x1, y1, z1, x2, y2, z2, dashDots, width, colixA,
-          colixB, renderD, asLineOnly, s1);
+      drawDashedCylinder(g3d, x1, y1, z1, x2, y2, z2, dashDots, width, colixA, colixB, renderD, asLineOnly, s1);
     }
     return (diameter + 1) / 2;
   }
@@ -289,12 +266,7 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     int zT = z - radius - 2;
     if (zT < 1)
       zT = 1;
-    //if (!box.contains(xT, yT) && !box.contains(xT + width, yT)
-      //  && !box.contains(xT, yT + height)
-        //&& !box.contains(xT + width, yT + height)) {
-      g3d.drawString(sVal, font3d, xT, yT, zT, zT, (short) 0);
-   //   box.setBounds(xT, yT, width, height);
-   // }
+    g3d.drawString(sVal, font3d, xT, yT, zT, zT, (short) 0);
   }
   
   static protected void drawDashedCylinder(JmolRendererInterface g3d, 
@@ -358,18 +330,11 @@ public abstract class FontLineShapeRenderer extends ShapeRenderer {
     }
   }
   
-  protected static void fillCylinder(JmolRendererInterface g3d, short colixA, short colixB, byte endcaps,
-                              int xA, int yA, int zA, int xB, int yB,
-                              int zB, int diameter, boolean asLineOnly) {
-    if (asLineOnly)
+  protected static void fillCylinder(JmolRendererInterface g3d, short colixA, short colixB, byte endcaps, int xA, int yA, int zA, int xB, int yB, int zB, int diameter, boolean asLineOnly) {
+    if (asLineOnly) {
       g3d.drawLine(colixA, colixB, xA, yA, zA, xB, yB, zB);
-    else
-      g3d.fillCylinderXYZ(colixA, colixB, endcaps, 
-          diameter, 
-          xA, yA, zA, xB, yB, zB);
+	} else {
+      g3d.fillCylinderXYZ(colixA, colixB, endcaps, diameter, xA, yA, zA, xB, yB, zB);
+	}
   }
-
-
-
-
 }

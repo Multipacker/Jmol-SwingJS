@@ -33,13 +33,13 @@ import org.jmol.shape.FontLineShape;
 import org.jmol.util.BoxInfo;
 
 abstract class CageRenderer extends FontLineShapeRenderer {
-
   // Bbcage and Uccage
 
   protected final P3d[] p3Screens = new P3d[8];
   {
-    for (int i = 8; --i >= 0; )
+    for (int i = 8; --i >= 0; ) {
       p3Screens[i] = new P3d();
+	}
   }
 
   protected char[] tickEdges;
@@ -49,9 +49,7 @@ abstract class CageRenderer extends FontLineShapeRenderer {
   
   private P3d pt = new P3d();
   
-  protected void renderCage(int mad, P3d[] vertices, int[][] faces,
-                        P3d[] axisPoints, int firstLine, int allowedEdges0,
-                        int allowedEdges1, double scale) {
+  protected void renderCage(int mad, P3d[] vertices, int[][] faces, P3d[] axisPoints, int firstLine, int allowedEdges0, int allowedEdges1, double scale) {
     //clearBox();
     g3d.setC(colix);
     FontLineShape fls = (FontLineShape) shape;
@@ -94,13 +92,15 @@ abstract class CageRenderer extends FontLineShapeRenderer {
       int d = diameter;
       int edge0 = BoxInfo.edges[i];
       int edge1 = BoxInfo.edges[i + 1];
-      if (hiddenLines && (!bsSolid.get(edge0) || !bsSolid.get(edge1)))
+      if (hiddenLines && (!bsSolid.get(edge0) || !bsSolid.get(edge1))) {
         d = -Math.abs(diameter);
-      if (axisPoints != null && edge0 == 0)
+	  }
+      if (axisPoints != null && edge0 == 0) {
         tm.transformPtNoClip(axisPoints[axisPt--], p3Screens[0]);
-      if ((allowedEdges0 & (1 << edge0)) == 0 
-        || (allowedEdges1 & (1 << edge1)) == 0)
+	  }
+      if ((allowedEdges0 & (1 << edge0)) == 0 || (allowedEdges1 & (1 << edge1)) == 0) {
         continue;
+	  }
       boolean drawTicks = (fls.tickInfos != null && (edge = tickEdges[i >> 1]) != 0);
       if (drawTicks) {
         checkTickTemps();
@@ -120,16 +120,16 @@ abstract class CageRenderer extends FontLineShapeRenderer {
             break;
           }
         tickInfo = fls.tickInfos["xyz".indexOf(edge) + 1];
-        if (tickInfo == null)
+        if (tickInfo == null) {
           tickInfo = fls.tickInfos[0];
-        if (tickInfo == null)
+		}
+        if (tickInfo == null) {
           drawTicks = false;
-        else
+		} else {
           tickInfo.first = start;
+		}
       }
-      renderLine(p3Screens[edge0], p3Screens[edge1], d,
-          drawTicks);
+      renderLine(p3Screens[edge0], p3Screens[edge1], d, drawTicks);
     }
   }
 }
-

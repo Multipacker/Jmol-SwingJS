@@ -25,11 +25,14 @@ package org.jmol.render;
 import org.jmol.modelkit.ModelKit;
 import org.jmol.script.T;
 import org.jmol.shape.Frank;
+import org.jmol.shape.Shape;
 import org.jmol.util.C;
 import org.jmol.viewer.Viewer;
+import org.jmol.api.JmolRendererInterface;
+import org.jmol.modelset.ModelSet;
+import org.jmol.util.GData;
 
 public class FrankRenderer extends ShapeRenderer {
-
   //we render Frank last just for the touch that if there are translucent
   //objects, then it becomes translucent. Just for fun.
 
@@ -37,25 +40,29 @@ public class FrankRenderer extends ShapeRenderer {
 
   @Override
   protected boolean render() {
+	  return FrankRenderer.renderFrank(vwr, g3d, ms, shape);
+  }
+
+  public static boolean renderFrank(Viewer vwr, JmolRendererInterface g3d, ModelSet ms, Shape shape) {
+    boolean isExport = (g3d.getExportType() != GData.EXPORT_NOT);
+
     Frank frank = (Frank) shape;
     boolean allowKeys = vwr.getBooleanProperty("allowKeyStrokes");
     boolean modelKitMode = vwr.getBoolean(T.modelkitmode);
-    colix = (modelKitMode && !vwr.getModelkit(false).isHidden() ? C.MAGENTA : vwr.isSignedApplet ? (allowKeys
-        || (Viewer.isJS || Viewer.isSwingJS) && !vwr.isWebGL ? C.ORANGE : C.RED) : allowKeys ? C.BLUE
-        : C.GRAY);
-    if (isExport
-        || !vwr.getShowFrank()
-        || !g3d.setC(colix))
+    short colix = (modelKitMode && !vwr.getModelkit(false).isHidden() ? C.MAGENTA : allowKeys ? C.BLUE : C.GRAY);
+
+    if (isExport || !vwr.getShowFrank() || !g3d.setC(colix)) {
       return false;
-    if (vwr.frankOn && !vwr.noFrankEcho)
+	}
+    if (vwr.frankOn && !vwr.noFrankEcho) {
       return vwr.noFrankEcho;
+	}
     vwr.noFrankEcho = true;
     double imageFontScaling = vwr.imageFontScaling;
     frank.getFont(imageFontScaling);
     int dx = (int) (frank.frankWidth + Frank.frankMargin * imageFontScaling);
     int dy = frank.frankDescent;
-    g3d.drawStringNoSlab(frank.frankString, frank.font3d, vwr.gdata.width - dx,
-        vwr.gdata.height - dy, 0, (short) 0);
+    g3d.drawStringNoSlab(frank.frankString, frank.font3d, vwr.gdata.width - dx, vwr.gdata.height - dy, 0, (short) 0);
     ModelKit kit = (modelKitMode ? vwr.getModelkit(false) : null);
     if (modelKitMode && !kit.isHidden()) {
       g3d.setC(C.GRAY);
@@ -75,7 +82,6 @@ public class FrankRenderer extends ShapeRenderer {
           g3d.fillTextRect(0, h<<1, 0, 0, w, h);
         }
       }
-      
     }
     return false;
   }

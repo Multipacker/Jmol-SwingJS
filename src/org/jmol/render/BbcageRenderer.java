@@ -29,7 +29,6 @@ import org.jmol.util.BoxInfo;
 import org.jmol.viewer.StateManager;
 
 public class BbcageRenderer extends CageRenderer {
-
   @Override
   protected void initRenderer() {
     tickEdges = BoxInfo.bbcageTickEdges; 
@@ -40,12 +39,10 @@ public class BbcageRenderer extends CageRenderer {
     Bbcage bbox = (Bbcage) shape;
     boolean hiddenLines = (vwr.getBoolean(T.hiddenlinesdashed));
     // no translucent bounding box
-    if (bbox.isVisible && (isExport || g3d.checkTranslucent(false))
-        && !vwr.isJmolDataFrame()) {
+    if (bbox.isVisible && (isExport || g3d.checkTranslucent(false)) && !vwr.isJmolDataFrame()) {
       colix = vwr.getObjectColix(StateManager.OBJ_BOUNDBOX);
       renderCage(vwr.getObjectMad10(StateManager.OBJ_BOUNDBOX), ms.getBBoxVertices(), (hiddenLines ? BoxInfo.facePoints : null), null, 0, 0xFF, 0xFF, 1);
     }
     return false;
   }
-
 }

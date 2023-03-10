@@ -162,7 +162,8 @@ public class RepaintManager implements JmolRepaintManager {
 
   private boolean renderShape(int shapeID, JmolRendererInterface g3d, ModelSet modelSet, Shape shape) {
 	  switch (shapeID) {
-		  case JC.SHAPE_BALLS: RepaintManager.renderBalls(vwr, g3d, modelSet, shape);
+		  case JC.SHAPE_BALLS: return RepaintManager.renderBalls(vwr, g3d, modelSet, shape);
+		  case JC.SHAPE_FRANK: return FrankRenderer.renderFrank(vwr, g3d, modelSet, shape);
 		  default: return getRenderer(shapeID).renderShape(g3d, modelSet, shape);
 	  }
   }
